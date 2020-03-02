@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>流程模型管理</title>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/designer.css" />
+<script type="text/javascript" src="designer.js"></script>
+<script type="text/javascript">
+//左边的按钮
+$(function(){
+	//任意一人（环节）
+	$('#tool1Btn').click(function(){
+		//获取画布长度和宽度
+		var cwidth = $(c).attr('width').replace('px','');
+		var cheight = $(c).attr('height').replace('px','');
+		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
+		//新创建一个业务对象
+		var act = {model:{
+			activityId:'',
+			activityName:'活动名称',
+			activityType:'01',
+			displayName:'活动名称'
+		  },
+		  view:{
+			displayindex:168,
+			height:36,
+			width:28,
+			x:Math.floor((cwidth-26)/2),
+			y:Math.floor((cheight-36)/2)
+		  }
+		};
+		flowModle.activities.push(act);
+		drawAll(cxt);
+	});
+	
+	$('#tool2Btn').click(function(){
+		//获取画布长度和宽度
+		var cwidth = $(c).attr('width').replace('px','');
+		var cheight = $(c).attr('height').replace('px','');
+		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
+		//新创建一个业务对象
+		var operation = {model:{
+			activityId:'',
+			activityName:'',
+			description:'',
+			displayName:'操作名称',
+			operationName:'操作名称',
+			operationId:''
+		  },
+		  view:{
+			displayindex:169,
+			height:16,
+			width:16,
+			x:Math.floor((cwidth-16)/2),
+			y:Math.floor((cheight-16)/2)
+		  }
+		};
+		//在业务对象的上方增加一个控制点。(控制点以图形的中心为准)
+		var left = operation.view.x +Math.floor((operation.view.width)/2);
+		controlPoint = {x:left,y:operation.view.y-30+16/2};// 16/2是鼠标图形的一半。
+		controlPoint.parent = operation;//父对象就是其业务对象。
+		controlPoint.parentType = 'result';
+		operation.view.controlPoint = controlPoint;
+		
+		flowModle.operations.push(operation);
+		drawAll(cxt);
+	});
+});
+</script>
+</head>
+<body>
+  <div class="topButtons" >
+  	<button >保存</button>
+  	<button >打开</button>
+  	<button >下载</button>
+  </div>
+  <div class="main" >
+    <div class="asideTools">
+      <div class="title">图形库</div>
+      <div id="tool1Btn" >
+        <img id="tool1" src="imgs/design/anyone.gif">
+        <div>任意一人</div>
+      </div>
+      <div id="tool2Btn" >
+        <img id="tool2" src="imgs/design/Blue Ball.png">
+        <div>结果线</div>
+      </div>
+    </div>
+    <canvas id="designer" width="980px" height="560px" ></canvas>
+    <div class="clear"></div>
+  </div>
+</body>
+</html>
