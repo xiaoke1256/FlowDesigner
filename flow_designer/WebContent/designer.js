@@ -29,8 +29,14 @@ Act.prototype = new BussinessObj();
 /**
  * 子类，操作选项
  */
-var Oper = function(){
+var Oper = function(obj){
 	BussinessObj.call(this,obj);
+	//在业务对象的上方增加一个控制点。(控制点以图形的中心为准)
+	var left = this.view.x +Math.floor((this.view.width)/2);
+	controlPoint = {x:left,y:this.view.y-30+16/2};// 16/2是鼠标图形的一半。
+	controlPoint.parent = this;//父对象就是其业务对象。
+	controlPoint.parentType = 'result';
+	this.view.controlPoint = controlPoint;
 };
 Oper.prototype = new BussinessObj();
 
@@ -74,7 +80,7 @@ function FlRenderer(canvasId){
 	};
 	
 	/*
-	 * 选中的对象 ，其每个元素如下：{type:'act',obj:act}，其中 type的取值是 'act'、'result'代表“活动”，“结果”等，act 是活动本身的对象.包括model和view两部分
+	 * 选中的对象 
 	 */
 	var selected = [];
 	var redMarked = null;//标红的对象
@@ -95,27 +101,11 @@ function FlRenderer(canvasId){
 		var x = event.pageX-this.offsetLeft;
         var y = event.pageY-this.offsetTop;
         console.log("x:"+x+" y:"+y );
-        //遍历模型中的对象看鼠标落在哪个对象上。
+        //看看鼠标落在哪个对象上。
         selected = [];
-        for(var i in flowModle.activities){
-        	view = flowModle.activities[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y );
-        	if(view.x<x && x<view.x+view.width 
-        			&& view.y<y && y<view.y+view.height){
-        		console.log("selected!"+selected.length);
-        		selected.push({type:'act',obj:flowModle.activities[i]});
-        		console.log("selected.length:"+selected.length);
-        	}
-        }
-        for(var i in flowModle.operations){
-        	view = flowModle.operations[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y );
-        	if(view.x<x && x<view.x+view.width 
-        			&& view.y<y && y<view.y+view.height){
-        		console.log("selected!"+selected.length);
-        		selected.push({type:'result',obj:flowModle.operations[i]});
-        		console.log("selected.length:"+selected.length);
-        	}
+        var obj = selectObj(x,y);
+        if(obj){
+        	selected.push(obj);
         }
         drawAll(cxt);
         
@@ -134,10 +124,10 @@ function FlRenderer(canvasId){
         if(dragedObj==null)
         	//看selected中哪个正在被拖动
         	for(var i in selected){
-            	var view = selected[i].obj.view;
+            	var view = selected[i].view;
             	if(view.x<x && x<view.x+view.width 
             			&& view.y<y && y<view.y+view.height){
-            		dragedObj = selected[i].obj;
+            		dragedObj = selected[i];
             	}
         	}
         }
@@ -187,7 +177,7 @@ function FlRenderer(canvasId){
 		if(event.button == 0){//为0表示左键
 			isMouseDown = true;
 			//获取鼠标的当前位置
-			var cursorPos = getCursorPos(event);
+			var cursorPos = getCursorPos(event,c);
 		    //看看有没有controlPoint被选中
 			var obj = selectObj(cursorPos.x,cursorPos.y);
 			if(obj){
@@ -214,8 +204,9 @@ function FlRenderer(canvasId){
 	 * 鼠标开始拖动事件
 	 */
 	function onStartDrag(obj){
+		console.log("onStartDrag obj:"+obj);
 		dragedObj = obj;
-		preDragPos = getCursorPos(event);
+		preDragPos = getCursorPos(event,c);
 	}
 	/**控制点拖动结束事件*/
 	function onEndDrag(obj){
@@ -242,7 +233,7 @@ function FlRenderer(canvasId){
 	function selectObj(x,y){
 		for(var i in flowModle.activities){
         	view = flowModle.activities[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	console.log("view.x:"+view.x+" view.y:"+view.y + "   x:"+x+" y:"+y );
         	if(view.x<x && x<view.x+view.width 
         			&& view.y<y && y<view.y+view.height){
         		console.log("selected!"+selected.length);
@@ -272,6 +263,7 @@ function FlRenderer(canvasId){
     	    	return controlPoint;
     	    }
 	    }
+	    return null;
 	}
 	
 	/**绘制整个图像*/
@@ -356,7 +348,7 @@ function FlRenderer(canvasId){
 	 */
 	function drawSelect(ctx){
 		for(var i in selected){
-			var view = selected[i].obj.view;
+			var view = selected[i].view;
 			console.log("draw selected.");
 			ctx.beginPath();
 			ctx.lineWidth="1";
@@ -395,17 +387,28 @@ function FlRenderer(canvasId){
 			//drawAll(cxt)
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
 		},
+		/**向模型中增加一个Act*/
+		addAct:function(actJson){
+			flowModle.activities.push(new Act(actJson));
+			drawAll(cxt);
+		},
+		/**向模型中增加一个Oper*/
+		addOper:function(operJson){
+			flowModle.operations.push(new Oper(operJson));
+			drawAll(cxt);
+		}
 	};
 }
 
 /**
  * 获取鼠标的位置
  * @param event 事件
+ * @param canvase 元素
  * @returns {x:x,y:y}
  */
-function getCursorPos(event){
-	var x = event.pageX-this.offsetLeft;
-    var y = event.pageY-this.offsetTop;
+function getCursorPos(event,c){
+	var x = event.pageX-c.offsetLeft;
+    var y = event.pageY-c.offsetTop;
     return {x:x,y:y};
 }
 

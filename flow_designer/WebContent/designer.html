@@ -38,8 +38,8 @@ $(function(){
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
 		//获取画布长度和宽度
-		var cwidth = $(c).attr('width').replace('px','');
-		var cheight = $(c).attr('height').replace('px','');
+		var cwidth = $('#designer').attr('width').replace('px','');
+		var cheight = $('#designer').attr('height').replace('px','');
 		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
 		//新创建一个业务对象
 		var act = {model:{
@@ -56,14 +56,13 @@ $(function(){
 			y:Math.floor((cheight-36)/2)
 		  }
 		};
-		flowModle.activities.push(act);
-		drawAll(cxt);
+		flRenderer.addAct(act);
 	});
 	
 	$('#tool2Btn').click(function(){
 		//获取画布长度和宽度
-		var cwidth = $(c).attr('width').replace('px','');
-		var cheight = $(c).attr('height').replace('px','');
+		var cwidth = $('#designer').attr('width').replace('px','');
+		var cheight = $('#designer').attr('height').replace('px','');
 		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
 		//新创建一个业务对象
 		var operation = {model:{
@@ -82,15 +81,8 @@ $(function(){
 			y:Math.floor((cheight-16)/2)
 		  }
 		};
-		//在业务对象的上方增加一个控制点。(控制点以图形的中心为准)
-		var left = operation.view.x +Math.floor((operation.view.width)/2);
-		controlPoint = {x:left,y:operation.view.y-30+16/2};// 16/2是鼠标图形的一半。
-		controlPoint.parent = operation;//父对象就是其业务对象。
-		controlPoint.parentType = 'result';
-		operation.view.controlPoint = controlPoint;
 		
-		flowModle.operations.push(operation);
-		drawAll(cxt);
+		flRenderer.addOper(operation);
 	});
 });
 </script>
