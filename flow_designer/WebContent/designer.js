@@ -10,6 +10,7 @@ var BussinessObj = function(obj){
 	this.model={};
 	if(obj && obj instanceof Object){
 		this.model=obj.model;
+		console.log("obj.model.displayName:"+obj.model.displayName);
 	}
 	this.view={};
 	if(obj && obj instanceof Object){
@@ -20,13 +21,17 @@ var BussinessObj = function(obj){
 /**
  * 子类，Activity
  */
-var Act = function(){};
+var Act = function(obj){
+	BussinessObj.call(this,obj);
+};
 Act.prototype = new BussinessObj();
 
 /**
  * 子类，操作选项
  */
-var Oper = function(){};
+var Oper = function(){
+	BussinessObj.call(this,obj);
+};
 Oper.prototype = new BussinessObj();
 
 /**
@@ -46,37 +51,19 @@ var Point = function(x,y){
 var ControlPoint = function(){}
 ControlPoint.prototype = new Point();
 
-
-//绘图过程中要使用到的图片
-var actImg = new Image();
-actImg.src='imgs/design/anyone.gif';
-var operImg = new Image();
-operImg.src='imgs/design/Blue Ball16.png';
-var mouseImg = new Image();
-mouseImg.src='imgs/design/mouse_add.png';
-
-//用来测试的模型
-var testModel = {activities:
-	  [
-			{model:{
-				activityId:'0000',
-				activityName:'任务分配',
-				activityType:'01',
-				displayName:'任务分配'
-			  },
-			  view:{
-				displayindex:168,
-				height:36,
-				width:28,
-				x:349,
-				y:28
-			  }
-			},
-		  ],
-		  operations:[]
-	};
-
-$(function(){
+/**
+ * 图形绘制器
+ * @returns
+ */
+function FlRenderer(canvasId){
+	
+	//绘图过程中要使用到的图片
+	var actImg = new Image();
+	actImg.src='imgs/design/anyone.gif';
+	var operImg = new Image();
+	operImg.src='imgs/design/Blue Ball16.png';
+	var mouseImg = new Image();
+	mouseImg.src='imgs/design/mouse_add.png';
 	
 	/**
 	 * 模型
@@ -95,7 +82,7 @@ $(function(){
 	 
 	var c = null;//画布元素.
 	
-	c = document.getElementById("designer");
+	c = document.getElementById(canvasId);
 	cxt = c.getContext("2d"); 
 	//init();
 	drawAll(cxt);
@@ -286,13 +273,131 @@ $(function(){
     	    }
 	    }
 	}
-});
-/*
-function init(){
-	actImg = document.getElementById("tool1");
-	operImg = 
+	
+	/**绘制整个图像*/
+	function drawAll(cxt){
+		cxt.clearRect(0,0,c.width,c.height); 
+		console.log("flowModle.activities:"+flowModle.activities);
+		for(var i in flowModle.activities){
+			drawActivity(cxt,flowModle.activities[i]);
+		}
+		for(var i in flowModle.operations){
+			drawOperation(cxt,flowModle.operations[i]);
+		}
+		drawSelect(cxt);
+		drawReadMarked(cxt);
+	}
+	
+	/**
+	 * 绘制一个活动
+	 */
+	function drawActivity(cxt,act){
+		console.log("act.model:"+act.model);
+		//绘制活动的名称
+		if(act.model.displayName){
+			cxt.font = "bold 14px songti";
+			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2
+			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);
+		}
+		cxt.drawImage(actImg,act.view.x,act.view.y);
+	}
+	/**
+	 * 绘制一个结果线
+	 */
+	function drawOperation(cxt,oper){
+		 var view = oper.view;
+		 cxt.drawImage(operImg,oper.view.x,oper.view.y);
+		 //如果关联了一个活动
+		 console.log("oper.model.activityId:"+oper.model.activityId);
+		 if(oper.model.activityId){
+			 console.log("oper.model.activityId:"+oper.model.activityId);
+			 //TODO 查找对应的活动
+			 var act = selectActByActId(oper.model.activityId);
+			 //TODO 绘制从结果到活动的线条。
+			 if(act!=null){
+				 //act.view
+				 cxt.beginPath();
+				 cxt.lineWidth=2;
+				 cxt.strokeStyle='#48f';
+				 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+				 cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
+				 cxt.stroke();
+			 }
+		 }else if(oper.view.controlPoint){//存在控制点
+			 //在控制点处绘制一个鼠标。
+			 var mouseLeft = oper.view.controlPoint.x - 16/2;
+			 var mouseTop = oper.view.controlPoint.y - 16/2;
+			 cxt.drawImage(mouseImg,mouseLeft,mouseTop);
+			 //绘制连线
+			 cxt.beginPath();
+			 cxt.lineWidth=2;
+			 cxt.strokeStyle='#48f';
+			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+			 cxt.lineTo(oper.view.controlPoint.x,oper.view.controlPoint.y);
+			 cxt.stroke();
+		 }else{
+			 //在上方(30px处)绘制一个鼠标
+			 var mouseLeft = oper.view.x +Math.floor((oper.view.width-16)/2);
+			 cxt.drawImage(mouseImg,mouseLeft,oper.view.y-30);
+			 //绘制连线
+			 cxt.beginPath();
+			 cxt.lineWidth=2;
+			 cxt.strokeStyle='#48f';
+			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+			 cxt.lineTo(view.x+view.width/2,view.y+view.height/2-30);
+			 cxt.stroke();
+		 }
+		 cxt.font = "12px songti";
+		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2);
+	     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);
+	 }
+	/**
+	 * 绘制选中的元素
+	 */
+	function drawSelect(ctx){
+		for(var i in selected){
+			var view = selected[i].obj.view;
+			console.log("draw selected.");
+			ctx.beginPath();
+			ctx.lineWidth="1";
+			ctx.strokeStyle="green";
+			ctx.rect(view.x,view.y,view.width,view.height);
+			ctx.stroke();
+		}
+	}
+
+	function drawReadMarked(ctx){
+		if(redMarked){
+			var view = redMarked.view;
+			console.log("draw red mark.");
+			ctx.beginPath();
+			ctx.lineWidth="1";
+			ctx.strokeStyle="red";
+			ctx.rect(view.x,view.y,view.width,view.height);
+			ctx.stroke();
+		}
+	}
+	
+	//暴露出去一个对象
+	return {
+		/**加载一个模型*/
+		loadModel:function(modelJson){
+			for(var i in modelJson.activities){
+				var act = modelJson.activities[i];
+				flowModle.activities.push(new Act(act));
+				console.log('加载了一个Act');
+			}
+			for(var i in modelJson.operations){
+				var oper = modelJson.operations[i];
+				flowModle.operations.push(new Oper(oper));
+			}
+			//加载完后渲染一下,放到另外一个线程去渲染，以保证图像已加载完成。
+			//drawAll(cxt)
+			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
+		},
+	};
 }
-*/
+
 /**
  * 获取鼠标的位置
  * @param event 事件
@@ -304,103 +409,7 @@ function getCursorPos(event){
     return {x:x,y:y};
 }
 
-function drawAll(cxt){
-	cxt.clearRect(0,0,c.width,c.height); 
-	for(var i in flowModle.activities){
-		drawActivity(cxt,flowModle.activities[i]);
-	}
-	for(var i in flowModle.operations){
-		drawOperation(cxt,flowModle.operations[i]);
-	}
-	drawSelect(cxt);
-	drawReadMarked(cxt);
-}
-/**
- * 绘制一个活动
- */
-function drawActivity(cxt,act){
-	//绘制活动的名称
-	cxt.font = "bold 14px songti";
-	var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2
-	cxt.fillText(act.model.displayName,textLeft,act.view.y-8);
-	cxt.drawImage(actImg,act.view.x,act.view.y);
-}
-/**
- * 绘制一个结果线
- */
-function drawOperation(cxt,oper){
-	 var view = oper.view;
-	 cxt.drawImage(operImg,oper.view.x,oper.view.y);
-	 //如果关联了一个活动
-	 console.log("oper.model.activityId:"+oper.model.activityId);
-	 if(oper.model.activityId){
-		 console.log("oper.model.activityId:"+oper.model.activityId);
-		 //TODO 查找对应的活动
-		 var act = selectActByActId(oper.model.activityId);
-		 //TODO 绘制从结果到活动的线条。
-		 if(act!=null){
-			 //act.view
-			 cxt.beginPath();
-			 cxt.lineWidth=2;
-			 cxt.strokeStyle='#48f';
-			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-			 cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
-			 cxt.stroke();
-		 }
-	 }else if(oper.view.controlPoint){//存在控制点
-		 //在控制点处绘制一个鼠标。
-		 var mouseLeft = oper.view.controlPoint.x - 16/2;
-		 var mouseTop = oper.view.controlPoint.y - 16/2;
-		 cxt.drawImage(mouseImg,mouseLeft,mouseTop);
-		 //绘制连线
-		 cxt.beginPath();
-		 cxt.lineWidth=2;
-		 cxt.strokeStyle='#48f';
-		 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-		 cxt.lineTo(oper.view.controlPoint.x,oper.view.controlPoint.y);
-		 cxt.stroke();
-	 }else{
-		 //在上方(30px处)绘制一个鼠标
-		 var mouseLeft = oper.view.x +Math.floor((oper.view.width-16)/2);
-		 cxt.drawImage(mouseImg,mouseLeft,oper.view.y-30);
-		 //绘制连线
-		 cxt.beginPath();
-		 cxt.lineWidth=2;
-		 cxt.strokeStyle='#48f';
-		 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-		 cxt.lineTo(view.x+view.width/2,view.y+view.height/2-30);
-		 cxt.stroke();
-	 }
-	 cxt.font = "12px songti";
-	 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2);
-     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);
- }
-/**
- * 绘制选中的元素
- */
-function drawSelect(ctx){
-	for(var i in selected){
-		var view = selected[i].obj.view;
-		console.log("draw selected.");
-		ctx.beginPath();
-		ctx.lineWidth="1";
-		ctx.strokeStyle="green";
-		ctx.rect(view.x,view.y,view.width,view.height);
-		ctx.stroke();
-	}
-}
 
-function drawReadMarked(ctx){
-	if(redMarked){
-		var view = redMarked.view;
-		console.log("draw red mark.");
-		ctx.beginPath();
-		ctx.lineWidth="1";
-		ctx.strokeStyle="red";
-		ctx.rect(view.x,view.y,view.width,view.height);
-		ctx.stroke();
-	}
-}
 
 function resetControlPoint(obj){
 	if(obj instanceof Oper){

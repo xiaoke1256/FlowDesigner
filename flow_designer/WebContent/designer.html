@@ -9,6 +9,32 @@
 <script type="text/javascript">
 //左边的按钮
 $(function(){
+	//用来测试的模型
+	var testModel = {activities:
+		  [
+				{model:{
+					activityId:'0000',
+					activityName:'任务分配',
+					activityType:'01',
+					displayName:'任务分配'
+				  },
+				  view:{
+					displayindex:168,
+					height:36,
+					width:28,
+					x:349,
+					y:28
+				  }
+				},
+			  ],
+			  operations:[]
+		};
+	
+	//初始化绘图器
+	var flRenderer = FlRenderer('designer');
+	//加载这个模型
+	flRenderer.loadModel(testModel);
+	
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
 		//获取画布长度和宽度
