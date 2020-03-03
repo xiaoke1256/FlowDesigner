@@ -30,27 +30,23 @@ var Oper = function(){};
 Oper.prototype = new BussinessObj();
 
 /**
- * 模型
+ * 一个点
  */
-var flowModle = {activities:
-	  [
-		{model:{
-			activityId:'0000',
-			activityName:'任务分配',
-			activityType:'01',
-			displayName:'任务分配'
-		  },
-		  view:{
-			displayindex:168,
-			height:36,
-			width:28,
-			x:349,
-			y:28
-		  }
-		},
-	  ],
-	  operations:[]
-	};
+var Point = function(x,y){
+	this.x = 0;
+	this.y = 0;
+	if(x)
+		this.x=x;
+	if(y)
+		this.y=y;
+}
+/**
+ * 控制点（业务对象上可以被鼠标拖动的点）
+ */
+var ControlPoint = function(){}
+ControlPoint.prototype = new Point();
+
+
 //绘图过程中要使用到的图片
 var actImg = new Image();
 actImg.src='imgs/design/anyone.gif';
@@ -59,16 +55,46 @@ operImg.src='imgs/design/Blue Ball16.png';
 var mouseImg = new Image();
 mouseImg.src='imgs/design/mouse_add.png';
 
-/*
- * 选中的对象 ，其每个元素如下：{type:'act',obj:act}，其中 type的取值是 'act'、'result'代表“活动”，“结果”等，act 是活动本身的对象.包括model和view两部分
- */
-var selected = [];
-var redMarked = null;//标红的对象
-var dragingControlPoint = null;//正在拖动的控制点
- 
-var c = null;//画布元素.
+//用来测试的模型
+var testModel = {activities:
+	  [
+			{model:{
+				activityId:'0000',
+				activityName:'任务分配',
+				activityType:'01',
+				displayName:'任务分配'
+			  },
+			  view:{
+				displayindex:168,
+				height:36,
+				width:28,
+				x:349,
+				y:28
+			  }
+			},
+		  ],
+		  operations:[]
+	};
 
 $(function(){
+	
+	/**
+	 * 模型
+	 */
+	var flowModle = {
+		  activities:[],
+		  operations:[]
+	};
+	
+	/*
+	 * 选中的对象 ，其每个元素如下：{type:'act',obj:act}，其中 type的取值是 'act'、'result'代表“活动”，“结果”等，act 是活动本身的对象.包括model和view两部分
+	 */
+	var selected = [];
+	var redMarked = null;//标红的对象
+	var dragingControlPoint = null;//正在拖动的控制点
+	 
+	var c = null;//画布元素.
+	
 	c = document.getElementById("designer");
 	cxt = c.getContext("2d"); 
 	//init();
@@ -173,22 +199,13 @@ $(function(){
 	$(c).mousedown(function(){
 		if(event.button == 0){//为0表示左键
 			isMouseDown = true;
+			//获取鼠标的当前位置
+			var cursorPos = getCursorPos(event);
 		    //看看有没有controlPoint被选中
-		    for(var i in flowModle.operations){
-		    	controlPoint = flowModle.operations[i].view.controlPoint;
-		    	if(!controlPoint)
-		    		continue;
-        	    console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-        	    //获取鼠标的当前位置
-        	    var x = event.pageX-this.offsetLeft;
-                var y = event.pageY-this.offsetTop;
-        	    if(controlPoint.x-16/2<x && x<controlPoint.x+16/2 
-            			&& controlPoint.y-16/2<y && y<controlPoint.y+16/2){
-        	    	dragingControlPoint = controlPoint;
-        	    	break;
-        	    }
-        	    
-		    }
+			var obj = selectObj(cursorPos.x,cursorPos.y);
+			if(obj){
+				onStartDrag(obj);
+			}
 		}
 	});
 	//监听鼠标左键释放事件
@@ -198,25 +215,76 @@ $(function(){
 		    //有可能是拖动结束
 		    if(preDragPos!=null){
 		    	//拖动结束
+		    	onEndDrag(dragedObj);
 		    	preDragPos = null;
 		    	dragedObj = null;
-		    }
-		    if(dragingControlPoint){
-		    	if(redMarked){
-		    		onDragingEnd(dragingControlPoint.parentType,dragingControlPoint.parent,'act',redMarked);//拖动结束
-		        }else{
-		        	resetControlPoint(dragingControlPoint.parentType,dragingControlPoint.parent);	
-		        }
-		        dragingControlPoint = null;
 		    }
 		    redMarked = null;
 		}
 	});
 	
-	//控制点拖动结束
-	function onDragingEnd(type,obj,targetType,target){
-		obj.model.activityId = target.model.activityId;
-		obj.view.controlPoint = null;
+	/**
+	 * 鼠标开始拖动事件
+	 */
+	function onStartDrag(obj){
+		dragedObj = obj;
+		preDragPos = getCursorPos(event);
+	}
+	/**控制点拖动结束事件*/
+	function onEndDrag(obj){
+		//如果拖动的是控制点的话需要处理
+		if(obj instanceof ControlPoint){
+			//看是否拖动到了某个对象内
+			if(!redMarked){
+				resetControlPoint(obj.parent);
+				return;
+			}
+			if(obj.parent instanceof Oper){
+				var target = redMarked;
+				obj.parent.model.activityId = target.model.activityId;
+				obj.parent.view.controlPoint = null;
+			}
+			
+		}
+		
+	};
+	
+	/**
+	 * 根据鼠标所选中的位置，判断哪个控件被选中了。
+	 */
+	function selectObj(x,y){
+		for(var i in flowModle.activities){
+        	view = flowModle.activities[i].view;
+        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	if(view.x<x && x<view.x+view.width 
+        			&& view.y<y && y<view.y+view.height){
+        		console.log("selected!"+selected.length);
+        		return flowModle.activities[i];
+        	}
+        }
+        for(var i in flowModle.operations){
+        	view = flowModle.operations[i].view;
+        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	if(view.x<x && x<view.x+view.width 
+        			&& view.y<y && y<view.y+view.height){
+        		console.log("selected!"+selected.length);
+        		return flowModle.operations[i];
+        	}
+        }
+        //看看有没有controlPoint被选中
+	    for(var i in flowModle.operations){
+	    	controlPoint = flowModle.operations[i].view.controlPoint;
+	    	if(!controlPoint)
+	    		continue;
+    	    console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+    	    //获取鼠标的当前位置
+    	    var x = event.pageX-this.offsetLeft;
+            var y = event.pageY-this.offsetTop;
+    	    if(controlPoint.x-16/2<x && x<controlPoint.x+16/2 
+        			&& controlPoint.y-16/2<y && y<controlPoint.y+16/2){
+    	    	return controlPoint;
+    	    }
+	    }
 	}
 });
 /*
@@ -225,6 +293,16 @@ function init(){
 	operImg = 
 }
 */
+/**
+ * 获取鼠标的位置
+ * @param event 事件
+ * @returns {x:x,y:y}
+ */
+function getCursorPos(event){
+	var x = event.pageX-this.offsetLeft;
+    var y = event.pageY-this.offsetTop;
+    return {x:x,y:y};
+}
 
 function drawAll(cxt){
 	cxt.clearRect(0,0,c.width,c.height); 
@@ -324,8 +402,8 @@ function drawReadMarked(ctx){
 	}
 }
 
-function resetControlPoint(type,obj){
-	if(type=='result'){
+function resetControlPoint(obj){
+	if(obj instanceof Oper){
 		var left = obj.view.x +Math.floor((obj.view.width)/2);
 		controlPoint = {x:left,y:obj.view.y-30+16/2};// 16/2是鼠标图形的一半。
 		controlPoint.parent = obj;//父对象就是其业务对象。
