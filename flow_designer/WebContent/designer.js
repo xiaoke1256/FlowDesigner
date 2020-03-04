@@ -32,8 +32,9 @@ Act.prototype = new BussinessObj();
 var Oper = function(obj){
 	BussinessObj.call(this,obj);
 	//在业务对象的上方增加一个控制点。(控制点以图形的中心为准)
-	var left = this.view.x +Math.floor((this.view.width)/2);
-	controlPoint = {x:left,y:this.view.y-30+16/2};// 16/2是鼠标图形的一半。
+	var x = this.view.x +Math.floor((this.view.width)/2);
+	var y = this.view.y-30+16/2;// 16/2是鼠标图形的一半。
+	controlPoint = new ControlPoint(x,y);
 	controlPoint.parent = this;//父对象就是其业务对象。
 	controlPoint.parentType = 'result';
 	this.view.controlPoint = controlPoint;
@@ -54,7 +55,9 @@ var Point = function(x,y){
 /**
  * 控制点（业务对象上可以被鼠标拖动的点）
  */
-var ControlPoint = function(){}
+var ControlPoint = function(x,y){
+	Point.call(this,x,y);
+}
 ControlPoint.prototype = new Point();
 
 /**
@@ -84,7 +87,6 @@ function FlRenderer(canvasId){
 	 */
 	var selected = [];
 	var redMarked = null;//标红的对象
-	var dragingControlPoint = null;//正在拖动的控制点
 	 
 	var c = null;//画布元素.
 	
@@ -121,24 +123,10 @@ function FlRenderer(canvasId){
         console.log("x:"+x+" y:"+y );
         if(preDragPos==null){
         	preDragPos = {x:x,y:y};
-        if(dragedObj==null)
-        	//看selected中哪个正在被拖动
-        	for(var i in selected){
-            	var view = selected[i].view;
-            	if(view.x<x && x<view.x+view.width 
-            			&& view.y<y && y<view.y+view.height){
-            		dragedObj = selected[i];
-            	}
-        	}
         }
         thisDragePos = {x:x,y:y}
         if(dragedObj!=null){
         	onDrag(dragedObj,preDragPos,thisDragePos);
-        	drawAll(cxt);
-        }
-        //控制点被拖动
-        if(dragingControlPoint!=null){
-        	onControlPointDrag(dragingControlPoint,preDragPos,thisDragePos);
         	drawAll(cxt);
         }
         preDragPos = thisDragePos;
@@ -146,32 +134,7 @@ function FlRenderer(canvasId){
 	
 	var dragedObj = null;//被拖动的对象
 	var preDragPos = null;//上次拖动的坐标
-	//拖动事件
-	onDrag = function(obj,beforePos,afterPos){
-		console.log("HAhahah");
-		obj.view.x=obj.view.x+afterPos.x-beforePos.x;
-		obj.view.y=obj.view.y+afterPos.y-beforePos.y;
-		if(obj.view.controlPoint){
-			obj.view.controlPoint.x = obj.view.controlPoint.x+afterPos.x-beforePos.x;
-			obj.view.controlPoint.y = obj.view.controlPoint.y+afterPos.y-beforePos.y;
-		}
-	}
-	//控制点被拖动事件
-	onControlPointDrag = function(controlPoint,beforePos,afterPos){
-		controlPoint.x = controlPoint.x + afterPos.x-beforePos.x;
-		controlPoint.y = controlPoint.y + afterPos.y-beforePos.y;
-		//标红
-		for(var i in flowModle.activities){
-			var act = flowModle.activities[i];
-			var view = act.view;
-			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
-					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
-				console.log('actact');
-				redMarked = act;
-			}
-		}
-	}
-	
+
 	//监听鼠标左键按下事件
 	$(c).mousedown(function(){
 		if(event.button == 0){//为0表示左键
@@ -199,6 +162,40 @@ function FlRenderer(canvasId){
 		    redMarked = null;
 		}
 	});
+	
+	/**拖动事件*/
+	function onDrag(obj,beforePos,afterPos){
+		console.log('obj:'+obj);
+		if(obj instanceof BussinessObj){
+			onBusinessObjDrag(obj,beforePos,afterPos);
+		}else if(obj instanceof ControlPoint){
+			onControlPointDrag(obj,beforePos,afterPos);
+		}
+	}
+	/**业务对象被拖动事件*/
+	function onBusinessObjDrag(bizObj,beforePos,afterPos){
+		bizObj.view.x=bizObj.view.x+afterPos.x-beforePos.x;
+		bizObj.view.y=bizObj.view.y+afterPos.y-beforePos.y;
+		if(bizObj.view.controlPoint){
+			bizObj.view.controlPoint.x = bizObj.view.controlPoint.x+afterPos.x-beforePos.x;
+			bizObj.view.controlPoint.y = bizObj.view.controlPoint.y+afterPos.y-beforePos.y;
+		}
+	}
+	/**控制点被拖动事件*/
+	function onControlPointDrag(controlPoint,beforePos,afterPos){
+		controlPoint.x = controlPoint.x + afterPos.x-beforePos.x;
+		controlPoint.y = controlPoint.y + afterPos.y-beforePos.y;
+		//标红
+		for(var i in flowModle.activities){
+			var act = flowModle.activities[i];
+			var view = act.view;
+			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
+					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
+				console.log('actact');
+				redMarked = act;
+			}
+		}
+	}
 	
 	/**
 	 * 鼠标开始拖动事件
@@ -255,15 +252,24 @@ function FlRenderer(canvasId){
 	    	if(!controlPoint)
 	    		continue;
     	    console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-    	    //获取鼠标的当前位置
-    	    var x = event.pageX-this.offsetLeft;
-            var y = event.pageY-this.offsetTop;
     	    if(controlPoint.x-16/2<x && x<controlPoint.x+16/2 
         			&& controlPoint.y-16/2<y && y<controlPoint.y+16/2){
     	    	return controlPoint;
     	    }
 	    }
 	    return null;
+	}
+	
+	/**
+	 * 从流程模型中按activityId选择一个活动。
+	 */
+	function selectActByActId(activityId){
+		for(var i in flowModle.activities){
+			if(flowModle.activities[i].model.activityId == activityId){
+				return flowModle.activities[i];
+			}
+		}
+		return null;
 	}
 	
 	/**绘制整个图像*/
@@ -425,11 +431,3 @@ function resetControlPoint(obj){
 	
 }
 
-function selectActByActId(activityId){
-	for(var i in flowModle.activities){
-		if(flowModle.activities[i].model.activityId == activityId){
-			return flowModle.activities[i];
-		}
-	}
-	return null;
-}
