@@ -102,11 +102,11 @@ function FlRenderer(canvasId){
 		//获取鼠标的坐标（相对于画布的位置）。
 		var x = event.pageX-this.offsetLeft;
         var y = event.pageY-this.offsetTop;
-        console.log("x:"+x+" y:"+y );
+        //console.log("x:"+x+" y:"+y );
         //看看鼠标落在哪个对象上。
         selected = [];
         var obj = selectObj(x,y);
-        if(obj){
+        if(obj && obj instanceof BussinessObj){
         	selected.push(obj);
         }
         drawAll(cxt);
@@ -125,7 +125,7 @@ function FlRenderer(canvasId){
         	preDragPos = {x:x,y:y};
         }
         thisDragePos = {x:x,y:y}
-        if(dragedObj!=null){
+        if(dragedObj){
         	onDrag(dragedObj,preDragPos,thisDragePos);
         	drawAll(cxt);
         }
@@ -144,6 +144,9 @@ function FlRenderer(canvasId){
 		    //看看有没有controlPoint被选中
 			var obj = selectObj(cursorPos.x,cursorPos.y);
 			if(obj){
+				console.log("onStartDrag obj:"+obj);
+				dragedObj = obj;
+				preDragPos = getCursorPos(event,c);
 				onStartDrag(obj);
 			}
 		}
@@ -165,7 +168,8 @@ function FlRenderer(canvasId){
 	
 	/**拖动事件*/
 	function onDrag(obj,beforePos,afterPos){
-		console.log('obj:'+obj);
+		console.log('obj instanceof BussinessObj:'+obj instanceof BussinessObj);
+		console.log('obj instanceof ControlPoint:'+obj instanceof ControlPoint);
 		if(obj instanceof BussinessObj){
 			onBusinessObjDrag(obj,beforePos,afterPos);
 		}else if(obj instanceof ControlPoint){
@@ -201,9 +205,7 @@ function FlRenderer(canvasId){
 	 * 鼠标开始拖动事件
 	 */
 	function onStartDrag(obj){
-		console.log("onStartDrag obj:"+obj);
-		dragedObj = obj;
-		preDragPos = getCursorPos(event,c);
+		//do nothing.
 	}
 	/**控制点拖动结束事件*/
 	function onEndDrag(obj){
@@ -277,13 +279,78 @@ function FlRenderer(canvasId){
 		cxt.clearRect(0,0,c.width,c.height); 
 		console.log("flowModle.activities:"+flowModle.activities);
 		for(var i in flowModle.activities){
-			drawActivity(cxt,flowModle.activities[i]);
+			drawBizLine(cxt,flowModle.activities[i]);
 		}
 		for(var i in flowModle.operations){
-			drawOperation(cxt,flowModle.operations[i]);
+			drawBizLine(cxt,flowModle.operations[i]);
+		}
+		for(var i in flowModle.activities){
+			drawBizObj(cxt,flowModle.activities[i]);
+		}
+		for(var i in flowModle.operations){
+			drawBizObj(cxt,flowModle.operations[i]);
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
+	}
+	
+	/**
+	 * 绘制业务对象中的线条
+	 */
+	function drawBizLine(cxt,obj){
+		if(obj instanceof Act){
+			drawActivityLine(cxt,obj);
+		}else if(obj instanceof Oper){
+			drawOperationLine(cxt,obj);
+		}
+	}
+	
+	/**
+	 * 绘制一个活动的线条
+	 */
+	function drawActivityLine(cxt,act){
+		//do nothing.
+	}
+	
+	/**
+	 * 绘制结果线中的线条
+	 */
+	function drawOperationLine(cxt,oper){
+		var view = oper.view;
+		if(oper.model.activityId){//如果关联了一个活动
+			console.log("oper.model.activityId:"+oper.model.activityId);
+			//查找对应的活动
+			var act = selectActByActId(oper.model.activityId);
+			//绘制从结果到活动的线条。
+			if(act){
+			    //act.view
+				cxt.beginPath();
+				cxt.lineWidth=2;
+				cxt.strokeStyle='#48f';
+				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
+				cxt.stroke();
+			}
+		}else if(oper.view.controlPoint){//存在控制点
+			 //绘制连线到控制点
+			 cxt.beginPath();
+			 cxt.lineWidth=2;
+			 cxt.strokeStyle='#48f';
+			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+			 cxt.lineTo(oper.view.controlPoint.x,oper.view.controlPoint.y);
+			 cxt.stroke();
+		}
+	}
+	
+	/**
+	 * 绘制一个业务对象
+	 */
+	function drawBizObj(cxt,obj){
+		if(obj instanceof Act){
+			drawActivity(cxt,obj);
+		}else if(obj instanceof Oper){
+			drawOperation(cxt,obj);
+		}
 	}
 	
 	/**
@@ -309,41 +376,12 @@ function FlRenderer(canvasId){
 		 console.log("oper.model.activityId:"+oper.model.activityId);
 		 if(oper.model.activityId){
 			 console.log("oper.model.activityId:"+oper.model.activityId);
-			 //TODO 查找对应的活动
-			 var act = selectActByActId(oper.model.activityId);
-			 //TODO 绘制从结果到活动的线条。
-			 if(act!=null){
-				 //act.view
-				 cxt.beginPath();
-				 cxt.lineWidth=2;
-				 cxt.strokeStyle='#48f';
-				 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-				 cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
-				 cxt.stroke();
-			 }
+			 //do nothing.
 		 }else if(oper.view.controlPoint){//存在控制点
 			 //在控制点处绘制一个鼠标。
 			 var mouseLeft = oper.view.controlPoint.x - 16/2;
 			 var mouseTop = oper.view.controlPoint.y - 16/2;
 			 cxt.drawImage(mouseImg,mouseLeft,mouseTop);
-			 //绘制连线
-			 cxt.beginPath();
-			 cxt.lineWidth=2;
-			 cxt.strokeStyle='#48f';
-			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-			 cxt.lineTo(oper.view.controlPoint.x,oper.view.controlPoint.y);
-			 cxt.stroke();
-		 }else{
-			 //在上方(30px处)绘制一个鼠标
-			 var mouseLeft = oper.view.x +Math.floor((oper.view.width-16)/2);
-			 cxt.drawImage(mouseImg,mouseLeft,oper.view.y-30);
-			 //绘制连线
-			 cxt.beginPath();
-			 cxt.lineWidth=2;
-			 cxt.strokeStyle='#48f';
-			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-			 cxt.lineTo(view.x+view.width/2,view.y+view.height/2-30);
-			 cxt.stroke();
 		 }
 		 cxt.font = "12px songti";
 		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2);
@@ -422,8 +460,9 @@ function getCursorPos(event,c){
 
 function resetControlPoint(obj){
 	if(obj instanceof Oper){
-		var left = obj.view.x +Math.floor((obj.view.width)/2);
-		controlPoint = {x:left,y:obj.view.y-30+16/2};// 16/2是鼠标图形的一半。
+		var x = obj.view.x +Math.floor((obj.view.width)/2);
+		var y = obj.view.y-30+16/2;// 16/2是鼠标图形的一半。
+		controlPoint = new ControlPoint(x,y);
 		controlPoint.parent = obj;//父对象就是其业务对象。
 		controlPoint.parentType = 'result';
 		obj.view.controlPoint = controlPoint;
