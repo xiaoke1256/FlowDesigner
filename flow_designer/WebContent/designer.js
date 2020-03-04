@@ -1,3 +1,6 @@
+/**
+ * 流程图编辑器
+ */
 /*
  * 定义业务对象
  */
@@ -89,6 +92,8 @@ function FlRenderer(canvasId){
 	var redMarked = null;//标红的对象
 	 
 	var c = null;//画布元素.
+	
+	var maxDisplayindex = 0 ;//displayindex从0开始编号
 	
 	c = document.getElementById(canvasId);
 	cxt = c.getContext("2d"); 
@@ -419,26 +424,35 @@ function FlRenderer(canvasId){
 		/**加载一个模型*/
 		loadModel:function(modelJson){
 			for(var i in modelJson.activities){
-				var act = modelJson.activities[i];
-				flowModle.activities.push(new Act(act));
+				var act = new Act(modelJson.activities[i]);
+				flowModle.activities.push(act);
+				if(act.view.displayindex){
+					maxDisplayindex = Math.max(maxDisplayindex,act.view.displayindex);
+				}
 				console.log('加载了一个Act');
 			}
 			for(var i in modelJson.operations){
-				var oper = modelJson.operations[i];
-				flowModle.operations.push(new Oper(oper));
+				var oper = new Oper(modelJson.operations[i]);
+				flowModle.operations.push(oper);
+				if(oper.view.displayindex){
+					maxDisplayindex = Math.max(maxDisplayindex,oper.view.displayindex);
+				}
 			}
 			//加载完后渲染一下,放到另外一个线程去渲染，以保证图像已加载完成。
-			//drawAll(cxt)
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
 		},
 		/**向模型中增加一个Act*/
 		addAct:function(actJson){
-			flowModle.activities.push(new Act(actJson));
+			var act = new Act(actJson);
+			act.view.displayindex=++maxDisplayindex;
+			flowModle.activities.push(act);
 			drawAll(cxt);
 		},
 		/**向模型中增加一个Oper*/
 		addOper:function(operJson){
-			flowModle.operations.push(new Oper(operJson));
+			var oper = new Oper(operJson);
+			oper.view.displayindex=++maxDisplayindex;
+			flowModle.operations.push(oper);
 			drawAll(cxt);
 		}
 	};
