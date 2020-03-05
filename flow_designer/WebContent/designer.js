@@ -35,10 +35,11 @@ Act.prototype = new BussinessObj();
  */
 var Oper = function(obj){
 	BussinessObj.call(this,obj);
-	//在业务对象的上方增加一个控制点。(控制点以图形的中心为准)
-	var x = this.view.x +Math.floor((this.view.width)/2);
-	var y = this.view.y-30+16/2;// 16/2是鼠标图形的一半。
-	controlPoint = new ControlPoint(x,y);
+	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
+	var x = this.view.x +Math.floor((icons['oper'].width)/2);
+	var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
+	var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+	var controlPoint = new ControlPoint(x,y);
 	controlPoint.parent = this;//父对象就是其业务对象。
 	controlPoint.parentType = 'result';
 	this.view.controlPoint = controlPoint;
@@ -65,18 +66,36 @@ var ControlPoint = function(x,y){
 ControlPoint.prototype = new Point();
 
 /**
+ * 绘图过程中要使用到的图片(图标)
+ */
+var icons = (function(){
+	//活动图片.
+	var actImg = new Image();
+	actImg.src='imgs/design/anyone.gif';
+	actImg.width = 28;//这里未必是图片真实的宽度，因图片上有可能有空白的边。
+	actImg.height = 36;//这里未必是图片真实的高度，因图片上有可能有空白的边。
+	//图片结果图片
+	var operImg = new Image();
+	operImg.src='imgs/design/Blue Ball16.png';
+	operImg.width = 16;
+	operImg.height = 16;
+	//控制点图片
+	var mouseImg = new Image();
+	mouseImg.src='imgs/design/mouse_add.png';
+	mouseImg.width = 16;
+	mouseImg.height = 16;
+	return {
+		"act":actImg,
+		"oper":operImg,
+		"mouse":mouseImg
+	}
+})();
+
+/**
  * 图形绘制器
  * @returns
  */
 function FlRenderer(canvasId){
-	
-	//绘图过程中要使用到的图片
-	var actImg = new Image();
-	actImg.src='imgs/design/anyone.gif';
-	var operImg = new Image();
-	operImg.src='imgs/design/Blue Ball16.png';
-	var mouseImg = new Image();
-	mouseImg.src='imgs/design/mouse_add.png';
 	
 	/**
 	 * 模型
@@ -259,12 +278,14 @@ function FlRenderer(canvasId){
         }
         //看看有没有controlPoint被选中
 	    for(var i in flowModle.operations){
-	    	controlPoint = flowModle.operations[i].view.controlPoint;
+	    	var controlPoint = flowModle.operations[i].view.controlPoint;
 	    	if(!controlPoint)
 	    		continue;
     	    console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-    	    if(controlPoint.x-16/2<x && x<controlPoint.x+16/2 
-        			&& controlPoint.y-16/2<y && y<controlPoint.y+16/2){
+    	    var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
     	    	return controlPoint;
     	    }
 	    }
@@ -370,17 +391,17 @@ function FlRenderer(canvasId){
 		//绘制活动的名称
 		if(act.model.displayName){
 			cxt.font = "bold 14px songti";
-			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2
-			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);
+			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2  //14是字体的宽度。
+			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);//文字写在图像上方8个像素点处。
 		}
-		cxt.drawImage(actImg,act.view.x,act.view.y);
+		cxt.drawImage(icons['act'],act.view.x,act.view.y);
 	}
 	/**
 	 * 绘制一个结果线
 	 */
 	function drawOperation(cxt,oper){
 		 var view = oper.view;
-		 cxt.drawImage(operImg,oper.view.x,oper.view.y);
+		 cxt.drawImage(icons['oper'],oper.view.x,oper.view.y);
 		 //如果关联了一个活动
 		 console.log("oper.model.activityId:"+oper.model.activityId);
 		 if(oper.model.activityId){
@@ -388,13 +409,13 @@ function FlRenderer(canvasId){
 			 //do nothing.
 		 }else if(oper.view.controlPoint){//存在控制点
 			 //在控制点处绘制一个鼠标。
-			 var mouseLeft = oper.view.controlPoint.x - 16/2;
-			 var mouseTop = oper.view.controlPoint.y - 16/2;
-			 cxt.drawImage(mouseImg,mouseLeft,mouseTop);
+			 var mouseLeft = oper.view.controlPoint.x - Math.floor(icons['mouse'].width/2);
+			 var mouseTop = oper.view.controlPoint.y - Math.floor(icons['mouse'].height/2);
+			 cxt.drawImage(icons['mouse'],mouseLeft,mouseTop);
 		 }
 		 cxt.font = "12px songti";
-		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2);
-	     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);
+		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2); //12是字体的宽度
+	     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);//12是字体的高度
 	 }
 	/**
 	 * 绘制选中的元素
@@ -429,18 +450,28 @@ function FlRenderer(canvasId){
 		loadModel:function(modelJson){
 			for(var i in modelJson.activities){
 				var act = new Act(modelJson.activities[i]);
-				flowModle.activities.push(act);
 				if(act.view.displayindex){
 					maxDisplayindex = Math.max(maxDisplayindex,act.view.displayindex);
+				}else{
+					act.view.displayindex = ++maxDisplayindex;
 				}
+				//设置宽度和高度.
+				act.view.width = icons['act'].width;
+				act.view.height = icons['act'].height;
+				flowModle.activities.push(act);
 				console.log('加载了一个Act');
 			}
 			for(var i in modelJson.operations){
 				var oper = new Oper(modelJson.operations[i]);
-				flowModle.operations.push(oper);
 				if(oper.view.displayindex){
 					maxDisplayindex = Math.max(maxDisplayindex,oper.view.displayindex);
+				}else{
+					oper.view.displayindex = ++maxDisplayindex;
 				}
+				//设置宽度和高度.
+				oper.view.width = icons['oper'].width;
+				oper.view.height = icons['oper'].height;
+				flowModle.operations.push(oper);
 			}
 			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
@@ -449,6 +480,9 @@ function FlRenderer(canvasId){
 		addAct:function(actJson){
 			var act = new Act(actJson);
 			act.view.displayindex=++maxDisplayindex;
+			//设置宽度和高度.
+			act.view.width = icons['act'].width;
+			act.view.height = icons['act'].height;
 			flowModle.activities.push(act);
 			drawAll(cxt);
 		},
@@ -456,6 +490,9 @@ function FlRenderer(canvasId){
 		addOper:function(operJson){
 			var oper = new Oper(operJson);
 			oper.view.displayindex=++maxDisplayindex;
+			//设置宽度和高度.
+			oper.view.width = icons['oper'].width;
+			oper.view.height = icons['oper'].height;
 			flowModle.operations.push(oper);
 			drawAll(cxt);
 		}
@@ -479,11 +516,10 @@ function getCursorPos(event,c){
 function resetControlPoint(obj){
 	if(obj instanceof Oper){
 		var x = obj.view.x +Math.floor((obj.view.width)/2);
-		var y = obj.view.y-30+16/2;// 16/2是鼠标图形的一半。
-		controlPoint = new ControlPoint(x,y);
-		controlPoint.parent = obj;//父对象就是其业务对象。
-		controlPoint.parentType = 'result';
-		obj.view.controlPoint = controlPoint;
+		var y = obj.view.y-30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
+		var controlPoint = obj.view.controlPoint;
+		controlPoint.x = x;
+		controlPoint.y = y;
 	}
 	
 }
