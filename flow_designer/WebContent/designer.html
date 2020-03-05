@@ -37,10 +37,8 @@ $(function(){
 	
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
-		//获取画布长度和宽度
-		var cwidth = $('#designer').attr('width').replace('px','');
-		var cheight = $('#designer').attr('height').replace('px','');
-		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
+		//获取画布的中心点坐标
+		var center = flRenderer.getCenter();
 		//新创建一个业务对象
 		var act = {model:{
 			activityId:'',
@@ -52,18 +50,16 @@ $(function(){
 			displayindex:168,
 			height:36,
 			width:28,
-			x:Math.floor((cwidth-26)/2),
-			y:Math.floor((cheight-36)/2)
+			x:(center.x-26/2),
+			y:(center.y-36/2)
 		  }
 		};
 		flRenderer.addAct(act);
 	});
 	
 	$('#tool2Btn').click(function(){
-		//获取画布长度和宽度
-		var cwidth = $('#designer').attr('width').replace('px','');
-		var cheight = $('#designer').attr('height').replace('px','');
-		console.log("cwidth:"+cwidth+"  cheight:"+cheight);
+		//获取画布的中心点坐标
+		var center = flRenderer.getCenter();
 		//新创建一个业务对象
 		var operation = {model:{
 			activityId:'',
@@ -77,8 +73,8 @@ $(function(){
 			displayindex:169,
 			height:16,
 			width:16,
-			x:Math.floor((cwidth-16)/2),
-			y:Math.floor((cheight-16)/2)
+			x:(center.x-16/2),
+			y:(center.y-16/2)
 		  }
 		};
 		

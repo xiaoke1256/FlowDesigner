@@ -193,8 +193,6 @@ function FlRenderer(canvasId){
 	
 	/**拖动事件*/
 	function onDrag(obj,beforePos,afterPos){
-		console.log('obj instanceof BussinessObj:'+obj instanceof BussinessObj);
-		console.log('obj instanceof ControlPoint:'+obj instanceof ControlPoint);
 		if(obj instanceof BussinessObj){
 			onBusinessObjDrag(obj,beforePos,afterPos);
 		}else if(obj instanceof ControlPoint){
@@ -495,6 +493,14 @@ function FlRenderer(canvasId){
 			oper.view.height = icons['oper'].height;
 			flowModle.operations.push(oper);
 			drawAll(cxt);
+		},
+		/**获取画布中心点的坐标*/
+		getCenter:function(){
+			var cwidth = $(c).attr('width').replace('px','');
+			var cheight = $(c).attr('height').replace('px','');
+			var x = Math.floor((cwidth)/2);
+			var y = Math.floor((cheight)/2);
+			return {x:x,y:y};
 		}
 	};
 }
