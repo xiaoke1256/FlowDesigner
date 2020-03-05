@@ -47,6 +47,30 @@ var Oper = function(obj){
 Oper.prototype = new BussinessObj();
 
 /**
+ * 子类，后续线
+ */
+var Subsequent = function(obj){
+	BussinessObj.call(this,obj);
+	this.view.controlPoints = [];
+	//在业务对象的上方和下方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
+	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
+	var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
+	var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+	var controlPoint = new ControlPoint(x,y);
+	controlPoint.parent = this;//父对象就是其业务对象。
+	controlPoint.parentType = 'result';
+	this.view.controlPoints.push(controlPoint);
+	
+	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
+	var y = this.view.y-30-Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+	var controlPoint = new ControlPoint(x,y);
+	controlPoint.parent = this;//父对象就是其业务对象。
+	controlPoint.parentType = 'result';
+	this.view.controlPoints.push(controlPoint);
+}
+Subsequent.prototype = new BussinessObj();
+
+/**
  * 一个点
  */
 var Point = function(x,y){
@@ -84,11 +108,18 @@ var icons = (function(){
 	mouseImg.src='imgs/design/mouse_add.png';
 	mouseImg.width = 16;
 	mouseImg.height = 16;
+	//后续线图片（没有图片，是直接在画布上画的圆圈）
+	var subseqImg = new Image();
+	mouseImg.width = 16;
+	mouseImg.height = 16;
 	return {
 		"act":actImg,
 		"oper":operImg,
-		"mouse":mouseImg
+		"mouse":mouseImg,
+		"subseq":subseqImg
 	}
+	
+	
 })();
 
 /**
@@ -101,8 +132,9 @@ function FlRenderer(canvasId){
 	 * 模型
 	 */
 	var flowModle = {
-		  activities:[],
-		  operations:[]
+		  activities:[],/*活动*/
+		  operations:[],/*操作结果*/
+		  subsequents:[] /*操作结果*/
 	};
 	
 	/*
@@ -270,6 +302,15 @@ function FlRenderer(canvasId){
         		return flowModle.activities[i];
         	}
         }
+        for(var i in flowModle.subsequents){
+        	view = flowModle.subsequents[i].view;
+        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	if(view.x<x && x<view.x+view.width 
+        			&& view.y<y && y<view.y+view.height){
+        		console.log("selected!"+selected.length);
+        		return flowModle.subsequents[i];
+        	}
+        }
         for(var i in flowModle.operations){
         	view = flowModle.operations[i].view;
         	console.log("view.x:"+view.x+" view.y:"+view.y );
@@ -291,6 +332,22 @@ function FlRenderer(canvasId){
         			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
     	    	return controlPoint;
     	    }
+	    }
+	    for(var i in flowModle.subsequents){
+	    	var controlPoints = flowModle.subsequents[i].view.controlPoints;
+	    	if(!controlPoints)
+	    		continue;
+    	    for(var j in controlPoints){
+    	    	var controlPoint = controlPoints[j];
+    	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+    	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+        	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+        	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+            			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
+        	    	return controlPoint;
+        	    }
+    	    }
+    	    
 	    }
 	    return null;
 	}
