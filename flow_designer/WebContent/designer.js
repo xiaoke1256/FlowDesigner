@@ -1,5 +1,6 @@
 /**
  * 流程图编辑器
+ * 本js程序依赖于jQuery.
  */
 /*
  * 定义业务对象
@@ -202,8 +203,11 @@ function FlRenderer(canvasId){
 					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
 				console.log('actact');
 				redMarked = act;
+				return;
 			}
 		}
+		//没有拖动到任何对象内则取消标红
+		redMarked = null;
 	}
 	
 	/**
@@ -438,7 +442,7 @@ function FlRenderer(canvasId){
 					maxDisplayindex = Math.max(maxDisplayindex,oper.view.displayindex);
 				}
 			}
-			//加载完后渲染一下,放到另外一个线程去渲染，以保证图像已加载完成。
+			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
 		},
 		/**向模型中增加一个Act*/
