@@ -244,8 +244,13 @@ function FlRenderer(canvasId){
 			}
 			if(obj.parent instanceof Oper){
 				var target = redMarked;
+				if(!target.model.activityId){
+					showErrMsg('请先填写“活动代码”。');
+					resetControlPoint(obj.parent);
+				    return;
+				}
 				obj.parent.model.activityId = target.model.activityId;
-				obj.parent.view.controlPoint = null;
+			    obj.parent.view.controlPoint = null;
 			}
 			
 		}
@@ -517,8 +522,11 @@ function getCursorPos(event,c){
     return {x:x,y:y};
 }
 
-
-
+/**
+ * 把控制点调整到默认位置。
+ * @param obj
+ * @returns
+ */
 function resetControlPoint(obj){
 	if(obj instanceof Oper){
 		var x = obj.view.x +Math.floor((obj.view.width)/2);
@@ -527,6 +535,13 @@ function resetControlPoint(obj){
 		controlPoint.x = x;
 		controlPoint.y = y;
 	}
-	
 }
 
+/**
+ * 显示错误信息给用户
+ * 如果不满意显示效果可以另写一个函数把它覆盖掉。
+ * @returns
+ */
+function showErrMsg(msg){
+	alert(msg);
+}
