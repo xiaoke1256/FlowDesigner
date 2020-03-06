@@ -288,6 +288,45 @@ function FlRenderer(canvasId){
 				obj.parent.model.activityId = target.model.activityId;
 			    obj.parent.view.controlPoint = null;
 			}
+			if(obj.parent instanceof Subsequent){
+				var target = redMarked;
+				if (target instanceof Act){
+					if(!target.model.activityId){
+						showErrMsg('请先填写“活动代码”。');
+						resetControlPoint(obj.parent,obj);
+					    return;
+					}
+					if(obj.parent.model.activityId){
+						showErrMsg('后续线应当一头连接活动，一头连接结果。');
+						resetControlPoint(obj.parent,obj);
+					    return;
+					}
+					obj.parent.model.activityId = target.model.activityId;
+					if(obj.parent.view.controlPoint===obj){
+						obj.parent.view.controlPoint = null;
+					}else if(obj.parent.view.controlPoint1===obj){
+						obj.parent.view.controlPoint1 = null;
+					}
+				}
+				if (target instanceof Oper){
+					if(!target.model.operationId){
+						showErrMsg('请先填写“结果代码”。');
+						resetControlPoint(obj.parent,obj);
+					    return;
+					}
+					if(obj.parent.model.operationId){
+						showErrMsg('后续线应当一头连接活动，一头连接结果。');
+						resetControlPoint(obj.parent,obj);
+					    return;
+					}
+					obj.parent.model.operationId = target.model.operationId;
+					if(obj.parent.view.controlPoint===obj){
+						obj.parent.view.controlPoint = null;
+					}else if(obj.parent.view.controlPoint1===obj){
+						obj.parent.view.controlPoint1 = null;
+					}
+				}
+			}
 			
 		}
 		
@@ -339,20 +378,24 @@ function FlRenderer(canvasId){
 	    }
 	    for(var i in flowModle.subsequents){
 	    	var controlPoint = flowModle.subsequents[i].view.controlPoint;
-	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
-    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
-    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
-        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
-    	    	return controlPoint;
-    	    }
+	    	if (controlPoint){
+		    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+		    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+	    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+	    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+	        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
+	    	    	return controlPoint;
+	    	    }
+	    	}
     	    var controlPoint = flowModle.subsequents[i].view.controlPoint1;
-	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
-    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
-    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
-        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
-    	    	return controlPoint;
+    	    if (controlPoint){
+		    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+		    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+	    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+	    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+	        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
+	    	    	return controlPoint;
+	    	    }
     	    }
 	    }
 	    return null;
@@ -458,7 +501,7 @@ function FlRenderer(canvasId){
 			if(act){
 			    //act.view
 				cxt.beginPath();
-				cxt.lineWidth=1;
+				cxt.lineWidth=0.5;
 				cxt.strokeStyle='black';
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
 				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
@@ -681,14 +724,22 @@ function getCursorPos(event,c){
 
 /**
  * 把控制点调整到默认位置。
- * @param obj
+ * @param obj 业务对象
+ * @param thisControlPoint 本控制点。
  * @returns
  */
-function resetControlPoint(obj){
-	if(obj instanceof Oper){
+function resetControlPoint(obj,thisControlPoint){
+	if(!thisControlPoint && obj.view.controlPoint || thisControlPoint===obj.view.controlPoint){
+		var controlPoint = obj.view.controlPoint;
 		var x = obj.view.x +Math.floor((obj.view.width)/2);
 		var y = obj.view.y-30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
-		var controlPoint = obj.view.controlPoint;
+		controlPoint.x = x;
+		controlPoint.y = y;
+	}
+	if(!thisControlPoint && obj.view.controlPoint1 || thisControlPoint===obj.view.controlPoint1){
+		var controlPoint = obj.view.controlPoint1;
+		var x = obj.view.x +Math.floor((obj.view.width)/2);
+		var y = obj.view.y+30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
 		controlPoint.x = x;
 		controlPoint.y = y;
 	}
