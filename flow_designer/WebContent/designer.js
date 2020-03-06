@@ -51,22 +51,22 @@ Oper.prototype = new BussinessObj();
  */
 var Subsequent = function(obj){
 	BussinessObj.call(this,obj);
-	this.view.controlPoints = [];
-	//在业务对象的上方和下方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
+	//有两个控制点，一个是controlPoint，一个是controlPoint1
+	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
 	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
 	var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
 	var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
 	var controlPoint = new ControlPoint(x,y);
 	controlPoint.parent = this;//父对象就是其业务对象。
 	controlPoint.parentType = 'result';
-	this.view.controlPoints.push(controlPoint);
-	
+	this.view.controlPoint=controlPoint;
+	//在业务对象的下方（30个像素处）增加一个控制点。
 	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
-	var y = this.view.y-30-Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+	var y = this.view.y+30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
 	var controlPoint = new ControlPoint(x,y);
 	controlPoint.parent = this;//父对象就是其业务对象。
 	controlPoint.parentType = 'result';
-	this.view.controlPoints.push(controlPoint);
+	this.view.controlPoint1=controlPoint;
 }
 Subsequent.prototype = new BussinessObj();
 
@@ -110,8 +110,8 @@ var icons = (function(){
 	mouseImg.height = 16;
 	//后续线图片（没有图片，是直接在画布上画的圆圈）
 	var subseqImg = new Image();
-	mouseImg.width = 16;
-	mouseImg.height = 16;
+	subseqImg.width = 16;
+	subseqImg.height = 16;
 	return {
 		"act":actImg,
 		"oper":operImg,
@@ -239,6 +239,10 @@ function FlRenderer(canvasId){
 			bizObj.view.controlPoint.x = bizObj.view.controlPoint.x+afterPos.x-beforePos.x;
 			bizObj.view.controlPoint.y = bizObj.view.controlPoint.y+afterPos.y-beforePos.y;
 		}
+		if(bizObj.view.controlPoint1){
+			bizObj.view.controlPoint1.x = bizObj.view.controlPoint1.x+afterPos.x-beforePos.x;
+			bizObj.view.controlPoint1.y = bizObj.view.controlPoint1.y+afterPos.y-beforePos.y;
+		}
 	}
 	/**控制点被拖动事件*/
 	function onControlPointDrag(controlPoint,beforePos,afterPos){
@@ -334,20 +338,22 @@ function FlRenderer(canvasId){
     	    }
 	    }
 	    for(var i in flowModle.subsequents){
-	    	var controlPoints = flowModle.subsequents[i].view.controlPoints;
-	    	if(!controlPoints)
-	    		continue;
-    	    for(var j in controlPoints){
-    	    	var controlPoint = controlPoints[j];
-    	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
-    	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
-        	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
-        	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
-            			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
-        	    	return controlPoint;
-        	    }
+	    	var controlPoint = flowModle.subsequents[i].view.controlPoint;
+	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
+    	    	return controlPoint;
     	    }
-    	    
+    	    var controlPoint = flowModle.subsequents[i].view.controlPoint1;
+	    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+	    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
+    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
+    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
+        			&& controlPoint.y-halfHeight<y && y<controlPoint.y+halfHeight){
+    	    	return controlPoint;
+    	    }
 	    }
 	    return null;
 	}
@@ -374,11 +380,17 @@ function FlRenderer(canvasId){
 		for(var i in flowModle.operations){
 			drawBizLine(cxt,flowModle.operations[i]);
 		}
+		for(var i in flowModle.subsequents){
+			drawBizLine(cxt,flowModle.subsequents[i]);
+		}
 		for(var i in flowModle.activities){
 			drawBizObj(cxt,flowModle.activities[i]);
 		}
 		for(var i in flowModle.operations){
 			drawBizObj(cxt,flowModle.operations[i]);
+		}
+		for(var i in flowModle.subsequents){
+			drawBizObj(cxt,flowModle.subsequents[i]);
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
@@ -392,6 +404,8 @@ function FlRenderer(canvasId){
 			drawActivityLine(cxt,obj);
 		}else if(obj instanceof Oper){
 			drawOperationLine(cxt,obj);
+		}else if(obj instanceof Subsequent){
+			drawSubsequentLine(cxt,obj);
 		}
 	}
 	
@@ -431,6 +445,47 @@ function FlRenderer(canvasId){
 			 cxt.stroke();
 		}
 	}
+	/**
+	 * 绘制结果线中的线条
+	 */
+	function drawSubsequentLine(cxt,subseq){
+		var view = subseq.view;
+		if(subseq.model.activityId){//如果关联了一个活动
+			console.log("oper.model.activityId:"+subseq.model.activityId);
+			//查找对应的活动
+			var act = selectActByActId(subseq.model.activityId);
+			//绘制从结果到活动的线条。
+			if(act){
+			    //act.view
+				cxt.beginPath();
+				cxt.lineWidth=1;
+				cxt.strokeStyle='black';
+				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
+				cxt.stroke();
+			}
+		}
+		if(subseq.view.controlPoint){//存在控制点
+			var controlPoint = subseq.view.controlPoint;
+			//绘制连线到控制点
+			cxt.beginPath();
+			cxt.lineWidth=0.5;
+			cxt.strokeStyle='black';
+			cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+			cxt.lineTo(controlPoint.x,controlPoint.y);
+			cxt.stroke();
+		}
+		if(subseq.view.controlPoint1){//存在控制点
+			var controlPoint = subseq.view.controlPoint1;
+			//绘制连线到控制点
+			cxt.beginPath();
+			cxt.lineWidth=0.5;
+			cxt.strokeStyle='black';
+			cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+			cxt.lineTo(controlPoint.x,controlPoint.y);
+			cxt.stroke();
+		}
+	}
 	
 	/**
 	 * 绘制一个业务对象
@@ -440,6 +495,8 @@ function FlRenderer(canvasId){
 			drawActivity(cxt,obj);
 		}else if(obj instanceof Oper){
 			drawOperation(cxt,obj);
+		}else if(obj instanceof Subsequent){
+			drawSubsequent(cxt,obj);
 		}
 	}
 	
@@ -477,6 +534,41 @@ function FlRenderer(canvasId){
 		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2); //12是字体的宽度
 	     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);//12是字体的高度
 	 }
+	/**
+	 * 绘制一个后续线.
+	 */
+	function drawSubsequent(ctx,subseq){
+		//后续线的中心点上绘制一个圆圈
+		//先计算圆形的中心
+		var x = subseq.view.x + Math.floor(subseq.view.width/2);
+		var y = subseq.view.y + Math.floor(subseq.view.height/2);
+		//半径是宽度的1/4
+		var r = Math.floor(subseq.view.width/4);
+		console.log('arc: x:'+x+" y:"+y+ " r:"+r);
+		//开始绘制
+		ctx.beginPath();
+	    //设置弧线的颜色为灰色
+		ctx.lineWidth="0.5";
+	    ctx.strokeStyle = "black";
+		ctx.arc(x, y, r, 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.stroke();
+		//绘制控制点
+		var controlPoint = subseq.view.controlPoint;
+		if(controlPoint){
+			 var mouseLeft = controlPoint.x - Math.floor(icons['mouse'].width/2);
+			 var mouseTop = controlPoint.y - Math.floor(icons['mouse'].height/2);
+			 cxt.drawImage(icons['mouse'],mouseLeft,mouseTop);
+		}
+		var controlPoint = subseq.view.controlPoint1;
+		if(controlPoint){
+			 var mouseLeft = controlPoint.x - Math.floor(icons['mouse'].width/2);
+			 var mouseTop = controlPoint.y - Math.floor(icons['mouse'].height/2);
+			 cxt.drawImage(icons['mouse'],mouseLeft,mouseTop);
+		}
+	}
 	/**
 	 * 绘制选中的元素
 	 */
@@ -554,6 +646,14 @@ function FlRenderer(canvasId){
 			oper.view.width = icons['oper'].width;
 			oper.view.height = icons['oper'].height;
 			flowModle.operations.push(oper);
+			drawAll(cxt);
+		},
+		addSubseq:function(subseqJson){
+			var subseq = new Subsequent(subseqJson);
+			//设置宽度和高度.
+			subseq.view.width = icons['subseq'].width;
+			subseq.view.height = icons['subseq'].height;
+			flowModle.subsequents.push(subseq);
 			drawAll(cxt);
 		},
 		/**获取画布中心点的坐标*/

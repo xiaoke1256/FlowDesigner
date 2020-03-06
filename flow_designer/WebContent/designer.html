@@ -80,6 +80,22 @@ $(function(){
 		
 		flRenderer.addOper(operation);
 	});
+	$('#toolNodeBtn').click(function(){
+		//获取画布的中心点坐标
+		var center = flRenderer.getCenter();
+		//新创建一个业务对象
+		var subseq = {model:{
+			activityId:'',
+			operationId:''
+		  },
+		  view:{
+			x:(center.x-16/2),
+			y:(center.y-16/2)
+		  }
+		};
+		
+		flRenderer.addSubseq(subseq);
+	});
 });
 </script>
 </head>
