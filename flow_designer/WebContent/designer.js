@@ -683,6 +683,10 @@ function FlRenderer(canvasId){
 	return {
 		/**加载一个模型*/
 		loadModel:function(modelJson){
+			//先清空模型
+			flowModle.activities = [];
+			flowModle.operations = [];
+			flowModle.subsequents = [];
 			for(var i in modelJson.activities){
 				var act = new Act(modelJson.activities[i]);
 				if(act.view.displayindex){
@@ -707,6 +711,18 @@ function FlRenderer(canvasId){
 				oper.view.width = icons['oper'].width;
 				oper.view.height = icons['oper'].height;
 				flowModle.operations.push(oper);
+			}
+			for(var i in modelJson.subsequents){
+				var subseq = new Subsequent(modelJson.subsequents[i]);
+				if(subseq.view.displayindex){
+					maxDisplayindex = Math.max(maxDisplayindex,oper.view.displayindex);
+				}else{
+					subseq.view.displayindex = ++maxDisplayindex;
+				}
+				//设置宽度和高度.
+				subseq.view.width = icons['subseq'].width;
+				subseq.view.height = icons['subseq'].height;
+				flowModle.subsequents.push(subseq);
 			}
 			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
