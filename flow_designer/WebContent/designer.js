@@ -437,7 +437,7 @@ function FlRenderer(canvasId){
 	/**绘制整个图像*/
 	function drawAll(cxt){
 		cxt.clearRect(0,0,c.width,c.height); 
-		console.log("flowModle.activities:"+flowModle.activities);
+		drawBackground(cxt,0,0,c.width,c.height);
 		for(var i in flowModle.activities){
 			drawBizLine(cxt,flowModle.activities[i]);
 		}
@@ -458,6 +458,47 @@ function FlRenderer(canvasId){
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
+	}
+	
+	/**
+	 * 绘制背景
+	 */
+	function drawBackground(ctx,x1,y1,x2,y2){
+		var lg = ctx.createLinearGradient(0,y1,0,y2);//创建一个渐变色
+		lg.addColorStop(0,"white");
+		lg.addColorStop(1,"#ddd");
+		ctx.fillStyle = lg;
+		ctx.beginPath();
+		ctx.rect(x1,y1,x2-x1,y2-y1);
+		ctx.fill();
+		//每500个像素画一道横线
+		var y=0;
+		y+=500
+		while(y<=y2){
+			if(y<y1)
+				continue;
+			ctx.beginPath();
+			cxt.lineWidth=0.5;
+			cxt.strokeStyle='black';
+			ctx.moveTo(x1,y);
+			cxt.lineTo(x2,y);
+			cxt.stroke();
+			y+=500;
+		}
+		//每500个像素画一道竖线
+		var x=0;
+		x+=500
+		while(x<=x2){
+			if(x<x1)
+				continue;
+			ctx.beginPath();
+			cxt.lineWidth=0.5;
+			cxt.strokeStyle='black';
+			ctx.moveTo(x,y1);
+			cxt.lineTo(x,y2);
+			cxt.stroke();
+			x+=500;
+		}
 	}
 	
 	/**
