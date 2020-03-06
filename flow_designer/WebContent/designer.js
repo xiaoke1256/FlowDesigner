@@ -471,7 +471,7 @@ function FlRenderer(canvasId){
 		ctx.beginPath();
 		ctx.rect(x1,y1,x2-x1,y2-y1);
 		ctx.fill();
-		//每500个像素画一道横线
+		//每500个像素画一道维线
 		var y=0;
 		y+=500
 		while(y<=y2){
@@ -485,7 +485,7 @@ function FlRenderer(canvasId){
 			cxt.stroke();
 			y+=500;
 		}
-		//每500个像素画一道竖线
+		//每500个像素画一道经线
 		var x=0;
 		x+=500
 		while(x<=x2){
