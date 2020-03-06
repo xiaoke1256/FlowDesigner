@@ -12,23 +12,36 @@ $(function(){
 	//用来测试的模型
 	var testModel = {activities:
 		  [
-				{model:{
-					activityId:'0000',
-					activityName:'任务分配',
-					activityType:'01',
-					displayName:'任务分配'
-				  },
-				  view:{
-					displayindex:168,
-					height:36,
-					width:28,
-					x:349,
-					y:28
-				  }
-				},
-			  ],
-			  operations:[]
-		};
+			{model:{
+				activityId:'0000',
+				activityName:'任务分配',
+				activityType:'01',
+				displayName:'任务分配'
+			  },
+			  view:{
+				displayindex:168,
+				height:36,
+				width:28,
+				x:349,
+				y:28
+			  }
+			},
+		  ],
+		  operations:[
+		    {model:{
+		    	activityId:'0000',
+		    	autoFinish:'0',
+		    	displayName:'分配完成',
+		    	operationId:'000001'
+		      },
+		      view:{
+		    	x:257,
+		    	y:90
+		      }
+			  
+		    }
+		  ]
+	};
 	
 	//初始化绘图器
 	var flRenderer = FlRenderer('designer');

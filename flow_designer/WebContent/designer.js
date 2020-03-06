@@ -259,6 +259,16 @@ function FlRenderer(canvasId){
 				return;
 			}
 		}
+		for(var i in flowModle.operations){
+			var oper = flowModle.operations[i];
+			var view = oper.view;
+			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
+					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
+				console.log('actact');
+				redMarked = oper;
+				return;
+			}
+		}
 		//没有拖动到任何对象内则取消标红
 		redMarked = null;
 	}
@@ -412,6 +422,17 @@ function FlRenderer(canvasId){
 		}
 		return null;
 	}
+	/**
+	 * 从流程模型中按operationId选择一个结果。
+	 */
+	function selectOperByOperId(operationId){
+		for(var i in flowModle.operations){
+			if(flowModle.operations[i].model.operationId == operationId){
+				return flowModle.operations[i];
+			}
+		}
+		return null;
+	}
 	
 	/**绘制整个图像*/
 	function drawAll(cxt){
@@ -494,10 +515,10 @@ function FlRenderer(canvasId){
 	function drawSubsequentLine(cxt,subseq){
 		var view = subseq.view;
 		if(subseq.model.activityId){//如果关联了一个活动
-			console.log("oper.model.activityId:"+subseq.model.activityId);
+			console.log("subseq.model.activityId:"+subseq.model.activityId);
 			//查找对应的活动
 			var act = selectActByActId(subseq.model.activityId);
-			//绘制从结果到活动的线条。
+			//绘制从圆圈到活动的线条。
 			if(act){
 			    //act.view
 				cxt.beginPath();
@@ -507,6 +528,22 @@ function FlRenderer(canvasId){
 				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
 				cxt.stroke();
 			}
+		}
+		if(subseq.model.operationId){//如果关联了一个结果
+			console.log("subseq.model.activityId:"+subseq.model.operationId);
+			//查找对应的结果
+			var oper = selectOperByOperId(subseq.model.operationId);
+			//绘制从圆圈到活动的结果。
+			if(oper){
+			    //act.view
+				cxt.beginPath();
+				cxt.lineWidth=0.5;
+				cxt.strokeStyle='black';
+				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
+				cxt.lineTo(oper.view.x+oper.view.width/2,oper.view.y+oper.view.height/2);
+				cxt.stroke();
+			}
+			
 		}
 		if(subseq.view.controlPoint){//存在控制点
 			var controlPoint = subseq.view.controlPoint;
@@ -549,7 +586,9 @@ function FlRenderer(canvasId){
 	function drawActivity(cxt,act){
 		console.log("act.model:"+act.model);
 		//绘制活动的名称
+		console.log("act.model.displayName:"+act.model.displayName);
 		if(act.model.displayName){
+			cxt.fillStyle = 'black';
 			cxt.font = "bold 14px songti";
 			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2  //14是字体的宽度。
 			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);//文字写在图像上方8个像素点处。
@@ -573,6 +612,7 @@ function FlRenderer(canvasId){
 			 var mouseTop = oper.view.controlPoint.y - Math.floor(icons['mouse'].height/2);
 			 cxt.drawImage(icons['mouse'],mouseLeft,mouseTop);
 		 }
+		 cxt.fillStyle = 'black';
 		 cxt.font = "12px songti";
 		 var textLeft = oper.view.x+Math.floor((oper.view.width-oper.model.displayName.length*12)/2); //12是字体的宽度
 	     cxt.fillText(oper.model.displayName,textLeft,oper.view.y+oper.view.height+12);//12是字体的高度
