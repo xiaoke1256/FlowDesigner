@@ -1,6 +1,8 @@
 /**
  * 流程图编辑器
- * 本js程序依赖于jQuery.
+ * 本js程序依赖于以下程序：
+ * jQuery.js
+ * dragController.js
  */
 /*
  * 定义业务对象
@@ -149,12 +151,19 @@ function FlRenderer(canvasId){
 	
 	var maxDisplayindex = 0 ;//displayindex从0开始编号
 	
+	/**拖动模式：normal-正常模式，moving-移动模式（调整坐标系时）  */
+	//var dragMode = 'normal';
+	
 	c = document.getElementById(canvasId);
-	cxt = c.getContext("2d"); //绘图上下文.
+	var cxt = c.getContext("2d"); //绘图上下文.
+	
 	//init();
 	drawAll(cxt);
 	
 	var isMouseDown = false;//鼠标左键是否按下
+	//鼠标拖动控制器，暂时不设定，等后面再设定.
+	var defualtDragCtrl = null;//getDefaultDragCtrl(this);
+	var dragCtrl = null;//defualtDragCtrl;
 	
 	//监听事件onclick
 	$(c).click(function(){
@@ -183,7 +192,7 @@ function FlRenderer(canvasId){
         	preDragPos = cursorPos;
         }
         thisDragePos = cursorPos;
-        onDrag(dragedObj,preDragPos,thisDragePos);
+        dragCtrl.onDrag(dragedObj,preDragPos,thisDragePos);
     	drawAll(cxt);
         preDragPos = thisDragePos;
 	});
@@ -203,7 +212,7 @@ function FlRenderer(canvasId){
 				console.log("onStartDrag obj:"+obj);
 				dragedObj = obj;
 				preDragPos = cursorPos;//getCursorPos(event,c);
-				onStartDrag(obj);
+				dragCtrl.onStartDrag(obj);
 			}
 		}
 	});
@@ -214,134 +223,13 @@ function FlRenderer(canvasId){
 		    //有可能是拖动结束
 		    if(preDragPos!=null){
 		    	//拖动结束
-		    	onEndDrag(dragedObj);
+		    	dragCtrl.onEndDrag(dragedObj);
 		    	preDragPos = null;
 		    	dragedObj = null;
 		    }
 		    redMarked = null;
 		}
 	});
-	
-	/**拖动事件*/
-	function onDrag(obj,beforePos,afterPos){
-		if(!obj)
-			return;
-		if(obj instanceof BussinessObj){
-			onBusinessObjDrag(obj,beforePos,afterPos);
-		}else if(obj instanceof ControlPoint){
-			onControlPointDrag(obj,beforePos,afterPos);
-		}
-	}
-	/**业务对象被拖动事件*/
-	function onBusinessObjDrag(bizObj,beforePos,afterPos){
-		bizObj.view.x=bizObj.view.x+afterPos.x-beforePos.x;
-		bizObj.view.y=bizObj.view.y+afterPos.y-beforePos.y;
-		if(bizObj.view.controlPoint){
-			bizObj.view.controlPoint.x = bizObj.view.controlPoint.x+afterPos.x-beforePos.x;
-			bizObj.view.controlPoint.y = bizObj.view.controlPoint.y+afterPos.y-beforePos.y;
-		}
-		if(bizObj.view.controlPoint1){
-			bizObj.view.controlPoint1.x = bizObj.view.controlPoint1.x+afterPos.x-beforePos.x;
-			bizObj.view.controlPoint1.y = bizObj.view.controlPoint1.y+afterPos.y-beforePos.y;
-		}
-	}
-	/**控制点被拖动事件*/
-	function onControlPointDrag(controlPoint,beforePos,afterPos){
-		controlPoint.x = controlPoint.x + afterPos.x-beforePos.x;
-		controlPoint.y = controlPoint.y + afterPos.y-beforePos.y;
-		//标红
-		for(var i in flowModle.activities){
-			var act = flowModle.activities[i];
-			var view = act.view;
-			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
-					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
-				console.log('actact');
-				redMarked = act;
-				return;
-			}
-		}
-		for(var i in flowModle.operations){
-			var oper = flowModle.operations[i];
-			var view = oper.view;
-			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
-					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
-				console.log('actact');
-				redMarked = oper;
-				return;
-			}
-		}
-		//没有拖动到任何对象内则取消标红
-		redMarked = null;
-	}
-	
-	/**
-	 * 鼠标开始拖动事件
-	 */
-	function onStartDrag(obj){
-		//do nothing.
-	}
-	/**控制点拖动结束事件*/
-	function onEndDrag(obj){
-		//如果拖动的是控制点的话需要处理
-		if(obj instanceof ControlPoint){
-			//看是否拖动到了某个对象内
-			if(!redMarked){
-				resetControlPoint(obj.parent);
-				return;
-			}
-			if(obj.parent instanceof Oper){
-				var target = redMarked;
-				if(!target.model.activityId){
-					showErrMsg('请先填写“活动代码”。');
-					resetControlPoint(obj.parent);
-				    return;
-				}
-				obj.parent.model.activityId = target.model.activityId;
-			    obj.parent.view.controlPoint = null;
-			}
-			if(obj.parent instanceof Subsequent){
-				var target = redMarked;
-				if (target instanceof Act){
-					if(!target.model.activityId){
-						showErrMsg('请先填写“活动代码”。');
-						resetControlPoint(obj.parent,obj);
-					    return;
-					}
-					if(obj.parent.model.activityId){
-						showErrMsg('后续线应当一头连接活动，一头连接结果。');
-						resetControlPoint(obj.parent,obj);
-					    return;
-					}
-					obj.parent.model.activityId = target.model.activityId;
-					if(obj.parent.view.controlPoint===obj){
-						obj.parent.view.controlPoint = null;
-					}else if(obj.parent.view.controlPoint1===obj){
-						obj.parent.view.controlPoint1 = null;
-					}
-				}
-				if (target instanceof Oper){
-					if(!target.model.operationId){
-						showErrMsg('请先填写“结果代码”。');
-						resetControlPoint(obj.parent,obj);
-					    return;
-					}
-					if(obj.parent.model.operationId){
-						showErrMsg('后续线应当一头连接活动，一头连接结果。');
-						resetControlPoint(obj.parent,obj);
-					    return;
-					}
-					obj.parent.model.operationId = target.model.operationId;
-					if(obj.parent.view.controlPoint===obj){
-						obj.parent.view.controlPoint = null;
-					}else if(obj.parent.view.controlPoint1===obj){
-						obj.parent.view.controlPoint1 = null;
-					}
-				}
-			}
-			
-		}
-		
-	};
 	
 	/**
 	 * 根据鼠标所选中的位置，判断哪个控件被选中了。
@@ -747,7 +635,7 @@ function FlRenderer(canvasId){
 	}
 	
 	//暴露出去一个对象
-	return {
+	var exportObj = {
 		/**加载一个模型*/
 		loadModel:function(modelJson){
 			//先清空模型
@@ -829,32 +717,24 @@ function FlRenderer(canvasId){
 			var x = Math.floor((cwidth)/2);
 			var y = Math.floor((cheight)/2);
 			return {x:x,y:y};
+		},
+		/**标红需要暴露出去*/
+		getRedMarked:function(){
+			return redMarked;
+		},
+		setRedMarked:function(rm){
+			redMarked=rm;
+		},
+		getFlowModle:function(){
+			return flowModle;
 		}
 	};
+	//设定鼠标拖动控制器
+	defualtDragCtrl = getDefaultDragCtrl(exportObj);
+	dragCtrl = defualtDragCtrl;
+	return exportObj;
 }
 
-/**
- * 把控制点调整到默认位置。
- * @param obj 业务对象
- * @param thisControlPoint 本控制点。
- * @returns
- */
-function resetControlPoint(obj,thisControlPoint){
-	if(!thisControlPoint && obj.view.controlPoint || thisControlPoint===obj.view.controlPoint){
-		var controlPoint = obj.view.controlPoint;
-		var x = obj.view.x +Math.floor((obj.view.width)/2);
-		var y = obj.view.y-30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
-		controlPoint.x = x;
-		controlPoint.y = y;
-	}
-	if(!thisControlPoint && obj.view.controlPoint1 || thisControlPoint===obj.view.controlPoint1){
-		var controlPoint = obj.view.controlPoint1;
-		var x = obj.view.x +Math.floor((obj.view.width)/2);
-		var y = obj.view.y+30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
-		controlPoint.x = x;
-		controlPoint.y = y;
-	}
-}
 
 /**
  * 显示错误信息给用户
