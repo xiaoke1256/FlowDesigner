@@ -68,6 +68,12 @@ $(function(){
 		$('#designer').css({"cursor":'default'});
 	});
 	
+	
+	$('#makeCenterBtn').click(function(){
+		flRenderer.makeCenter();
+	});
+	
+	
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
 		//获取画布的中心点坐标
@@ -139,6 +145,7 @@ $(function(){
   	<button ><img src="imgs/design/menus/document-attribute-x-export.png">下载</button>
   	<button id="moveBtn" ><img src="">移动</button>
   	<button id="cancleMoveBtn" ><img src="">取消移动</button>
+  	<button id="makeCenterBtn" ><img src="">居中</button>
   </div>
   <div class="main" >
     <div class="asideTools">

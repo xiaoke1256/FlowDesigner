@@ -190,7 +190,7 @@ function FlRenderer(canvasId){
 		var cursorPos = getCursorPos(event,c);
 		//鼠标当前位置，（相对于画布的位置）。
 		var absPos = getCursorAbsPos(event,c);
-        console.log("x:"+cursorPos.x+" y:"+cursorPos.y );
+        //console.log("x:"+cursorPos.x+" y:"+cursorPos.y );
         if(preDragPos==null || preDragAbsPos == null){
         	preDragPos = cursorPos;
         	preDragAbsPos = absPos;
@@ -217,7 +217,7 @@ function FlRenderer(canvasId){
 		    //看看有没有controlPoint被选中
 			var obj = selectObj(cursorPos.x,cursorPos.y);
 			if(obj){
-				console.log("onStartDrag obj:"+obj);
+				//console.log("onStartDrag obj:"+obj);
 				dragedObj = obj;
 				preDragPos = cursorPos;//getCursorPos(event,c);
 				preDragAbsPos = absPos;
@@ -247,7 +247,7 @@ function FlRenderer(canvasId){
 	function selectObj(x,y){
 		for(var i in flowModle.activities){
         	view = flowModle.activities[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y + "   x:"+x+" y:"+y );
+        	//console.log("view.x:"+view.x+" view.y:"+view.y + "   x:"+x+" y:"+y );
         	if(view.x<x && x<view.x+view.width 
         			&& view.y<y && y<view.y+view.height){
         		console.log("selected!"+selected.length);
@@ -256,19 +256,19 @@ function FlRenderer(canvasId){
         }
         for(var i in flowModle.subsequents){
         	view = flowModle.subsequents[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	//console.log("view.x:"+view.x+" view.y:"+view.y );
         	if(view.x<x && x<view.x+view.width 
         			&& view.y<y && y<view.y+view.height){
-        		console.log("selected!"+selected.length);
+        		//console.log("selected!"+selected.length);
         		return flowModle.subsequents[i];
         	}
         }
         for(var i in flowModle.operations){
         	view = flowModle.operations[i].view;
-        	console.log("view.x:"+view.x+" view.y:"+view.y );
+        	//console.log("view.x:"+view.x+" view.y:"+view.y );
         	if(view.x<x && x<view.x+view.width 
         			&& view.y<y && y<view.y+view.height){
-        		console.log("selected!"+selected.length);
+        		//console.log("selected!"+selected.length);
         		return flowModle.operations[i];
         	}
         }
@@ -277,7 +277,7 @@ function FlRenderer(canvasId){
 	    	var controlPoint = flowModle.operations[i].view.controlPoint;
 	    	if(!controlPoint)
 	    		continue;
-    	    console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+    	    //console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
     	    var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
     	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
     	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
@@ -288,7 +288,7 @@ function FlRenderer(canvasId){
 	    for(var i in flowModle.subsequents){
 	    	var controlPoint = flowModle.subsequents[i].view.controlPoint;
 	    	if (controlPoint){
-		    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+		    	//console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
 		    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
 	    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
 	    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
@@ -298,7 +298,7 @@ function FlRenderer(canvasId){
 	    	}
     	    var controlPoint = flowModle.subsequents[i].view.controlPoint1;
     	    if (controlPoint){
-		    	console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
+		    	//console.log("controlPoint.x:"+controlPoint.x+" controlPoint.y:"+controlPoint.y );
 		    	var halfWidth = Math.floor(icons['mouse'].width/2);//控制点宽度的一半
 	    	    var halfHeight = Math.floor(icons['mouse'].height/2);//控制点高度的一半
 	    	    if(controlPoint.x-halfWidth<x && x<controlPoint.x+halfWidth
@@ -335,23 +335,30 @@ function FlRenderer(canvasId){
 	
 	/**绘制整个图像*/
 	function drawAll(cxt){
+		console.log('开始绘制');
 		cxt.clearRect(0,0,c.width,c.height);
 		cxt.save();
 		//移动坐标系
-		cxt.translate(originPoint.x,originPoint.y);
-		drawBackground(cxt,0-originPoint.x,0-originPoint.y,c.width-originPoint.x,c.height-originPoint.y);
+		cxt.translate(-originPoint.x,-originPoint.y);
+		console.log('绘制背景');
+		drawBackground(cxt,0+originPoint.x,0+originPoint.y,c.width+originPoint.x,c.height+originPoint.y);
+		console.log('11111111111111');
 		for(var i in flowModle.activities){
 			drawBizLine(cxt,flowModle.activities[i]);
 		}
+		console.log('2222222222222');
 		for(var i in flowModle.operations){
 			drawBizLine(cxt,flowModle.operations[i]);
 		}
+		console.log('33333333333333');
 		for(var i in flowModle.subsequents){
 			drawBizLine(cxt,flowModle.subsequents[i]);
 		}
+		console.log('44444444444444');
 		for(var i in flowModle.activities){
 			drawBizObj(cxt,flowModle.activities[i]);
 		}
+		console.log('555555555555');
 		for(var i in flowModle.operations){
 			drawBizObj(cxt,flowModle.operations[i]);
 		}
@@ -360,6 +367,7 @@ function FlRenderer(canvasId){
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
+		console.log('绘制完成');
 		cxt.restore();
 	}
 	
@@ -381,8 +389,10 @@ function FlRenderer(canvasId){
 		}
 		y+=500
 		while(y<=y2){
-			if(y<y1)
+			if(y<y1){
+				y+=500;
 				continue;
+			}
 			ctx.beginPath();
 			cxt.lineWidth=0.5;
 			cxt.strokeStyle='black';
@@ -392,14 +402,17 @@ function FlRenderer(canvasId){
 			y+=500;
 		}
 		//每500个像素画一道经线
+		
 		var x=0.5;
 		if(x>x1){
 			x-=500;
 		}
 		x+=500
 		while(x<=x2){
-			if(x<x1)
+			if(x<x1){
+				x+=500;
 				continue;
+			}
 			ctx.beginPath();
 			cxt.lineWidth=0.5;
 			cxt.strokeStyle='black';
@@ -408,6 +421,7 @@ function FlRenderer(canvasId){
 			cxt.stroke();
 			x+=500;
 		}
+		
 	}
 	
 	/**
@@ -436,7 +450,7 @@ function FlRenderer(canvasId){
 	function drawOperationLine(cxt,oper){
 		var view = oper.view;
 		if(oper.model.activityId){//如果关联了一个活动
-			console.log("oper.model.activityId:"+oper.model.activityId);
+			//console.log("oper.model.activityId:"+oper.model.activityId);
 			//查找对应的活动
 			var act = selectActByActId(oper.model.activityId);
 			//绘制从结果到活动的线条。
@@ -465,7 +479,7 @@ function FlRenderer(canvasId){
 	function drawSubsequentLine(cxt,subseq){
 		var view = subseq.view;
 		if(subseq.model.activityId){//如果关联了一个活动
-			console.log("subseq.model.activityId:"+subseq.model.activityId);
+			//console.log("subseq.model.activityId:"+subseq.model.activityId);
 			//查找对应的活动
 			var act = selectActByActId(subseq.model.activityId);
 			//绘制从圆圈到活动的线条。
@@ -480,7 +494,7 @@ function FlRenderer(canvasId){
 			}
 		}
 		if(subseq.model.operationId){//如果关联了一个结果
-			console.log("subseq.model.activityId:"+subseq.model.operationId);
+			//console.log("subseq.model.activityId:"+subseq.model.operationId);
 			//查找对应的结果
 			var oper = selectOperByOperId(subseq.model.operationId);
 			//绘制从圆圈到活动的结果。
@@ -534,9 +548,9 @@ function FlRenderer(canvasId){
 	 * 绘制一个活动
 	 */
 	function drawActivity(cxt,act){
-		console.log("act.model:"+act.model);
+		//console.log("act.model:"+act.model);
 		//绘制活动的名称
-		console.log("act.model.displayName:"+act.model.displayName);
+		//console.log("act.model.displayName:"+act.model.displayName);
 		if(act.model.displayName){
 			cxt.fillStyle = 'black';
 			cxt.font = "bold 14px songti";
@@ -552,7 +566,7 @@ function FlRenderer(canvasId){
 		 var view = oper.view;
 		 cxt.drawImage(icons['oper'],oper.view.x,oper.view.y);
 		 //如果关联了一个活动
-		 console.log("oper.model.activityId:"+oper.model.activityId);
+		 //console.log("oper.model.activityId:"+oper.model.activityId);
 		 if(oper.model.activityId){
 			 console.log("oper.model.activityId:"+oper.model.activityId);
 			 //do nothing.
@@ -577,7 +591,7 @@ function FlRenderer(canvasId){
 		var y = subseq.view.y + Math.floor(subseq.view.height/2);
 		//半径是宽度的1/4
 		var r = Math.floor(subseq.view.width/4);
-		console.log('arc: x:'+x+" y:"+y+ " r:"+r);
+		//console.log('arc: x:'+x+" y:"+y+ " r:"+r);
 		//开始绘制
 		ctx.beginPath();
 	    //设置弧线的颜色为灰色
@@ -608,7 +622,7 @@ function FlRenderer(canvasId){
 	function drawSelect(ctx){
 		for(var i in selected){
 			var view = selected[i].view;
-			console.log("draw selected.");
+			//console.log("draw selected.");
 			ctx.beginPath();
 			ctx.lineWidth="1";
 			ctx.strokeStyle="green";
@@ -620,7 +634,7 @@ function FlRenderer(canvasId){
 	function drawReadMarked(ctx){
 		if(redMarked){
 			var view = redMarked.view;
-			console.log("draw red mark.");
+			//console.log("draw red mark.");
 			ctx.beginPath();
 			ctx.lineWidth="1";
 			ctx.strokeStyle="red";
@@ -639,8 +653,8 @@ function FlRenderer(canvasId){
 		var x = event.pageX-c.offsetLeft;
 	    var y = event.pageY-c.offsetTop;
 	    //按原点位置调整坐标系
-	    x-=originPoint.x;
-	    y-=originPoint.y;
+	    x+=originPoint.x;
+	    y+=originPoint.y;
 	    return {x:x,y:y};
 	}
 	
@@ -649,6 +663,110 @@ function FlRenderer(canvasId){
 		var x = event.pageX-c.offsetLeft;
 	    var y = event.pageY-c.offsetTop;
 	    return {x:x,y:y};
+	}
+	
+	/**
+	 * 使整个流程图居中
+	 */
+	function _makeCenter(){
+		var maxX = null;
+		var minX = null;
+		var maxY = null;
+		var minY = null;
+		
+		for(var i in flowModle.activities){
+			var x=flowModle.activities[i].view.x;
+			var y=flowModle.activities[i].view.y;
+			if(maxX==null){
+				maxX = x;
+			}else{
+				maxX = Math.max(maxX,x);
+			}
+			if(minX==null){
+				minX = x;
+			}else{
+				minX = Math.max(minX,x);
+			}
+			if(maxY==null){
+				maxY = y;
+			}else{
+				maxY = Math.max(maxY,y);
+			}
+			if(minX==null){
+				minY = y;
+			}else{
+				minY = Math.max(minY,y);
+			}
+		}
+		/*
+		for(var i in flowModle.operations){
+			var x=flowModle.operations[i].view.x;
+			var y=flowModle.operations[i].view.y;
+			if(maxX==null){
+				maxX = x;
+			}else{
+				maxX = Math.max(maxX,x);
+			}
+			if(minX==null){
+				minX = x;
+			}else{
+				minX = Math.max(minX,x);
+			}
+			if(maxY==null){
+				maxY = y;
+			}else{
+				maxY = Math.max(maxY,y);
+			}
+			if(minX==null){
+				minY = y;
+			}else{
+				minY = Math.max(minY,y);
+			}
+		}
+		
+		for(var i in flowModle.subsequents){
+			var x=flowModle.subsequents[i].view.x;
+			var y=flowModle.subsequents[i].view.y;
+			if(maxX==null){
+				maxX = x;
+			}else{
+				maxX = Math.max(maxX,x);
+			}
+			if(minX==null){
+				minX = x;
+			}else{
+				minX = Math.max(minX,x);
+			}
+			if(maxY==null){
+				maxY = y;
+			}else{
+				maxY = Math.max(maxY,y);
+			}
+			if(minX==null){
+				minY = y;
+			}else{
+				minY = Math.max(minY,y);
+			}
+		}
+		*/
+		
+		if(maxX==null || minX==null || maxY==null || minY==null ){
+			//只要有一个为空则无需处理坐标系
+			return;
+		}
+		//获得了模型的中心点
+		var centerX = (minX+maxX)/2;
+		var centerY = (minY+maxY)/2;
+		console.log("centerX:"+centerX);
+		console.log("centerY:"+centerY);
+		//新的原点
+		var x = Math.floor(centerX-c.width/2+0.5);//0.5的目的是为了四舍五入
+		var y = Math.floor(centerY-c.height/2+0.5);
+		console.log("x:"+x);
+		console.log("y:"+y);
+		originPoint.x=x;
+		originPoint.y=y;
+		drawAll(cxt);
 	}
 	
 	//暴露出去一个对象
@@ -744,14 +862,13 @@ function FlRenderer(canvasId){
 		},
 		/**把流程模型暴露出去*/
 		getFlowModle:function(){
+			//TODO : 应当深拷贝后再报露出去.
 			return flowModle;
 		},
 		/**移动坐标系*/
 		moveOriginPoint:function(dx,dy){
-			console.log("moving.... dx:"+dx+"  dy:"+dy);
-			originPoint.x+=dx;
-			originPoint.y+=dy;
-			console.log("moving.... originPoint.x:"+originPoint.x+"  originPoint.y:"+originPoint.y);
+			originPoint.x-=dx;
+			originPoint.y-=dy;
 		},
 		/**设置鼠标移动控制器*/
 		setDragCtrl:function(ctrl){
@@ -761,6 +878,10 @@ function FlRenderer(canvasId){
 		/**将鼠标控制器复原成默认*/
 		resetDragCtrl:function(){
 			dragCtrl = defualtDragCtrl;
+		},
+		/**使整个流程图居中显示*/
+		makeCenter:function(){
+			_makeCenter();
 		}
 	};
 	//设定鼠标拖动控制器
