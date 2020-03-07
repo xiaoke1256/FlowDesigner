@@ -183,10 +183,8 @@ function FlRenderer(canvasId){
         	preDragPos = cursorPos;
         }
         thisDragePos = cursorPos;
-        if(dragedObj){
-        	onDrag(dragedObj,preDragPos,thisDragePos);
-        	drawAll(cxt);
-        }
+        onDrag(dragedObj,preDragPos,thisDragePos);
+    	drawAll(cxt);
         preDragPos = thisDragePos;
 	});
 	
@@ -226,6 +224,8 @@ function FlRenderer(canvasId){
 	
 	/**拖动事件*/
 	function onDrag(obj,beforePos,afterPos){
+		if(!obj)
+			return;
 		if(obj instanceof BussinessObj){
 			onBusinessObjDrag(obj,beforePos,afterPos);
 		}else if(obj instanceof ControlPoint){
