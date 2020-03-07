@@ -71,7 +71,7 @@ var Subsequent = function(obj){
 Subsequent.prototype = new BussinessObj();
 
 /**
- * 一个点
+ * 一个坐标点
  */
 var Point = function(x,y){
 	this.x = 0;
@@ -137,6 +137,8 @@ function FlRenderer(canvasId){
 		  subsequents:[] /*操作结果*/
 	};
 	
+	var originPoint = {x:0,y:0};//坐标系原点在画布上的位置 
+	
 	/*
 	 * 选中的对象 
 	 */
@@ -148,7 +150,7 @@ function FlRenderer(canvasId){
 	var maxDisplayindex = 0 ;//displayindex从0开始编号
 	
 	c = document.getElementById(canvasId);
-	cxt = c.getContext("2d"); 
+	cxt = c.getContext("2d"); //绘图上下文.
 	//init();
 	drawAll(cxt);
 	
@@ -175,13 +177,12 @@ function FlRenderer(canvasId){
 		if(!isMouseDown)
 			return;
 		//获取鼠标的坐标（相对于画布的位置）。
-		var x = event.pageX-this.offsetLeft;
-        var y = event.pageY-this.offsetTop;
-        console.log("x:"+x+" y:"+y );
+		var cursorPos = getCursorPos(event,c);
+        console.log("x:"+cursorPos.x+" y:"+cursorPos.y );
         if(preDragPos==null){
-        	preDragPos = {x:x,y:y};
+        	preDragPos = cursorPos;
         }
-        thisDragePos = {x:x,y:y}
+        thisDragePos = cursorPos;
         if(dragedObj){
         	onDrag(dragedObj,preDragPos,thisDragePos);
         	drawAll(cxt);
@@ -203,7 +204,7 @@ function FlRenderer(canvasId){
 			if(obj){
 				console.log("onStartDrag obj:"+obj);
 				dragedObj = obj;
-				preDragPos = getCursorPos(event,c);
+				preDragPos = cursorPos;//getCursorPos(event,c);
 				onStartDrag(obj);
 			}
 		}
@@ -436,8 +437,11 @@ function FlRenderer(canvasId){
 	
 	/**绘制整个图像*/
 	function drawAll(cxt){
-		cxt.clearRect(0,0,c.width,c.height); 
-		drawBackground(cxt,0,0,c.width,c.height);
+		cxt.clearRect(0,0,c.width,c.height);
+		cxt.save();
+		//移动坐标系
+		cxt.translate(originPoint.x,originPoint.y);
+		drawBackground(cxt,0-originPoint.x,0-originPoint.y,c.width-originPoint.x,c.height-originPoint.y);
 		for(var i in flowModle.activities){
 			drawBizLine(cxt,flowModle.activities[i]);
 		}
@@ -458,6 +462,7 @@ function FlRenderer(canvasId){
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
+		cxt.restore();
 	}
 	
 	/**
@@ -472,7 +477,10 @@ function FlRenderer(canvasId){
 		ctx.rect(x1,y1,x2-x1,y2-y1);
 		ctx.fill();
 		//每500个像素画一道维线
-		var y=0;
+		var y=0.5;
+		if(y>y1){
+			y-=500;
+		}
 		y+=500
 		while(y<=y2){
 			if(y<y1)
@@ -486,7 +494,10 @@ function FlRenderer(canvasId){
 			y+=500;
 		}
 		//每500个像素画一道经线
-		var x=0;
+		var x=0.5;
+		if(x>x1){
+			x-=500;
+		}
 		x+=500
 		while(x<=x2){
 			if(x<x1)
@@ -565,8 +576,8 @@ function FlRenderer(canvasId){
 				cxt.beginPath();
 				cxt.lineWidth=0.5;
 				cxt.strokeStyle='black';
-				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
+				cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);//由于像素精度问题所以每个坐标都要减0.5个像素
+				cxt.lineTo(act.view.x+act.view.width/2-0.5,act.view.y+act.view.height/2-0.5);
 				cxt.stroke();
 			}
 		}
@@ -580,8 +591,8 @@ function FlRenderer(canvasId){
 				cxt.beginPath();
 				cxt.lineWidth=0.5;
 				cxt.strokeStyle='black';
-				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-				cxt.lineTo(oper.view.x+oper.view.width/2,oper.view.y+oper.view.height/2);
+				cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);
+				cxt.lineTo(oper.view.x+oper.view.width/2-0.5,oper.view.y+oper.view.height/2-0.5);
 				cxt.stroke();
 			}
 			
@@ -592,8 +603,8 @@ function FlRenderer(canvasId){
 			cxt.beginPath();
 			cxt.lineWidth=0.5;
 			cxt.strokeStyle='black';
-			cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-			cxt.lineTo(controlPoint.x,controlPoint.y);
+			cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);
+			cxt.lineTo(controlPoint.x-0.5,controlPoint.y-0.5);
 			cxt.stroke();
 		}
 		if(subseq.view.controlPoint1){//存在控制点
@@ -602,8 +613,8 @@ function FlRenderer(canvasId){
 			cxt.beginPath();
 			cxt.lineWidth=0.5;
 			cxt.strokeStyle='black';
-			cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-			cxt.lineTo(controlPoint.x,controlPoint.y);
+			cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);
+			cxt.lineTo(controlPoint.x-0.5,controlPoint.y-0.5);
 			cxt.stroke();
 		}
 	}
@@ -720,6 +731,21 @@ function FlRenderer(canvasId){
 		}
 	}
 	
+	/**
+	 * 获取鼠标的位置
+	 * @param event 事件
+	 * @param canvase 元素
+	 * @returns {x:x,y:y}
+	 */
+	function getCursorPos(event,c){
+		var x = event.pageX-c.offsetLeft;
+	    var y = event.pageY-c.offsetTop;
+	    //按原点位置调整坐标系
+	    x-=originPoint.x;
+	    y-=originPoint.y;
+	    return {x:x,y:y};
+	}
+	
 	//暴露出去一个对象
 	return {
 		/**加载一个模型*/
@@ -805,18 +831,6 @@ function FlRenderer(canvasId){
 			return {x:x,y:y};
 		}
 	};
-}
-
-/**
- * 获取鼠标的位置
- * @param event 事件
- * @param canvase 元素
- * @returns {x:x,y:y}
- */
-function getCursorPos(event,c){
-	var x = event.pageX-c.offsetLeft;
-    var y = event.pageY-c.offsetTop;
-    return {x:x,y:y};
 }
 
 /**
