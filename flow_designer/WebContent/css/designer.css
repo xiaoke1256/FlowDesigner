@@ -1,5 +1,6 @@
 body {font-size:8px}
 .topButtons {margin:5px 0}
+.topButtons button ,.topButtons button img {vertical-align: bottom}
 .main>div {float:left}
 .main .clear {clear:both}
 .main .asideTools {border:1px solid grey}
