@@ -9,6 +9,7 @@
 <script type="text/javascript">
 //左边的按钮
 $(function(){
+	$('#cancleMoveBtn').hide();
 	//用来测试的模型
 	var testModel = {activities:
 		  [
@@ -118,6 +119,8 @@ $(function(){
   	<button ><img src="imgs/design/menus/disk.png">保存</button>
   	<button ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
   	<button ><img src="imgs/design/menus/document-attribute-x-export.png">下载</button>
+  	<button id="moveBtn" ><img src="">移动</button>
+  	<button id="cancleMoveBtn" ><img src="">取消移动</button>
   </div>
   <div class="main" >
     <div class="asideTools">
