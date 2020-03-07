@@ -160,3 +160,27 @@ function resetControlPoint(obj,thisControlPoint){
 		controlPoint.y = y;
 	}
 }
+
+/**
+ * 鼠标拖动控制器，用来调整坐标系
+ */
+var getMovimgDragCtrl = function(renderCtx){
+	var flRender = renderCtx;
+	function _onDrag(obj,beforePos,afterPos,beforeAbsPos,afterAbsPos){
+		renderCtx.moveOriginPoint(afterAbsPos.x-beforeAbsPos.x,afterAbsPos.y-beforeAbsPos.y);
+	}
+	return {
+		/**开始拖动事件*/
+		onStartDrag:function (obj){
+			//do nothing.
+		},
+		/**结束拖动鼠标事件*/
+		onEndDrag:function(obj){
+			//do nothing.
+		},
+		/**拖动事件*/
+		onDrag:function(obj,beforePos,afterPos,beforeAbsPos,afterAbsPos){
+			_onDrag(obj,beforePos,afterPos,beforeAbsPos,afterAbsPos)
+		}
+	};
+}

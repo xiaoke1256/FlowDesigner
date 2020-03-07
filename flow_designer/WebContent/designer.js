@@ -168,8 +168,9 @@ function FlRenderer(canvasId){
 	//监听事件onclick
 	$(c).click(function(){
 		//获取鼠标的坐标（相对于画布的位置）。
-		var x = event.pageX-this.offsetLeft;
-        var y = event.pageY-this.offsetTop;
+		var cursorPos = getCursorPos(event,c);
+		var x = cursorPos.x;
+        var y = cursorPos.y;
         //console.log("x:"+x+" y:"+y );
         //看看鼠标落在哪个对象上。
         selected = [];
@@ -185,20 +186,26 @@ function FlRenderer(canvasId){
 	$(c).mousemove(function(){
 		if(!isMouseDown)
 			return;
-		//获取鼠标的坐标（相对于画布的位置）。
+		//获取鼠标的坐标（相对于原点的位置）。
 		var cursorPos = getCursorPos(event,c);
+		//鼠标当前位置，（相对于画布的位置）。
+		var absPos = getCursorAbsPos(event,c);
         console.log("x:"+cursorPos.x+" y:"+cursorPos.y );
-        if(preDragPos==null){
+        if(preDragPos==null || preDragAbsPos == null){
         	preDragPos = cursorPos;
+        	preDragAbsPos = absPos;
         }
         thisDragePos = cursorPos;
-        dragCtrl.onDrag(dragedObj,preDragPos,thisDragePos);
+        thisAbsPos = absPos;
+        dragCtrl.onDrag(dragedObj,preDragPos,thisDragePos,preDragAbsPos,thisAbsPos);
     	drawAll(cxt);
         preDragPos = thisDragePos;
+        preDragAbsPos = thisAbsPos;
 	});
 	
 	var dragedObj = null;//被拖动的对象
-	var preDragPos = null;//上次拖动的坐标
+	var preDragPos = null;//上次拖动的坐标（相对于原点）
+	var preDragAbsPos = null;//上次拖动的坐标（相对于画布）
 
 	//监听鼠标左键按下事件
 	$(c).mousedown(function(){
@@ -206,12 +213,14 @@ function FlRenderer(canvasId){
 			isMouseDown = true;
 			//获取鼠标的当前位置
 			var cursorPos = getCursorPos(event,c);
+			var absPos = getCursorAbsPos(event,c);
 		    //看看有没有controlPoint被选中
 			var obj = selectObj(cursorPos.x,cursorPos.y);
 			if(obj){
 				console.log("onStartDrag obj:"+obj);
 				dragedObj = obj;
 				preDragPos = cursorPos;//getCursorPos(event,c);
+				preDragAbsPos = absPos;
 				dragCtrl.onStartDrag(obj);
 			}
 		}
@@ -225,6 +234,7 @@ function FlRenderer(canvasId){
 		    	//拖动结束
 		    	dragCtrl.onEndDrag(dragedObj);
 		    	preDragPos = null;
+		    	preDragAbsPos = null;
 		    	dragedObj = null;
 		    }
 		    redMarked = null;
@@ -620,7 +630,7 @@ function FlRenderer(canvasId){
 	}
 	
 	/**
-	 * 获取鼠标的位置
+	 * 获取鼠标的位置，考虑坐标系
 	 * @param event 事件
 	 * @param canvase 元素
 	 * @returns {x:x,y:y}
@@ -631,6 +641,13 @@ function FlRenderer(canvasId){
 	    //按原点位置调整坐标系
 	    x-=originPoint.x;
 	    y-=originPoint.y;
+	    return {x:x,y:y};
+	}
+	
+	/**获取鼠标的位置，不考虑坐标系*/
+	function getCursorAbsPos(event,c){
+		var x = event.pageX-c.offsetLeft;
+	    var y = event.pageY-c.offsetTop;
 	    return {x:x,y:y};
 	}
 	
@@ -725,8 +742,25 @@ function FlRenderer(canvasId){
 		setRedMarked:function(rm){
 			redMarked=rm;
 		},
+		/**把流程模型暴露出去*/
 		getFlowModle:function(){
 			return flowModle;
+		},
+		/**移动坐标系*/
+		moveOriginPoint:function(dx,dy){
+			console.log("moving.... dx:"+dx+"  dy:"+dy);
+			originPoint.x+=dx;
+			originPoint.y+=dy;
+			console.log("moving.... originPoint.x:"+originPoint.x+"  originPoint.y:"+originPoint.y);
+		},
+		/**设置鼠标移动控制器*/
+		setDragCtrl:function(ctrl){
+			if(ctrl)
+				dragCtrl = ctrl;
+		},
+		/**将鼠标控制器复原成默认*/
+		resetDragCtrl:function(){
+			dragCtrl = defualtDragCtrl;
 		}
 	};
 	//设定鼠标拖动控制器

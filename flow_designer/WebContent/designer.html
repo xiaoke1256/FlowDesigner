@@ -51,6 +51,23 @@ $(function(){
 	//加载这个模型
 	flRenderer.loadModel(testModel);
 	
+	//移动坐标系的控制器
+	var movimgDragCtrl = getMovimgDragCtrl(flRenderer);
+	//移动按钮的点击事件
+	$('#moveBtn').click(function(){
+		flRenderer.setDragCtrl(movimgDragCtrl);
+		$('#moveBtn').hide();
+		$('#cancleMoveBtn').show();
+		$('#designer').css({"cursor":'move'});
+	});
+	//取消移动按钮的点击事件
+	$('#cancleMoveBtn').click(function(){
+		flRenderer.resetDragCtrl();
+		$('#cancleMoveBtn').hide();
+		$('#moveBtn').show();
+		$('#designer').css({"cursor":'default'});
+	});
+	
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
 		//获取画布的中心点坐标
