@@ -191,8 +191,10 @@ function FlRenderer(canvasId,options){
         	selected.push(obj);
         }
         drawAll(cxt);
-        //TODO obj 应当深拷贝后再传出去的。
-        onSelect(obj);
+        if(selected.length>0){
+        	//TODO obj 应当深拷贝后再传出去的。
+        	onSelect(obj);
+        }
 	});
 	
 	//监听鼠标移动事件
