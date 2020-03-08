@@ -11,6 +11,8 @@
 
 $(function(){
 	$('#cancleMoveBtn').hide();
+	
+	$('#actInfo').hide();
 	//用来测试的模型
 	var testModel = {activities:
 		  [
@@ -172,83 +174,122 @@ $(function(){
     </div>
     <canvas id="designer" width="865px" height="560px" ></canvas>
     <div class="rightInfo">
-      <div class="title">活动基本信息</div>
-      <table class="info">
-      	<tbody>
-      	  <tr>
-      	    <td class="dt" >活动代码</td>
-      	    <td class="dc" ><input name="activityId" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >活动名称</td>
-      	    <td class="dc" ><input name="activityName" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >显示名称</td>
-      	    <td class="dc" ><input name="displayName" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >权限代码</td>
-      	    <td class="dc" ><input name="resourceId" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >链接地址</td>
-      	    <td class="dc" ><input name="linkpath" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >排序号</td>
-      	    <td class="dc" ><input name="listNo" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >活动说明</td>
-      	    <td class="dc" ><input name="description" type="text" ></td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >活动类型</td>
-      	    <td class="dc" >
-      	      <select name="activityType" >
-      	        <option value="01" >任意一人</option>
-      	        <option value="02" >多人顺序</option>
-      	        <option value="03" >多人并行</option>
-      	      </select>
-      	    </td>
-      	  </tr>
-      	  <tr>
-      	    <td class="dt" >是否可撤回</td>
-      	    <td class="dc" >
-      	      <input name="canWithdraw" type="checkbox" >
-      	    </td>
-      	  </tr>
-      	</tbody>
-      </table>
-      <div class="title">活动控制信息</div>
-       <table class="info">
-      	 <tbody>
-      	   <tr>
-      	     <td class="dt" >
-      	       <label><input name="activityBz" type="radio" value="0" >普通活动</label>
-      	     </td>
-      	     <td class="dd" >
-      	     </td>
-      	   </tr>
-      	   <tr>
-      	     <td class="dt" >
-      	       <label><input name="activityBz" type="radio" value="1" >开始活动</label>
-      	     </td>
-      	     <td class="dd" >
-      	       	流程必须要有一个开始活动。
-      	     </td>
-      	   </tr>
-      	   <tr>
-      	     <td class="dt" >
-      	       <label><input name="activityBz" type="radio" value="2" >自动完成</label>
-      	     </td>
-      	     <td class="dd" >
-      	       	同组触发顺序的其他活动均已完成时，本活动自动完成，并触发下一触发顺序的活动。
-      	     </td>
-      	   </tr>
-      	 </tbody>
-       </table>
+      
+      <!-- 活动信息 -->
+      <div id="actInfo">
+	      <div class="title">活动基本信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >活动代码</td>
+	      	    <td class="dc" ><input name="activityId" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >活动名称</td>
+	      	    <td class="dc" ><input name="activityName" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >显示名称</td>
+	      	    <td class="dc" ><input name="displayName" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >权限代码</td>
+	      	    <td class="dc" ><input name="resourceId" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >链接地址</td>
+	      	    <td class="dc" ><input name="linkpath" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >排序号</td>
+	      	    <td class="dc" ><input name="listNo" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >活动说明</td>
+	      	    <td class="dc" ><input name="description" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >活动类型</td>
+	      	    <td class="dc" >
+	      	      <select name="activityType" >
+	      	        <option value="01" >任意一人</option>
+	      	        <option value="02" >多人顺序</option>
+	      	        <option value="03" >多人并行</option>
+	      	      </select>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >是否可撤回</td>
+	      	    <td class="dc" >
+	      	      <input name="canWithdraw" type="checkbox" >
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
+	      <div class="title">活动控制信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >
+	      	      <label><input name="activityBz" type="radio" value="0" >普通活动</label>
+	      	    </td>
+	      	    <td class="dd" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >
+	      	      <label><input name="activityBz" type="radio" value="1" >开始活动</label>
+	      	    </td>
+	      	    <td class="dd" >
+	      	              流程必须要有一个开始活动。
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >
+	      	      <label><input name="activityBz" type="radio" value="2" >自动完成</label>
+	      	    </td>
+	      	    <td class="dd" >
+	      	               同组触发顺序的其他活动均已完成时，本活动自动完成，并触发下一触发顺序的活动。
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
+	    </div>
+	    
+	    <!-- 结果线信息 -->
+	    <div id="operInfo">
+	      <div class="title">结果基本信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >结果代码</td>
+	      	    <td class="dc" ><input name="operationId" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >结果名称</td>
+	      	    <td class="dc" ><input name="operationName" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >业务名称</td>
+	      	    <td class="dc" ><input name="displayName" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >排序号</td>
+	      	    <td class="dc" ><input name="listNo" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >结果说明</td>
+	      	    <td class="dc" ><input name="description" type="text" ></td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >权限代码</td>
+	      	    <td class="dc" ><input name="resourceId" type="text" ></td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
+	      <div class="title">结果控制信息</div>
+	      <div class="title">自动完成信息</div>
+	    </div>
     </div>
     <div class="clear"></div>
   </div>
