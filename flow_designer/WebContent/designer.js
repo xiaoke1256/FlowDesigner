@@ -335,30 +335,23 @@ function FlRenderer(canvasId){
 	
 	/**绘制整个图像*/
 	function drawAll(cxt){
-		console.log('开始绘制');
 		cxt.clearRect(0,0,c.width,c.height);
 		cxt.save();
 		//移动坐标系
 		cxt.translate(-originPoint.x,-originPoint.y);
-		console.log('绘制背景');
 		drawBackground(cxt,0+originPoint.x,0+originPoint.y,c.width+originPoint.x,c.height+originPoint.y);
-		console.log('11111111111111');
 		for(var i in flowModle.activities){
 			drawBizLine(cxt,flowModle.activities[i]);
 		}
-		console.log('2222222222222');
 		for(var i in flowModle.operations){
 			drawBizLine(cxt,flowModle.operations[i]);
 		}
-		console.log('33333333333333');
 		for(var i in flowModle.subsequents){
 			drawBizLine(cxt,flowModle.subsequents[i]);
 		}
-		console.log('44444444444444');
 		for(var i in flowModle.activities){
 			drawBizObj(cxt,flowModle.activities[i]);
 		}
-		console.log('555555555555');
 		for(var i in flowModle.operations){
 			drawBizObj(cxt,flowModle.operations[i]);
 		}
@@ -367,7 +360,6 @@ function FlRenderer(canvasId){
 		}
 		drawSelect(cxt);
 		drawReadMarked(cxt);
-		console.log('绘制完成');
 		cxt.restore();
 	}
 	
