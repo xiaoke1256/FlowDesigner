@@ -1,9 +1,19 @@
 body {font-size:8px}
 .topButtons {margin:5px 0}
 .topButtons button ,.topButtons button img {vertical-align: bottom}
-.main>div {float:left}
+.main>div,.main>canvas {float:left}
 .main .clear {clear:both}
 .main .asideTools {border:1px solid grey}
 .main .asideTools .title  {text-align:center;font-size:8px;width:80px;padding:5px;color:white;background-color:blue}
 .main .asideTools div {text-align:center;margin:0 0 20px 0}
 .main canvas {border:1px solid grey;margin:0 3px}
+
+.rightInfo {width:280px;border:1px solid grey;padding:12px 0}
+.rightInfo .title {text-align:center;width:80%;margin:3px auto 3px auto;padding:2px;color:white;background-color:blue}
+
+table.info {width:100%;margin:0 0 5px 0}
+table.info .dt {text-align:right;width:32%;padding:2px 5px;white-space: nowrap;vertical-align: top;}
+table.info .dc {text-align:left;width:68%;padding:2px 4px;}
+table.info .dc input[type=text] {width:85%}
+
+table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
