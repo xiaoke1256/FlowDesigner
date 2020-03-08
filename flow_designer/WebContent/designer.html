@@ -12,6 +12,7 @@
 $(function(){
 	$('#cancleMoveBtn').hide();
 	
+	$('#actInfo').hide();
 	$('#operInfo').hide();
 	//用来测试的模型
 	var testModel = {activities:
@@ -345,6 +346,120 @@ $(function(){
 	      	    <td class="dt" ></td>
 	      	    <td class="dc" >
 	      	      <input name="deadlineTime" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
+	    </div>
+	    
+	    <!-- 后续控制信息 -->
+	    <div id="subseqInfo" >
+	      <div class="title">后续控制信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >触发顺序</td>
+	      	    <td class="dc" >
+	      	      <input name="sequence" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >等待活动</td>
+	      	    <td class="dc" >
+	      	      <select name="waitingActivityId" >
+	      	      	<option></option>
+	      	      </select>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >状态代码</td>
+	      	    <td class="dc" >
+	      	      <input name="statusId" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >状态名称</td>
+	      	    <td class="dc" >
+	      	      <input name="statusName" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >排序号</td>
+	      	    <td class="dc" >
+	      	      <input name="sortNumber" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >附加活动</td>
+	      	    <td class="dd" >
+	      	      <div style="float:left" ><input name="inessential" type="checkbox" value="1" ></div>  
+	      	      <div style="float:left;width:80%" >执行与否不影响其他活动</div>
+	      	      <div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
+	      <div class="title">后续用户对象</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >控制位</td>
+	      	    <td class="dc" >
+	      	      <input name="optionControl" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >是否显示</td>
+	      	    <td class="dd" >
+	      	      <div style="float:left" ><input name="postDisplay" type="checkbox" value="1" ></div>  
+	      	      <div style="float:left;width:80%" >显示后续用户对象选择界面</div>
+	      	      <div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >是否必选</td>
+	      	    <td class="dd" >
+	      	      <div style="float:left" ><input name="postMustHave" type="checkbox" value="1" ></div>  
+	      	      <div style="float:left;width:80%" >后续用户对象必须选择</div>
+	      	      <div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >是否唯一</td>
+	      	    <td class="dd" >
+	      	      <div style="float:left" ><input name="postMustOne" type="checkbox" value="1" ></div>  
+	      	      <div style="float:left;width:80%" >后续用户对象最多选择一人</div>
+	      	      <div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >内部用户</td>
+	      	    <td class="dd" >
+	      	      <div style="float:left" ><input name="postSameDept" type="checkbox" value="1" ></div>  
+	      	      <div style="float:left;width:80%" >后续用户对象只能选择同部门人员</div>
+	      	      <div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >默认用户</td>
+	      	    <td class="dc" >
+	      	      <select name="postDefault" >
+	      	      	<option value="" >无</option>
+	      	      	<option value="1" >当前用户</option>
+	      	      	<option value="2" >后续活动首用户</option>
+	      	      	<option value="3" >后续活动末用户</option>
+	      	      	<option value="4" >指定活动首用户</option>
+	      	      	<option value="5" >指定活动末用户</option>
+	      	      	<option value="9" >同组活动的用户</option>
+	      	      </select>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >指定活动</td>
+	      	    <td class="dc" >
+	      	      <select name="postDefaultActivity" >
+	      	      	<option></option>
+	      	      </select>
 	      	    </td>
 	      	  </tr>
 	      	</tbody>
