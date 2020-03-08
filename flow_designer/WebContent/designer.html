@@ -12,8 +12,8 @@
 $(function(){
 	$('#cancleMoveBtn').hide();
 	
-	$('#actInfo').hide();
-	$('#operInfo').hide();
+	$('#rightInfo>div').hide();
+
 	//用来测试的模型
 	var testModel = {activities:
 		  [
@@ -52,7 +52,20 @@ $(function(){
 	//初始化绘图器
 	var flRenderer = FlRenderer('designer',
 			{'onSelect':function(obj){
-					alert(obj);
+				    var objType = '';
+					if(obj instanceof Act){
+						objType = 'act';
+					}else if(obj instanceof Oper){
+						objType = 'oper';
+					}else if(obj instanceof Subsequent){
+						objType = 'subseq';
+					}
+					$('#rightInfo>div').hide();
+					$('#'+objType+'Info').show();
+					for(var prop in obj.model){
+						var value = obj.model[prop];
+						$('#'+objType+'Info').find('[name='+prop+']').val(value);
+					}
 				}
 			}
 	);
@@ -174,7 +187,7 @@ $(function(){
       </div>
     </div>
     <canvas id="designer" width="865px" height="560px" ></canvas>
-    <div class="rightInfo">
+    <div id="rightInfo" class="rightInfo">
       
       <!-- 活动信息 -->
       <div id="actInfo">
