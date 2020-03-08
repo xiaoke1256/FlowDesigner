@@ -383,8 +383,8 @@ function FlRenderer(canvasId){
 		ctx.rect(x1,y1,x2-x1,y2-y1);
 		ctx.fill();
 		//每500个像素画一道维线
-		var y=0.5;
-		if(y>y1){
+		var y=-0.5;
+		while(y>y1){
 			y-=500;
 		}
 		y+=500
@@ -403,8 +403,8 @@ function FlRenderer(canvasId){
 		}
 		//每500个像素画一道经线
 		
-		var x=0.5;
-		if(x>x1){
+		var x=-0.5;
+		while(x>x1){
 			x-=500;
 		}
 		x+=500
@@ -698,7 +698,7 @@ function FlRenderer(canvasId){
 				minY = Math.max(minY,y);
 			}
 		}
-		/*
+		
 		for(var i in flowModle.operations){
 			var x=flowModle.operations[i].view.x;
 			var y=flowModle.operations[i].view.y;
@@ -748,7 +748,6 @@ function FlRenderer(canvasId){
 				minY = Math.max(minY,y);
 			}
 		}
-		*/
 		
 		if(maxX==null || minX==null || maxY==null || minY==null ){
 			//只要有一个为空则无需处理坐标系
