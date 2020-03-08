@@ -677,7 +677,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minX = x;
 			}else{
-				minX = Math.max(minX,x);
+				minX = Math.min(minX,x);
 			}
 			if(maxY==null){
 				maxY = y;
@@ -687,7 +687,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minY = y;
 			}else{
-				minY = Math.max(minY,y);
+				minY = Math.min(minY,y);
 			}
 		}
 		
@@ -702,7 +702,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minX = x;
 			}else{
-				minX = Math.max(minX,x);
+				minX = Math.min(minX,x);
 			}
 			if(maxY==null){
 				maxY = y;
@@ -712,7 +712,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minY = y;
 			}else{
-				minY = Math.max(minY,y);
+				minY = Math.min(minY,y);
 			}
 		}
 		
@@ -727,7 +727,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minX = x;
 			}else{
-				minX = Math.max(minX,x);
+				minX = Math.min(minX,x);
 			}
 			if(maxY==null){
 				maxY = y;
@@ -737,7 +737,7 @@ function FlRenderer(canvasId){
 			if(minX==null){
 				minY = y;
 			}else{
-				minY = Math.max(minY,y);
+				minY = Math.min(minY,y);
 			}
 		}
 		
@@ -842,6 +842,9 @@ function FlRenderer(canvasId){
 			var cheight = $(c).attr('height').replace('px','');
 			var x = Math.floor((cwidth)/2);
 			var y = Math.floor((cheight)/2);
+			//按坐标系调整
+			x = x + originPoint.x;
+			y = y + originPoint.y;
 			return {x:x,y:y};
 		},
 		/**标红需要暴露出去*/
