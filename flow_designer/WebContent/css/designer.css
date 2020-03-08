@@ -1,4 +1,7 @@
 body {font-size:8px}
+
+.center {padding:0 1px;text-align:center}
+
 .topButtons {margin:5px 0}
 .topButtons button ,.topButtons button img {vertical-align: bottom}
 .main>div,.main>canvas {float:left}

@@ -12,7 +12,7 @@
 $(function(){
 	$('#cancleMoveBtn').hide();
 	
-	$('#actInfo').hide();
+	$('#operInfo').hide();
 	//用来测试的模型
 	var testModel = {activities:
 		  [
@@ -254,6 +254,13 @@ $(function(){
 	      	  </tr>
 	      	</tbody>
 	      </table>
+	      <div class="title">活动权限范围信息</div>
+	      <div class="center">
+	        <label><input type="radio" name="authority" value="0" >到个人</label>
+	        <label><input type="radio" name="authority" value="1" >到部门</label>
+	        <label><input type="radio" name="authority" value="2" >到机关</label>
+	      </div>
+	      
 	    </div>
 	    
 	    <!-- 结果线信息 -->
@@ -288,7 +295,60 @@ $(function(){
 	      	</tbody>
 	      </table>
 	      <div class="title">结果控制信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >是否中断</td>
+	      	    <td class="dd" >
+	      	    	<div style="float:left" ><input name="resultFlag" type="checkbox" value="1" ></div>  
+	      	    	<div style="float:left;width:80%" >撤销本活动引发的所有后续待办任务</div>
+	      	    	<div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	   <tr>
+	      	    <td class="dt" >意见必输</td>
+	      	    <td class="dd" >
+	      	    	<div style="float:left" ><input name="mustHaveOpinion" type="checkbox" value="1" ></div>  
+	      	    	<div style="float:left;width:80%" >用户意见必输</div>
+	      	    	<div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
 	      <div class="title">自动完成信息</div>
+	      <table class="info">
+	      	<tbody>
+	      	  <tr>
+	      	    <td class="dt" >自动完成</td>
+	      	    <td class="dd" >
+	      	    	<div style="float:left" ><input name="autoFinish" type="checkbox" value="1" ></div>  
+	      	    	<div style="float:left;width:80%" >到期未完成，自动按此结果处理。</div>
+	      	    	<div class="clear"></div>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >截至天数</td>
+	      	    <td class="dc" >
+	      	    	<input name="deadlineDay" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" >截至时刻</td>
+	      	    <td class="dc" >
+	      	      <select name="deadlineType" >
+	      	    	<option value="1">相对时刻</option>
+	      	    	<option value="0">绝对时刻</option>
+	      	      </select>
+	      	    </td>
+	      	  </tr>
+	      	  <tr>
+	      	    <td class="dt" ></td>
+	      	    <td class="dc" >
+	      	      <input name="deadlineTime" type="text" >
+	      	    </td>
+	      	  </tr>
+	      	</tbody>
+	      </table>
 	    </div>
     </div>
     <div class="clear"></div>
