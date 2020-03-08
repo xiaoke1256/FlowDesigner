@@ -8,7 +8,7 @@
 <script type="text/javascript" src="dragController.js"></script>
 <script type="text/javascript" src="designer.js"></script>
 <script type="text/javascript">
-//左边的按钮
+
 $(function(){
 	$('#cancleMoveBtn').hide();
 	//用来测试的模型
@@ -47,7 +47,13 @@ $(function(){
 	};
 	
 	//初始化绘图器
-	var flRenderer = FlRenderer('designer');
+	var flRenderer = FlRenderer('designer',
+			{'onSelect':function(obj){
+					alert(obj);
+				}
+			}
+	);
+	
 	//加载这个模型
 	flRenderer.loadModel(testModel);
 	
@@ -74,6 +80,7 @@ $(function(){
 	});
 	
 	
+	//左边的按钮
 	//任意一人（环节）
 	$('#tool1Btn').click(function(){
 		//获取画布的中心点坐标

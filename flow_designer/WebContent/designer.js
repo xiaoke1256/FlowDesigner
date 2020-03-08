@@ -126,9 +126,12 @@ var icons = (function(){
 
 /**
  * 图形绘制器
+ * @param canvasId 页面上的画布元素
+ * @options 配置项.
  * @returns
  */
-function FlRenderer(canvasId){
+function FlRenderer(canvasId,options){
+	options = options || {};
 	
 	/**
 	 * 模型
@@ -157,6 +160,15 @@ function FlRenderer(canvasId){
 	c = document.getElementById(canvasId);
 	var cxt = c.getContext("2d"); //绘图上下文.
 	
+	/**
+	 * 选中一个业务对象后需要触发的事件
+	 */
+	var onSelect = function(bizObj){/*空函数*/};
+	
+	if(typeof(options.onSelect)=='function'){
+		onSelect = options.onSelect;
+	}
+	
 	//init();
 	drawAll(cxt);
 	
@@ -179,7 +191,8 @@ function FlRenderer(canvasId){
         	selected.push(obj);
         }
         drawAll(cxt);
-        
+        //TODO obj 应当深拷贝后再传出去的。
+        onSelect(obj);
 	});
 	
 	//监听鼠标移动事件
