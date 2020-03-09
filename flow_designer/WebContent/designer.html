@@ -62,6 +62,8 @@ $(function(){
 					}
 					$('#rightInfo>div').hide();
 					$('#'+objType+'Info').show();
+					//TODO 如果是后续线，需要把各个活动给填上.
+					
 					for(var prop in obj.model){
 						var value = obj.model[prop];
 						$('#'+objType+'Info').find('input[type=text][name='+prop+']').val(value);

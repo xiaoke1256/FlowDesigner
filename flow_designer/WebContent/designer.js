@@ -34,7 +34,7 @@ var Act = function(obj){
 		"activityBz":'0',
 		"authority":'0'
 	}
-	$.extend(obj.model,defaultModel);
+	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
 };
 Act.prototype = new BussinessObj();
@@ -43,6 +43,12 @@ Act.prototype = new BussinessObj();
  * 子类，操作选项
  */
 var Oper = function(obj){
+	var defaultModel = {
+		"listNo":0,/*排序号*/
+		"deadlineType":'1',
+		"deadlineTime":'00:00:00'
+	}
+	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
 	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
 	var x = this.view.x +Math.floor((icons['oper'].width)/2);
@@ -59,6 +65,13 @@ Oper.prototype = new BussinessObj();
  * 子类，后续线
  */
 var Subsequent = function(obj){
+	var defaultModel = {
+		"sortNumber":0,/*排序号*/
+		"sequence":'0',
+		"postDisplay":'1',
+		"postDefault":''
+	}
+	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
 	//有两个控制点，一个是controlPoint，一个是controlPoint1
 	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
