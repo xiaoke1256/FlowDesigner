@@ -28,6 +28,13 @@ var BussinessObj = function(obj){
  * 子类，Activity
  */
 var Act = function(obj){
+	var defaultModel = {
+		"listNo":0,/*排序号*/
+		"activityType":'01',
+		"activityBz":'0',
+		"authority":'0'
+	}
+	$.extend(obj.model,defaultModel);
 	BussinessObj.call(this,obj);
 };
 Act.prototype = new BussinessObj();
