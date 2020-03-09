@@ -347,6 +347,44 @@ function FlRenderer(canvasId,options){
 		}
 		return null;
 	}
+	/**
+	 * 从流程模型中按activityId选择一个结果。
+	 */
+	function selectOpersByActId(activityId){
+		var retOpers = [];
+		for(var i in flowModle.operations){
+			if(flowModle.operations[i].model.activityId == activityId){
+				retOpers.push(flowModle.operations[i]);
+			}
+		}
+		return retOpers;
+	}
+	
+	/**
+	 * 从流程模型中按activityId选择一个后续线。
+	 */
+	function selectSubseqByActId(activityId){
+		var subseqs = [];
+		for(var i in flowModle.subsequents){
+			if(flowModle.subsequents[i].model.activityId == activityId){
+				subseqs.push(flowModle.subsequents[i]);
+			}
+		}
+		return subseqs;
+	}
+	
+	/**
+	 * 从流程模型中按operationId选择一个后续线。
+	 */
+	function selectSubseqByOperId(operationId){
+		var subseqs = [];
+		for(var i in flowModle.subsequents){
+			if(flowModle.subsequents[i].model.operationId == operationId){
+				subseqs.push(flowModle.subsequents[i]);
+			}
+		}
+		return subseqs;
+	}
 	
 	/**绘制整个图像*/
 	function drawAll(cxt){
@@ -775,6 +813,31 @@ function FlRenderer(canvasId,options){
 		drawAll(cxt);
 	}
 	
+	/**当业务对象的属性发生变化时要处理的事情 */
+	function _onValueChange(obj,prop,beforValue,value){
+		if(obj instanceof Act){
+			if(prop=='activityId'){
+				obj.model.baseId = value;
+				var opers = selectOpersByActId(beforValue);
+				for(var i in opers){
+					opers[i].model.activityId = value;
+				}
+				var subseqs = selectSubseqByActId(beforValue);
+				for(var i in subseqs){
+					subseqs[i].model.activityId = value;
+				}
+			}
+		}else if(obj instanceof Oper){
+			obj.model.baseId = value;
+			var subseqs = selectSubseqByOperId(beforValue);
+			for(var i in subseqs){
+				subseqs[i].model.operationId = value;
+			}
+		}
+	}
+	
+	
+	
 	//暴露出去一个对象
 	var exportObj = {
 		/**加载一个模型*/
@@ -898,8 +961,11 @@ function FlRenderer(canvasId,options){
 			if(selected.length==0){
 				return;
 			}
-			var model = selected[selected.length-1].model;
+			var obj = selected[selected.length-1];
+			var model = obj.model;
+			var beforeValue = model[prop];
 			model[prop]=value;
+			_onValueChange(obj,prop,beforeValue,value);
 			//属性变了有可能影响图形外观
 			drawAll(cxt);
 		}
