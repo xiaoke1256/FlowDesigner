@@ -158,6 +158,27 @@ $(function(){
 		
 		flRenderer.addSubseq(subseq);
 	});
+	
+	//以下把页面上的输入信息，设置到模型对象中去.
+	/**文本框输入信息时的联动事件*/
+	$('#rightInfo input[type=text]').keyup(function(){
+		flRenderer.setVal(this.name,this.value);
+	});
+	/**选择框选择后的联动事件*/
+	$('#rightInfo select').change(function(){
+		flRenderer.setVal(this.name,$(this).val());
+	});
+	/**rediobutton点击后的联动事件*/
+	$('#rightInfo input[type=radio]').click(function(){
+		flRenderer.setVal(this.name,this.value);
+	});
+	/**checkbox点击后的联动事件*/
+	$('#rightInfo input[type=checkbox]').click(function(){
+		if(this.checked)
+			flRenderer.setVal(this.name,this.value);
+		else
+			flRenderer.setVal(this.name,'0');
+	});
 });
 </script>
 </head>

@@ -820,8 +820,8 @@ function FlRenderer(canvasId,options){
 				subseq.view.height = icons['subseq'].height;
 				flowModle.subsequents.push(subseq);
 			}
-			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。
-			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},0);
+			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。由于浏览器加载图片是异步的，可能需要花较长时间，所以给他200毫秒去加载
+			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},200);
 		},
 		/**向模型中增加一个Act*/
 		addAct:function(actJson){
@@ -891,6 +891,17 @@ function FlRenderer(canvasId,options){
 		/**使整个流程图居中显示*/
 		makeCenter:function(){
 			_makeCenter();
+		},
+		/**给业务对象的属性设值*/
+		setVal:function(prop,value){
+			//先找到选中的业务对象
+			if(selected.length==0){
+				return;
+			}
+			var model = selected[selected.length-1].model;
+			model[prop]=value;
+			//属性变了有可能影响图形外观
+			drawAll(cxt);
 		}
 	};
 	//设定鼠标拖动控制器
