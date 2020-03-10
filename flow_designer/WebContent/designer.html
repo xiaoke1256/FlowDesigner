@@ -67,9 +67,21 @@ $(function(){
 							var model = flowModle.activities[i].model;
 							$actSelect.append('<option value="'+model.activityId+'" >'+model.activityName+'</option>');
 						}
+						//“指定活动”在某些情况下是不可选的.
+						var defaultUser = $('[name=postDefault]').val();
+						if(defaultUser=='4'||defaultUser=='5'){/*指定活动首用户和指定活动末用户*/
+							$('[name=postDefaultActivity]').attr('disabled',false);
+						}else{
+							$('[name=postDefaultActivity]').val(null);
+							$('[name=postDefaultActivity]').attr('disabled',true);
+						}
 					}
 					$('#rightInfo>div').hide();
 					$('#'+objType+'Info').show();
+					
+					if(!obj){
+				    	return;
+				    }
 					
 					for(var prop in obj.model){
 						var value = obj.model[prop];
@@ -178,23 +190,53 @@ $(function(){
 	//以下把页面上的输入信息，设置到模型对象中去.
 	/**文本框输入信息时的联动事件*/
 	$('#rightInfo input[type=text]').keyup(function(){
+		if(!validate(this,$(this).val())){
+			return;
+		}
 		flRenderer.setVal(this.name,this.value);
 	});
 	/**选择框选择后的联动事件*/
 	$('#rightInfo select').change(function(){
+		if(!validate(this,$(this).val())){
+			return;
+		}
 		flRenderer.setVal(this.name,$(this).val());
 	});
 	/**rediobutton点击后的联动事件*/
 	$('#rightInfo input[type=radio]').click(function(){
+		if(!validate(this,$(this).val())){
+			return;
+		}
 		flRenderer.setVal(this.name,this.value);
 	});
 	/**checkbox点击后的联动事件*/
 	$('#rightInfo input[type=checkbox]').click(function(){
+		if(!validate(this,$(this).val())){
+			return;
+		}
 		if(this.checked)
 			flRenderer.setVal(this.name,this.value);
 		else
 			flRenderer.setVal(this.name,'0');
 	});
+	
+	/*校验页面上输入的内容*/
+	function validate(input,value){
+		var rule = eval('('+$(input).attr('validator')+')');//这是校验规则
+		if(rule){
+			//有些输入框必须输入数字。
+			if(rule.number){
+				if(isNaN(value)){
+					showErrMsg("请输入一个数字。");
+					$(input).val('0');
+					return false;
+				}
+			}
+			//某些控件必须输入唯一性字段
+		}
+		//某些控件是有联动性的。（包括联动后某些是必填了）
+		return true;
+	}
 });
 </script>
 </head>
@@ -257,7 +299,7 @@ $(function(){
 	      	  </tr>
 	      	  <tr>
 	      	    <td class="dt" >排序号</td>
-	      	    <td class="dc" ><input name="listNo" type="text" ></td>
+	      	    <td class="dc" ><input name="listNo" validator="{number:true}" type="text" ></td>
 	      	  </tr>
 	      	  <tr>
 	      	    <td class="dt" >活动说明</td>
@@ -337,7 +379,7 @@ $(function(){
 	      	  </tr>
 	      	  <tr>
 	      	    <td class="dt" >排序号</td>
-	      	    <td class="dc" ><input name="listNo" type="text" ></td>
+	      	    <td class="dc" ><input name="listNo" validator="{number:true}" type="text" ></td>
 	      	  </tr>
 	      	  <tr>
 	      	    <td class="dt" >结果说明</td>
@@ -414,7 +456,7 @@ $(function(){
 	      	  <tr>
 	      	    <td class="dt" >触发顺序</td>
 	      	    <td class="dc" >
-	      	      <input name="sequence" type="text" >
+	      	      <input name="sequence" validator="{number:true}" type="text" >
 	      	    </td>
 	      	  </tr>
 	      	  <tr>
@@ -440,7 +482,7 @@ $(function(){
 	      	  <tr>
 	      	    <td class="dt" >排序号</td>
 	      	    <td class="dc" >
-	      	      <input name="sortNumber" type="text" >
+	      	      <input name="sortNumber" validator="{number:true}" type="text" >
 	      	    </td>
 	      	  </tr>
 	      	  <tr>

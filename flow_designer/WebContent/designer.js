@@ -214,6 +214,8 @@ function FlRenderer(canvasId,options){
         if(selected.length>0){
         	//TODO obj 应当深拷贝后再传出去的。
         	onSelect(obj);
+        }else{
+        	onSelect(null);
         }
 	});
 	
@@ -275,6 +277,13 @@ function FlRenderer(canvasId,options){
 		    redMarked = null;
 		}
 	});
+	
+	/**清空选中*/
+	function _clearSelected(){
+		selected=[];
+		//需要触发onSelect事件,放在另一个线程中执行
+		setTimeout(function(){onSelect(null);},0);
+	}
 	
 	/**
 	 * 根据鼠标所选中的位置，判断哪个控件被选中了。
@@ -922,7 +931,7 @@ function FlRenderer(canvasId,options){
 			flowModle.activities = [];
 			flowModle.operations = [];
 			flowModle.subsequents = [];
-			selected = [];
+			_clearSelected();
 			for(var i in modelJson.activities){
 				var act = new Act(modelJson.activities[i]);
 				if(act.view.displayindex){
@@ -1061,7 +1070,7 @@ function FlRenderer(canvasId,options){
 				_deleteObj(selected[i]);
 			}
 			//删除后清空selected
-			selected = [];
+			_clearSelected();
 			//重绘一下
 			drawAll(cxt);
 		}
