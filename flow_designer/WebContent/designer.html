@@ -171,6 +171,9 @@ $(function(){
 		
 		flRenderer.addSubseq(subseq);
 	});
+	$('#deleteBtn').click(function(){
+		flRenderer.deleteSelected();
+	});
 	
 	//以下把页面上的输入信息，设置到模型对象中去.
 	/**文本框输入信息时的联动事件*/
@@ -218,6 +221,10 @@ $(function(){
       <div id="toolNodeBtn" >
         <img id="toolNode" src="imgs/design/node.png">
         <div>后续线</div>
+      </div>
+      <div id="deleteBtn" >
+        <img id="delete" src="imgs/design/trash.png">
+        <div>删除</div>
       </div>
     </div>
     <canvas id="designer" width="865px" height="560px" ></canvas>

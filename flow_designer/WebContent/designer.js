@@ -858,6 +858,58 @@ function FlRenderer(canvasId,options){
 		}
 	}
 	
+	/**（级联）删除一个业务对象*/
+	function _deleteObj(obj){
+		if(obj instanceof Act ){
+			_deleteAct(obj);
+		}else if(obj instanceof Oper){
+			_deleteOper(obj)
+		}else if(obj instanceof Subsequent){
+			_deleteSubseq(obj)
+		}
+	}
+	
+	/**（级联）删除一个业务对象*/
+	function _deleteAct(act){
+		var index = flowModle.activities.indexOf(act);
+		if(index>=0){
+			flowModle.activities.splice(index,1);
+		}
+		//查一下有没有子对象，有则把它删除掉.
+		if(act.model.activityId){
+			var opers = selectOpersByActId(act.model.activityId);
+			for(var i in opers){
+				_deleteOper(opers[i]);
+			}
+			var subseqs = selectSubseqByActId(act.model.activityId);
+			for(var i in subseqs){
+				_deleteSubseq(subseqs[i]);
+			}
+		}
+	}
+	
+	/**（级联）删除一个业务对象*/
+	function _deleteOper(oper){
+		var index = flowModle.operations.indexOf(oper);
+		if(index>=0){
+			flowModle.operations.splice(index,1);
+		}
+		//查一下有没有子对象，有则把它删除掉.
+		if(oper.model.operationId){
+			var subseqs = selectSubseqByOperId(oper.model.operationId);
+			for(var i in subseqs){
+				_deleteSubseq(subseqs[i]);
+			}
+		}
+	}
+	
+	/**删除一个业务对象*/
+	function _deleteSubseq(subseq){
+		var index = flowModle.subsequents.indexOf(subseq);
+		if(index>=0){
+			flowModle.subsequents.splice(index,1);
+		}
+	}
 	
 	
 	//暴露出去一个对象
@@ -999,6 +1051,16 @@ function FlRenderer(canvasId,options){
 			model[prop]=value;
 			_onValueChange(obj,prop,beforeValue,value);
 			//属性变了有可能影响图形外观
+			drawAll(cxt);
+		},
+		/**删除一个选中的业务对象（同时级联删除他关联到的子对象）*/
+		deleteSelected:function(){
+			for(var i in selected){
+				_deleteObj(selected[i]);
+			}
+			//删除后清空selected
+			selected = [];
+			//重绘一下
 			drawAll(cxt);
 		}
 	};
