@@ -852,10 +852,12 @@ function FlRenderer(canvasId,options){
 				var opers = selectOpersByActId(beforValue);
 				for(var i in opers){
 					opers[i].model.activityId = value;
+					//TODO 如果activityId被改成空了就要把控制点恢复
 				}
 				var subseqs = selectSubseqByActId(beforValue);
 				for(var i in subseqs){
 					subseqs[i].model.activityId = value;
+					//TODO 如果activityId被改成空了就要把控制点恢复
 				}
 			}
 		}else if(obj instanceof Oper){
@@ -864,6 +866,7 @@ function FlRenderer(canvasId,options){
 				var subseqs = selectSubseqByOperId(beforValue);
 				for(var i in subseqs){
 					subseqs[i].model.operationId = value;
+					//TODO 如果activityId被改成空了就要把控制点恢复
 				}
 			}
 		}
@@ -920,6 +923,34 @@ function FlRenderer(canvasId,options){
 		if(index>=0){
 			flowModle.subsequents.splice(index,1);
 		}
+	}
+	
+	/**某字段是否存在重复*/
+	function _isRepeate(obj,prop,value){
+		if(obj instanceof Act){
+			for(var i in flowModle.activities){
+				var another =flowModle.activities[i];
+				if(another===obj){
+					continue;
+				}
+				var model = another.model;
+				if(model[prop]==value){
+					return true;
+				}
+			}
+		}else if(obj instanceof Oper){
+			for(var i in flowModle.operations){
+				var another =flowModle.operations[i];
+				if(another===obj){
+					continue;
+				}
+				var model = another.model;
+				if(model[prop]==value){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	
@@ -1073,6 +1104,14 @@ function FlRenderer(canvasId,options){
 			_clearSelected();
 			//重绘一下
 			drawAll(cxt);
+		},
+		/**判断某字段是否重复*/
+		isRepeate:function(prop,value){
+			if(selected.length==0){
+				return false;
+			}
+			var obj = selected[selected.length-1];
+			return _isRepeate(obj,prop,value);
 		}
 	};
 	//设定鼠标拖动控制器
