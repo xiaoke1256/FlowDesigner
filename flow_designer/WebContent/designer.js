@@ -866,6 +866,7 @@ function FlRenderer(canvasId,options){
 			flowModle.activities = [];
 			flowModle.operations = [];
 			flowModle.subsequents = [];
+			selected = [];
 			for(var i in modelJson.activities){
 				var act = new Act(modelJson.activities[i]);
 				if(act.view.displayindex){
@@ -914,6 +915,9 @@ function FlRenderer(canvasId,options){
 			act.view.width = icons['act'].width;
 			act.view.height = icons['act'].height;
 			flowModle.activities.push(act);
+			//新添加的对象设置为选中
+			selected = [act];
+			onSelect(act);
 			drawAll(cxt);
 		},
 		/**向模型中增加一个Oper*/
@@ -924,6 +928,9 @@ function FlRenderer(canvasId,options){
 			oper.view.width = icons['oper'].width;
 			oper.view.height = icons['oper'].height;
 			flowModle.operations.push(oper);
+			//新添加的对象设置为选中
+			selected = [oper];
+			onSelect(oper);
 			drawAll(cxt);
 		},
 		addSubseq:function(subseqJson){
@@ -932,6 +939,9 @@ function FlRenderer(canvasId,options){
 			subseq.view.width = icons['subseq'].width;
 			subseq.view.height = icons['subseq'].height;
 			flowModle.subsequents.push(subseq);
+			//新添加的对象设置为选中
+			selected = [subseq];
+			onSelect(subseq);
 			drawAll(cxt);
 		},
 		/**获取画布中心点的坐标*/

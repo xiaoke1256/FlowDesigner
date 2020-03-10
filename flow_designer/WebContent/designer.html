@@ -59,10 +59,17 @@ $(function(){
 						objType = 'oper';
 					}else if(obj instanceof Subsequent){
 						objType = 'subseq';
+						// 如果是后续线，需要把各个活动给填上.
+						var flowModle = flRenderer.getFlowModle();
+						var $actSelect = $('[name=postDefaultActivity],[name=waitingActivityId]');
+						$actSelect.empty().append('<option></option>');
+						for(var i in flowModle.activities){
+							var model = flowModle.activities[i].model;
+							$actSelect.append('<option value="'+model.activityId+'" >'+model.activityName+'</option>');
+						}
 					}
 					$('#rightInfo>div').hide();
 					$('#'+objType+'Info').show();
-					//TODO 如果是后续线，需要把各个活动给填上.
 					
 					for(var prop in obj.model){
 						var value = obj.model[prop];
