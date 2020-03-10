@@ -757,7 +757,7 @@ function FlRenderer(canvasId,options){
 			}else{
 				maxY = Math.max(maxY,y);
 			}
-			if(minX==null){
+			if(minY==null){
 				minY = y;
 			}else{
 				minY = Math.min(minY,y);
@@ -782,7 +782,7 @@ function FlRenderer(canvasId,options){
 			}else{
 				maxY = Math.max(maxY,y);
 			}
-			if(minX==null){
+			if(minY==null){
 				minY = y;
 			}else{
 				minY = Math.min(minY,y);
@@ -807,7 +807,7 @@ function FlRenderer(canvasId,options){
 			}else{
 				maxY = Math.max(maxY,y);
 			}
-			if(minX==null){
+			if(minY==null){
 				minY = y;
 			}else{
 				minY = Math.min(minY,y);
@@ -823,6 +823,8 @@ function FlRenderer(canvasId,options){
 		var centerY = (minY+maxY)/2;
 		console.log("centerX:"+centerX);
 		console.log("centerY:"+centerY);
+		console.log("c.height:"+c.height);
+		console.log("c.height/2:"+(c.height/2));
 		//新的原点
 		var x = Math.floor(centerX-c.width/2+0.5);//0.5的目的是为了四舍五入
 		var y = Math.floor(centerY-c.height/2+0.5);
