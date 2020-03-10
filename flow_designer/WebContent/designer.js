@@ -836,7 +836,7 @@ function FlRenderer(canvasId,options){
 	/**当业务对象的属性发生变化时要处理的事情 */
 	function _onValueChange(obj,prop,beforValue,value){
 		if(obj instanceof Act){
-			if(prop=='activityId'){
+			if(prop=='activityId' && beforValue){
 				obj.model.baseId = value;
 				var opers = selectOpersByActId(beforValue);
 				for(var i in opers){
@@ -848,10 +848,12 @@ function FlRenderer(canvasId,options){
 				}
 			}
 		}else if(obj instanceof Oper){
-			obj.model.baseId = value;
-			var subseqs = selectSubseqByOperId(beforValue);
-			for(var i in subseqs){
-				subseqs[i].model.operationId = value;
+			if(prop=='operationId' && beforValue){
+				obj.model.baseId = value;
+				var subseqs = selectSubseqByOperId(beforValue);
+				for(var i in subseqs){
+					subseqs[i].model.operationId = value;
+				}
 			}
 		}
 	}
