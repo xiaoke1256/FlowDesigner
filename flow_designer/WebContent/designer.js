@@ -87,7 +87,7 @@ var Subsequent = function(obj){
 	var y = this.view.y+30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
 	var controlPoint = new ControlPoint(x,y);
 	controlPoint.parent = this;//父对象就是其业务对象。
-	controlPoint.parentType = 'result';
+	controlPoint.parentType = 'mouse';
 	this.view.controlPoint1=controlPoint;
 }
 Subsequent.prototype = new BussinessObj();
@@ -852,12 +852,30 @@ function FlRenderer(canvasId,options){
 				var opers = selectOpersByActId(beforValue);
 				for(var i in opers){
 					opers[i].model.activityId = value;
-					//TODO 如果activityId被改成空了就要把控制点恢复
+					//如果activityId被改成空了就要把控制点恢复
+					if(!value){
+						var controlPoint = new ControlPoint(0,0);//坐标先随便设一个
+						controlPoint.parent = opers[i];//父对象就是其业务对象。
+						controlPoint.parentType = 'result';
+						opers[i].view.controlPoint = controlPoint;
+						resetControlPoint(opers[i]);
+					}
 				}
 				var subseqs = selectSubseqByActId(beforValue);
 				for(var i in subseqs){
 					subseqs[i].model.activityId = value;
-					//TODO 如果activityId被改成空了就要把控制点恢复
+					//如果activityId被改成空了就要把控制点恢复
+					if(!value){
+						var controlPoint = new ControlPoint(0,0);//坐标先随便设一个
+						controlPoint.parent = subseqs[i];//父对象就是其业务对象。
+						controlPoint.parentType = 'subseq';
+						if(!subseqs[i].view.controlPoint){
+							subseqs[i].view.controlPoint = controlPoint;
+						}else if(!subseqs[i].view.controlPoint1){
+							subseqs[i].view.controlPoint1 = controlPoint;
+						}
+						resetControlPoint(subseqs[i]);
+					}
 				}
 			}
 		}else if(obj instanceof Oper){
@@ -866,7 +884,18 @@ function FlRenderer(canvasId,options){
 				var subseqs = selectSubseqByOperId(beforValue);
 				for(var i in subseqs){
 					subseqs[i].model.operationId = value;
-					//TODO 如果operationId被改成空了就要把控制点恢复
+					//如果operationId被改成空了就要把控制点恢复
+					if(!value){
+						var controlPoint = new ControlPoint(0,0);//坐标先随便设一个
+						controlPoint.parent = subseqs[i];//父对象就是其业务对象。
+						controlPoint.parentType = 'subseq';
+						if(!subseqs[i].view.controlPoint){
+							subseqs[i].view.controlPoint = controlPoint;
+						}else if(!subseqs[i].view.controlPoint1){
+							subseqs[i].view.controlPoint1 = controlPoint;
+						}
+						resetControlPoint(subseqs[i]);
+					}
 				}
 			}
 		}
