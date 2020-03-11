@@ -866,7 +866,7 @@ function FlRenderer(canvasId,options){
 				var subseqs = selectSubseqByOperId(beforValue);
 				for(var i in subseqs){
 					subseqs[i].model.operationId = value;
-					//TODO 如果activityId被改成空了就要把控制点恢复
+					//TODO 如果operationId被改成空了就要把控制点恢复
 				}
 			}
 		}
