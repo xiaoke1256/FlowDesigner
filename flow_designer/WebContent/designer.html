@@ -194,6 +194,8 @@ $(function(){
 			return;
 		}
 		flRenderer.setVal(this.name,this.value);
+		//处理联动
+		linkageControl(this);
 	});
 	/**选择框选择后的联动事件*/
 	$('#rightInfo select').change(function(){
@@ -201,6 +203,8 @@ $(function(){
 			return;
 		}
 		flRenderer.setVal(this.name,$(this).val());
+		//处理联动
+		linkageControl(this);
 	});
 	/**rediobutton点击后的联动事件*/
 	$('#rightInfo input[type=radio]').click(function(){
@@ -208,6 +212,8 @@ $(function(){
 			return;
 		}
 		flRenderer.setVal(this.name,this.value);
+		//处理联动
+		linkageControl(this);
 	});
 	/**checkbox点击后的联动事件*/
 	$('#rightInfo input[type=checkbox]').click(function(){
@@ -218,6 +224,8 @@ $(function(){
 			flRenderer.setVal(this.name,this.value);
 		else
 			flRenderer.setVal(this.name,'0');
+		//处理联动
+		linkageControl(this);
 	});
 	
 	/**
@@ -246,8 +254,23 @@ $(function(){
 			}
 			
 		}
-		//某些控件是有联动性的。（包括联动后某些是必填了）
 		return true;
+	}
+	
+	/**
+	* 联动控制
+	*/
+	function linkageControl(input){
+		if(input.name=='activityName'){
+			//活动名称的内容与显示名称的内容联动。
+			
+		}else if(input.name=='activityType'){
+			//活动类型与活动控制信息联动。
+			
+		}else if(input.name=='activityBz'){
+			//活动控制信息与活动类型联动。
+			
+		}
 	}
 });
 </script>
@@ -367,7 +390,7 @@ $(function(){
 	      <div class="center">
 	        <label><input type="radio" name="authority" value="0" >到个人</label>
 	        <label><input type="radio" name="authority" value="1" >到部门</label>
-	        <label><input type="radio" name="authority" value="2" >到机关</label>
+	        <label><input type="radio" name="authority" value="2" >到机构</label>
 	      </div>
 	      
 	    </div>
