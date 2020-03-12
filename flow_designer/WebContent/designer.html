@@ -21,7 +21,8 @@ $(function(){
 				activityId:'0000',
 				activityName:'任务分配',
 				activityType:'01',
-				displayName:'任务分配'
+				displayName:'任务分配',
+				activityBz:'1'
 			  },
 			  view:{
 				displayindex:168,
@@ -36,6 +37,7 @@ $(function(){
 		    {model:{
 		    	activityId:'0000',
 		    	autoFinish:'0',
+		    	operationName:'分配完成',
 		    	displayName:'分配完成',
 		    	operationId:'000001',
 		    	sequence:0 //sequence 就是优先级.
@@ -55,6 +57,16 @@ $(function(){
 				    var objType = '';
 					if(obj instanceof Act){
 						objType = 'act';
+						//活动控制信息再某些情况下是不可选的。
+						if('01'==obj.model.activityType){//任意一人则可以选择“开始活动”和“自动完成”
+							var $radio = $('input[type=radio][name=activityBz]');
+							$radio.filter('[value=1]').attr('disabled',false);
+							$radio.filter('[value=2]').attr('disabled',false);
+						}else{//否则则禁用“开始活动”和“自动完成”
+							var $radio = $('input[type=radio][name=activityBz]');
+							$radio.filter('[value=1]').attr('disabled',true);
+							$radio.filter('[value=2]').attr('disabled',true);
+						}
 					}else if(obj instanceof Oper){
 						objType = 'oper';
 					}else if(obj instanceof Subsequent){
@@ -263,12 +275,26 @@ $(function(){
 	function linkageControl(input){
 		if(input.name=='activityName'){
 			//活动名称的内容与显示名称的内容联动。
-			
+			$(input).parent().parent().parent().find('[name=displayName]').val($(input).val());
+			flRenderer.setVal('displayName',$(input).val());
 		}else if(input.name=='activityType'){
 			//活动类型与活动控制信息联动。
+			if('01'==$(input).val()){//任意一人则可以选择“开始活动”和“自动完成”
+				var $radio = $('input[type=radio][name=activityBz]');
+				$radio.filter('[value=1]').attr('disabled',false);
+				$radio.filter('[value=2]').attr('disabled',false);
+			}else{//否则则禁用“开始活动”和“自动完成”
+				var $radio = $('input[type=radio][name=activityBz]');
+				$radio.filter('[value=0]').attr('checked',true);
+				$radio.filter('[value=1]').attr('disabled',true);
+				$radio.filter('[value=2]').attr('disabled',true);
+				flRenderer.setVal('activityBz','0');
+			}
 			
 		}else if(input.name=='activityBz'){
-			//活动控制信息与活动类型联动。
+			//活动控制信息与活动类型联动。略....
+			
+		}else if(input.name=='operationName'){
 			
 		}
 	}
