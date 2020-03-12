@@ -298,6 +298,14 @@ $(function(){
 			//结果名称的内容与显示名称的内容联动。
 			$(input).parent().parent().parent().find('[name=displayName]').val($(input).val());
 			flRenderer.setVal('displayName',$(input).val());
+		}else if(input.name=='postDefault'){
+			//后续活动的
+			if('4'==$(input).val()||'5'==$(input).val()){//指定活动首用户和指定活动末用户
+				$('[name=postDefaultActivity]').attr('disabled',false);
+			}else{
+				$('[name=postDefaultActivity]').attr('disabled',true);
+			}
+			
 		}
 	}
 });
@@ -489,7 +497,7 @@ $(function(){
 	      	  <tr>
 	      	    <td class="dt" >截至天数</td>
 	      	    <td class="dc" >
-	      	    	<input name="deadlineDay" type="text" >
+	      	    	<input name="deadlineDay" validator="{number:true}" type="text" >
 	      	    </td>
 	      	  </tr>
 	      	  <tr>
