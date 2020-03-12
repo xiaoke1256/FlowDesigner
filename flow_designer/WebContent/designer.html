@@ -295,7 +295,9 @@ $(function(){
 			//活动控制信息与活动类型联动。略....
 			
 		}else if(input.name=='operationName'){
-			
+			//结果名称的内容与显示名称的内容联动。
+			$(input).parent().parent().parent().find('[name=displayName]').val($(input).val());
+			flRenderer.setVal('displayName',$(input).val());
 		}
 	}
 });
