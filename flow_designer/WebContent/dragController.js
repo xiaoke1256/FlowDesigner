@@ -24,7 +24,7 @@ var getDefaultDragCtrl = function(renderCtx){
 			}
 			if(obj.parent instanceof Oper){
 				var target = redMarked;
-				if(!target instanceof Act){//一个结果必须与一个活动关联.
+				if(!(target instanceof Act)){//一个结果必须与一个活动关联.
 					resetControlPoint(obj.parent);
 				    return;
 				}
@@ -113,7 +113,7 @@ var getDefaultDragCtrl = function(renderCtx){
 			var view = oper.view;
 			if(view.x < afterPos.x && afterPos.x < view.x + view.width 
 					&& view.y < afterPos.y && afterPos.y < view.y + view.height ){
-				console.log('actact');
+				console.log('oper selected : '+(oper instanceof Oper));
 				flRender.setRedMarked(oper);
 				return;
 			}
