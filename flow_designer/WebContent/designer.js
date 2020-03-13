@@ -873,10 +873,6 @@ function FlRenderer(canvasId,options){
 					opers[i].model.activityId = value;
 					//如果activityId被改成空了就要把控制点恢复
 					if(!value){
-						var controlPoint = new ControlPoint(0,0);//坐标先随便设一个
-						controlPoint.parent = opers[i];//父对象就是其业务对象。
-						controlPoint.parentType = 'result';
-						opers[i].view.controlPoint = controlPoint;
 						resetControlPoint(opers[i]);
 					}
 				}
@@ -885,14 +881,6 @@ function FlRenderer(canvasId,options){
 					subseqs[i].model.activityId = value;
 					//如果activityId被改成空了就要把控制点恢复
 					if(!value){
-						var controlPoint = new ControlPoint(0,0);//坐标先随便设一个
-						controlPoint.parent = subseqs[i];//父对象就是其业务对象。
-						controlPoint.parentType = 'subseq';
-						if(!subseqs[i].view.controlPoint){
-							subseqs[i].view.controlPoint = controlPoint;
-						}else if(!subseqs[i].view.controlPoint1){
-							subseqs[i].view.controlPoint1 = controlPoint;
-						}
 						resetControlPoint(subseqs[i]);
 					}
 				}
@@ -1171,6 +1159,30 @@ function FlRenderer(canvasId,options){
 			//重绘一下
 			drawAll(cxt);
 			onSelect(obj);//触发一下相关事件
+		},
+		/**断开连接与活动的连接*/
+		disconWithAct:function(){
+			//先找到选中的业务对象
+			if(selected.length==0){
+				return;
+			}
+			var obj = selected[selected.length-1];
+			obj.model.activityId = '';
+			resetControlPoint(obj);
+			//重绘一下
+			drawAll(cxt);
+		},
+		/**断开连接与结果的连接*/
+		disconWithOper:function(){
+			//先找到选中的业务对象
+			if(selected.length==0){
+				return;
+			}
+			var obj = selected[selected.length-1];
+			obj.model.operationId = '';
+			resetControlPoint(obj);
+			//重绘一下
+			drawAll(cxt);
 		}
 	};
 	//设定鼠标拖动控制器

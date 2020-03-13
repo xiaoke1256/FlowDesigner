@@ -195,9 +195,6 @@ $(function(){
 		
 		flRenderer.addSubseq(subseq);
 	});
-	$('#deleteBtn').click(function(){
-		flRenderer.deleteSelected();
-	});
 	
 	//以下把页面上的输入信息，设置到模型对象中去.
 	/**文本框输入信息时的联动事件*/
@@ -318,6 +315,12 @@ $(function(){
 		});
 		
 	});
+	$('.rmItemDisconAct').click(function(){
+		flRenderer.disconWithAct();
+	});
+	$('.rmItemDisconOper').click(function(){
+		flRenderer.disconWithOper();
+	});
 });
 </script>
 </head>
@@ -344,10 +347,6 @@ $(function(){
       <div id="toolNodeBtn" >
         <img id="toolNode" src="imgs/design/node.png">
         <div>后续线</div>
-      </div>
-      <div id="deleteBtn" >
-        <img id="delete" src="imgs/design/trash.png">
-        <div>删除</div>
       </div>
     </div>
     <canvas id="designer" width="865px" height="560px" ></canvas>
@@ -653,14 +652,14 @@ $(function(){
   </div>
   <div id="rightMenuForOper" class="rightMenu" style="display:none;z-index:100;position:absolute">
   	<ul>
-  		<li><a onclick='alert("aaaaa")' >断开与活动的连接</a></li>
+  		<li><a class="rmItemDisconAct" >断开与活动的连接</a></li>
   		<li><a class="rmItemDel">删除</a></li>
   	</ul>
   </div>
   <div id="rightMenuForSubseq" class="rightMenu" style="display:none;z-index:100;position:absolute">
   	<ul>
-  		<li><a onclick='alert("aaaaa")' >断开与活动的连接</a></li>
-  		<li><a onclick='alert("bbbbb")' >断开与结果的连接</a></li>
+  		<li><a class="rmItemDisconAct" >断开与活动的连接</a></li>
+  		<li><a class="rmItemDisconOper" >断开与结果的连接</a></li>
   		<li><a class="rmItemDel">删除</a></li>
   	</ul>
   </div>

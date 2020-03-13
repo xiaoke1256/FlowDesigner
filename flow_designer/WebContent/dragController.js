@@ -187,6 +187,51 @@ function resetControlPoint(obj,thisControlPoint){
 		controlPoint.x = x;
 		controlPoint.y = y;
 	}
+	//如果控制点缺失要将他补齐
+	if(obj instanceof Oper ){
+		if(!obj.model.activityId && !obj.view.controlPoint){
+			var x = obj.view.x +Math.floor((obj.view.width)/2);
+			var y = obj.view.y-30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
+			var controlPoint = new ControlPoint(x,y);//坐标先随便设一个
+			controlPoint.parent = obj;//父对象就是其业务对象。
+			controlPoint.parentType = 'result';
+			obj.view.controlPoint = controlPoint;
+		}
+	}
+	if(obj instanceof Subsequent){
+		var fillNum = 0;//需要补充的数量。
+		if(!obj.model.operationId){
+			fillNum++;
+		} 
+		if(!obj.model.activityId){
+			fillNum++;
+		}
+		if(obj.view.controlPoint){
+			fillNum--;
+		}
+		if(obj.view.controlPoint1){
+			fillNum--;
+		}
+		if(fillNum>0 && !obj.view.controlPoint){
+			var x = obj.view.x +Math.floor((obj.view.width)/2);
+			var y = obj.view.y-30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
+			var controlPoint = new ControlPoint(x,y);//坐标先随便设一个
+			controlPoint.parent = obj;//父对象就是其业务对象。
+			controlPoint.parentType = 'subseq';
+			obj.view.controlPoint = controlPoint;
+			fillNum--;
+		}
+		if(fillNum>0 && !obj.view.controlPoint1){
+			var x = obj.view.x +Math.floor((obj.view.width)/2);
+			var y = obj.view.y+30+Math.floor(icons['mouse'].height/2);// 鼠标图形的一半。
+			var controlPoint = new ControlPoint(x,y);//坐标先随便设一个
+			controlPoint.parent = obj;//父对象就是其业务对象。
+			controlPoint.parentType = 'subseq';
+			obj.view.controlPoint1 = controlPoint;
+			fillNum--;
+		}
+		
+	}
 }
 
 /**
