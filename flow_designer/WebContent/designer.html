@@ -308,6 +308,16 @@ $(function(){
 			
 		}
 	}
+	
+	//右键菜单中的事件
+	$('.rmItemDel').click(function(){
+		confirmMsg("是否真的要删除该对象。",function(result){
+			if(result){
+				flRenderer.deleteSelected();
+			}
+		});
+		
+	});
 });
 </script>
 </head>
@@ -635,5 +645,48 @@ $(function(){
     </div>
     <div class="clear"></div>
   </div>
+  <!-- 右键菜单 -->
+  <div id="rightMenuForAct" class="rightMenu" style="display:none;z-index:100;position:absolute">
+  	<ul>
+  		<li><a class="rmItemDel">删除</a></li>
+  	</ul>
+  </div>
+  <div id="rightMenuForOper" class="rightMenu" style="display:none;z-index:100;position:absolute">
+  	<ul>
+  		<li><a onclick='alert("aaaaa")' >断开与活动的连接</a></li>
+  		<li><a class="rmItemDel">删除</a></li>
+  	</ul>
+  </div>
+  <div id="rightMenuForSubseq" class="rightMenu" style="display:none;z-index:100;position:absolute">
+  	<ul>
+  		<li><a onclick='alert("aaaaa")' >断开与活动的连接</a></li>
+  		<li><a onclick='alert("bbbbb")' >断开与结果的连接</a></li>
+  		<li><a class="rmItemDel">删除</a></li>
+  	</ul>
+  </div>
+  <script type="text/javascript">
+  $(function(){
+	  //把浏览器默认的右键菜单禁用掉.
+	  $('.rightMenu').bind("contextmenu", function(){
+	    return false;
+	  });
+	  //点击任何地方，就把右键菜单隐藏起来.
+	  $('body').click(function(){
+		  $('.rightMenu').hide();
+	  })
+  });
+  
+  /**
+   * 显示需要确认信息
+   * 如果不满意显示效果可以另写一个函数把它覆盖掉。
+   * @returns
+   */
+  function confirmMsg(msg,callback){
+	  var result = confirm(msg);
+	  if(callback){
+		  callback(result);
+	  }
+  }
+  </script>
 </body>
 </html>

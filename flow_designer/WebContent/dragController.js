@@ -1,6 +1,8 @@
 /**
  * 本js文件定义了，鼠标拖动的控制器。
  * 包含两个控制器，一个是默认的，一个是调整坐标系时用的。
+ * 本js程序依赖于以下程序：
+ * jQuery.js
  */
 
 /**
@@ -141,6 +143,21 @@ var getDefaultDragCtrl = function(renderCtx){
 			flRender.resetSelected(obj);
 			//然后将右键菜单显示出来
 			//将右键菜单挪到鼠标所在的位置
+			var x = event.pageX;
+		    var y = event.pageY;
+		    var rightMenuDiv = null;
+		    if(obj instanceof Act){
+		    	rightMenuDiv = $('#rightMenuForAct');
+		    }else if(obj instanceof Oper){
+		    	rightMenuDiv = $('#rightMenuForOper');
+		    }else if(obj instanceof Subsequent){
+		    	rightMenuDiv = $('#rightMenuForSubseq');
+		    }else{
+		    	return;
+		    }
+		    rightMenuDiv.css("left",x);
+		    rightMenuDiv.css("top",y);
+		    rightMenuDiv.show();
 		}
 	}
 };

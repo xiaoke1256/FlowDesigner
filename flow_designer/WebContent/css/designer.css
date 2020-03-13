@@ -20,3 +20,9 @@ table.info .dc {text-align:left;width:68%;padding:2px 4px;}
 table.info .dc input[type=text],table.info .dc select {width:85%}
 
 table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
+
+.rightMenu {background-color:white;border:1px solid grey}
+.rightMenu ul {list-style:none;margin:2px;padding:0px}
+.rightMenu ul li:hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
+.rightMenu ul li:active {background-color:#9bf}
+.rightMenu ul li a {padding:3px 20px;cursor:default}
