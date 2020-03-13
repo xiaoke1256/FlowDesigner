@@ -134,6 +134,13 @@ var getDefaultDragCtrl = function(renderCtx){
 			}else if(obj instanceof ControlPoint){
 				_onControlPointDrag(obj,beforePos,afterPos);
 			}
+		},
+		/**右击事件*/
+		rightClick:function(obj){
+			//先把业务对象选中
+			flRender.resetSelected(obj);
+			//然后将右键菜单显示出来
+			//将右键菜单挪到鼠标所在的位置
 		}
 	}
 };
@@ -181,6 +188,10 @@ var getMovimgDragCtrl = function(renderCtx){
 		/**拖动事件*/
 		onDrag:function(obj,beforePos,afterPos,beforeAbsPos,afterAbsPos){
 			_onDrag(obj,beforePos,afterPos,beforeAbsPos,afterAbsPos)
+		},
+		/**右击事件*/
+		rightClick:function(obj){
+			//do nothing.
 		}
 	};
 }

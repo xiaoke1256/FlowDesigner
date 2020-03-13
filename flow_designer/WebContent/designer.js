@@ -219,6 +219,25 @@ function FlRenderer(canvasId,options){
         }
 	});
 	
+	//处理右键
+	//先把他禁用掉
+	$(c).bind("contextmenu", function(){
+	    return false;
+	});
+	//再处理事件
+	$(c).mouseup(function(e) {
+		if(event.button == 2){//右键为2
+			if(typeof(dragCtrl.rightClick)=='function'){
+				var cursorPos = getCursorPos(event,c);
+				var obj = selectObj(cursorPos.x,cursorPos.y);
+				if(obj instanceof BussinessObj){
+					dragCtrl.rightClick(obj);
+				}
+				
+			}
+		}
+	});
+	
 	//监听鼠标移动事件
 	$(c).mousemove(function(){
 		if(!isMouseDown)
@@ -1141,6 +1160,17 @@ function FlRenderer(canvasId,options){
 			}
 			var obj = selected[selected.length-1];
 			return _isRepeate(obj,prop,value);
+		},
+		/**重新设置选中框里的内容*/
+		resetSelected:function(obj){
+			//把选中框清空，然后把Obj放进去
+			selected = [];
+			if(obj && obj instanceof BussinessObj){
+				selected.push(obj);
+			}
+			//重绘一下
+			drawAll(cxt);
+			onSelect(obj);//触发一下相关事件
 		}
 	};
 	//设定鼠标拖动控制器
