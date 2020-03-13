@@ -24,6 +24,10 @@ var getDefaultDragCtrl = function(renderCtx){
 			}
 			if(obj.parent instanceof Oper){
 				var target = redMarked;
+				if(!target instanceof Act){//一个结果必须与一个活动关联.
+					resetControlPoint(obj.parent);
+				    return;
+				}
 				if(!target.model.activityId){
 					showErrMsg('请先填写“活动代码”。');
 					resetControlPoint(obj.parent);
