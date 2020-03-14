@@ -7,8 +7,10 @@ body {font-size:8px}
 .main>div,.main>canvas {float:left}
 .main .clear {clear:both}
 .main .asideTools {border:1px solid grey}
-.main .asideTools .title  {text-align:center;font-size:8px;width:80px;padding:5px;color:white;background-color:blue}
-.main .asideTools div {text-align:center;margin:0 0 20px 0}
+.main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
+.main .asideTools div {text-align:center;padding:10px 0}
+.main .asideTools div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
+.main .asideTools div:not(.title):active {background-color:#9bf}
 .main canvas {border:1px solid grey;margin:0 3px}
 
 .rightInfo {width:280px;border:1px solid grey;padding:12px 0}
