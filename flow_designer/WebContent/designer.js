@@ -120,6 +120,16 @@ var icons = (function(){
 	actImg.src='imgs/design/anyone.gif';
 	actImg.width = 28;//这里未必是图片真实的宽度，因图片上有可能有空白的边。
 	actImg.height = 36;//这里未必是图片真实的高度，因图片上有可能有空白的边。
+	//开始活动图片.
+	var actStartImg = new Image();
+	actStartImg.src='imgs/design/anyone_start.gif';
+	actStartImg.width = 28;
+	actStartImg.height = 36;
+	//自动完成活动图片.
+	var actAutoImg = new Image();
+	actAutoImg.src='imgs/design/anyone_auto.gif';
+	actAutoImg.width = 28;
+	actAutoImg.height = 36;
 	//图片结果图片
 	var operImg = new Image();
 	operImg.src='imgs/design/Blue Ball16.png';
@@ -136,6 +146,8 @@ var icons = (function(){
 	subseqImg.height = 16;
 	return {
 		"act":actImg,
+		"act_start":actStartImg,
+		"act_auto":actAutoImg,
 		"oper":operImg,
 		"mouse":mouseImg,
 		"subseq":subseqImg
@@ -650,7 +662,13 @@ function FlRenderer(canvasId,options){
 			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2  //14是字体的宽度。
 			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);//文字写在图像上方8个像素点处。
 		}
-		cxt.drawImage(icons['act'],act.view.x,act.view.y);
+		var icon = icons['act'];
+		if(act.model.activityBz=='1'){
+			icon = icons['act_start'];
+		}else if(act.model.activityBz=='2'){
+			icon = icons['act_auto'];
+		}
+		cxt.drawImage(icon,act.view.x,act.view.y);
 	}
 	/**
 	 * 绘制一个结果线
