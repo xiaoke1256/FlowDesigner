@@ -142,9 +142,19 @@ var icons = (function(){
 	actSeqImg.height = 36;
 	//图片结果图片
 	var operImg = new Image();
-	operImg.src='imgs/design/Blue Ball16.png';
-	operImg.width = 16;
-	operImg.height = 16;
+	operImg.src='imgs/design/result.gif';
+	operImg.width = 12;
+	operImg.height = 12;
+	//自动完成的结果
+	var operAutoImg = new Image();
+	operAutoImg.src= 'imgs/design/result_auto.gif';
+	operAutoImg.width = 12;
+	operAutoImg.height = 12;
+	//中断的结果
+	var operBreakImg = new Image();
+	operBreakImg.src= 'imgs/design/result_break.gif';
+	operBreakImg.width = 12;
+	operBreakImg.height = 12;
 	//控制点图片
 	var mouseImg = new Image();
 	mouseImg.src='imgs/design/mouse_add.png';
@@ -152,8 +162,8 @@ var icons = (function(){
 	mouseImg.height = 16;
 	//后续线图片（没有图片，是直接在画布上画的圆圈）
 	var subseqImg = new Image();
-	subseqImg.width = 16;
-	subseqImg.height = 16;
+	subseqImg.width = 12;
+	subseqImg.height = 12;
 	return {
 		"act":actImg,
 		"act_start":actStartImg,
@@ -161,6 +171,8 @@ var icons = (function(){
 		"act_piall":actPiallImg,
 		"act_seq":actSeqImg,
 		"oper":operImg,
+		"oper_auto":operAutoImg,
+		"oper_break":operBreakImg,
 		"mouse":mouseImg,
 		"subseq":subseqImg
 	}
@@ -691,7 +703,13 @@ function FlRenderer(canvasId,options){
 	 */
 	function drawOperation(cxt,oper){
 		 var view = oper.view;
-		 cxt.drawImage(icons['oper'],oper.view.x,oper.view.y);
+		 var icon = icons['oper'];
+		 if(oper.model.resultFlag=='1'){
+			 icon = icons['oper_break'];
+		 }else if(oper.model.autoFinish=='1'){
+			 icon = icons['oper_auto'];
+		 }
+		 cxt.drawImage(icon,oper.view.x,oper.view.y);
 		 //如果关联了一个活动
 		 //console.log("oper.model.activityId:"+oper.model.activityId);
 		 if(oper.model.activityId){
