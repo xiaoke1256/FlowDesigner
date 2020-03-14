@@ -130,6 +130,16 @@ var icons = (function(){
 	actAutoImg.src='imgs/design/anyone_auto.gif';
 	actAutoImg.width = 28;
 	actAutoImg.height = 36;
+	//多人并行
+	var actPiallImg = new Image();
+	actPiallImg.src='imgs/design/paiallel.gif';
+	actPiallImg.width = 28;
+	actPiallImg.height = 36;
+	//多人串行
+	var actSeqImg = new Image();
+	actSeqImg.src='imgs/design/sequence.gif';
+	actSeqImg.width = 28;
+	actSeqImg.height = 36;
 	//图片结果图片
 	var operImg = new Image();
 	operImg.src='imgs/design/Blue Ball16.png';
@@ -148,6 +158,8 @@ var icons = (function(){
 		"act":actImg,
 		"act_start":actStartImg,
 		"act_auto":actAutoImg,
+		"act_piall":actPiallImg,
+		"act_seq":actSeqImg,
 		"oper":operImg,
 		"mouse":mouseImg,
 		"subseq":subseqImg
@@ -667,6 +679,10 @@ function FlRenderer(canvasId,options){
 			icon = icons['act_start'];
 		}else if(act.model.activityBz=='2'){
 			icon = icons['act_auto'];
+		}else if(act.model.activityType=='03'){
+			icon = icons['act_piall'];
+		}else if(act.model.activityType=='02'){
+			icon = icons['act_seq'];
 		}
 		cxt.drawImage(icon,act.view.x,act.view.y);
 	}
