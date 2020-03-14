@@ -8,7 +8,7 @@ body {font-size:8px}
 .main .clear {clear:both}
 .main .asideTools {border:1px solid grey}
 .main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
-.main .asideTools div {text-align:center;padding:10px 0}
+.main .asideTools div {text-align:center;padding:8px 0}
 .main .asideTools div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
 .main .asideTools div:not(.title):active {background-color:#9bf}
 .main canvas {border:1px solid grey;margin:0 3px}
