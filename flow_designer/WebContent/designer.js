@@ -607,6 +607,16 @@ function FlRenderer(canvasId,options){
 	 */
 	function drawSubsequentLine(cxt,subseq){
 		var view = subseq.view;
+		if(subseq.model.sequence==0){//优先级是0，则用实线
+			cxt.setLineDash([]);
+		}else if(subseq.model.sequence==1){//优先级是1，则用虚线
+			cxt.setLineDash([10,10]);
+		}else if(subseq.model.sequence==2){//优先级是2，则用点划线
+			cxt.setLineDash([10,4,2,4]);
+		}else if(subseq.model.sequence>=3){//优先级大于2，则用双点划线
+			cxt.setLineDash([10,4,2,4,2,4]);
+		}
+		
 		if(subseq.model.activityId){//如果关联了一个活动
 			//console.log("subseq.model.activityId:"+subseq.model.activityId);
 			//查找对应的活动
@@ -658,6 +668,7 @@ function FlRenderer(canvasId,options){
 			cxt.lineTo(controlPoint.x-0.5,controlPoint.y-0.5);
 			cxt.stroke();
 		}
+		cxt.setLineDash([]);//绘制完后还原成实线。
 	}
 	
 	/**
