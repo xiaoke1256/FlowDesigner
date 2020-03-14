@@ -156,6 +156,48 @@ $(function(){
 		flRenderer.addAct(act);
 	});
 	
+	$('#toolSeqBtn').click(function(){
+		//获取画布的中心点坐标
+		var center = flRenderer.getCenter();
+		//新创建一个业务对象
+		var act = {model:{
+			activityId:'',
+			activityName:'活动名称',
+			activityType:'02',
+			displayName:'活动名称'
+		  },
+		  view:{
+			displayindex:168,
+			height:36,
+			width:28,
+			x:(center.x-26/2),
+			y:(center.y-36/2)
+		  }
+		};
+		flRenderer.addAct(act);
+	});
+	
+	$('#toolPiallBtn').click(function(){
+		//获取画布的中心点坐标
+		var center = flRenderer.getCenter();
+		//新创建一个业务对象
+		var act = {model:{
+			activityId:'',
+			activityName:'活动名称',
+			activityType:'03',
+			displayName:'活动名称'
+		  },
+		  view:{
+			displayindex:168,
+			height:36,
+			width:28,
+			x:(center.x-26/2),
+			y:(center.y-36/2)
+		  }
+		};
+		flRenderer.addAct(act);
+	});
+	
 	$('#tool2Btn').click(function(){
 		//获取画布的中心点坐标
 		var center = flRenderer.getCenter();
@@ -179,6 +221,7 @@ $(function(){
 		
 		flRenderer.addOper(operation);
 	});
+	
 	$('#toolNodeBtn').click(function(){
 		//获取画布的中心点坐标
 		var center = flRenderer.getCenter();
@@ -344,8 +387,8 @@ $(function(){
         <img id="toolSeq" src="imgs/design/sequence.gif">
         <div>多人串行</div>
       </div>
-      <div id="toolSeqBtn" >
-        <img id="toolSeq" src="imgs/design/paiallel.gif">
+      <div id="toolPiallBtn" >
+        <img id="toolPiall" src="imgs/design/paiallel.gif">
         <div>多人并行</div>
       </div>
       <div id="tool2Btn" >
