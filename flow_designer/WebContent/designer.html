@@ -65,7 +65,9 @@ $(function(){
 	var flRenderer = FlRenderer('designer',
 			{'onSelect':function(obj){
 				    var objType = '';
-					if(obj instanceof Act){
+				    if(obj instanceof FlowInfo){
+				    	objType = 'flow';
+				    }else if(obj instanceof Act){
 						objType = 'act';
 						//活动控制信息再某些情况下是不可选的。
 						if('01'==obj.model.activityType){//任意一人则可以选择“开始活动”和“自动完成”
@@ -412,7 +414,34 @@ $(function(){
     </div>
     <canvas id="designer" width="865px" height="560px" ></canvas>
     <div id="rightInfo" class="rightInfo">
-      
+      <!-- 流程基本信息 -->
+      <div id="flowInfo" >
+      	<div class="title">流程基本信息</div>
+      	<table class="info">
+	      <tbody>
+	        <tr>
+	      	  <td class="dt" >流程代码</td>
+	      	  <td class="dc" ><input name="flowId" readonly="readonly" type="text" ></td>
+	      	</tr>
+	      	<tr>
+	      	  <td class="dt" >版本号</td>
+	      	  <td class="dc" ><input name="version" type="text" ></td>
+	      	</tr>
+	      	<tr>
+	      	  <td class="dt" >流程名称</td>
+	      	  <td class="dc" ><input name="flowName" type="text" ></td>
+	      	</tr>
+	      	<tr>
+	      	  <td class="dt" >显示名称</td>
+	      	  <td class="dc" ><input name="displayName" type="text" ></td>
+	      	</tr>
+	      	<tr>
+	      	  <td class="dt" >流程描述</td>
+	      	  <td class="dc" ><textarea name="description" ></textarea></td>
+	      	</tr>
+	      </tbody>
+	   </table>
+      </div>
       <!-- 活动信息 -->
       <div id="actInfo">
 	      <div class="title">活动基本信息</div>

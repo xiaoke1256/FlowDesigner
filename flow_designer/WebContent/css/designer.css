@@ -20,6 +20,7 @@ table.info {width:100%;margin:0 0 5px 0}
 table.info .dt {text-align:right;width:32%;padding:2px 5px;white-space: nowrap;vertical-align: top;}
 table.info .dc {text-align:left;width:68%;padding:2px 4px;}
 table.info .dc input[type=text],table.info .dc select {width:85%}
+table.info .dc textarea {width:150px;height:80px}
 
 table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
 

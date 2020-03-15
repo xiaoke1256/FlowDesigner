@@ -100,7 +100,7 @@ var FlowInfo =function(obj){
 		"flowId":0,/*流程模型的编号*/
 		"version":'1.0',/*流程模型的版本号*/
 		"flowName":'',/*流程模型的名称*/
-		"displayName":'1',
+		"displayName":'',
 		"description":''
 	};
 	obj.model = $.extend(defaultModel,obj.model);
