@@ -19,7 +19,7 @@ var BussinessObj = function(obj){
 		console.log("obj.model.displayName:"+obj.model.displayName);
 	}
 	this.view={};
-	if(obj && obj instanceof Object){
+	if(obj && obj instanceof Object && obj.view){
 		this.view=obj.view;
 	}
 }
@@ -91,6 +91,21 @@ var Subsequent = function(obj){
 	this.view.controlPoint1=controlPoint;
 }
 Subsequent.prototype = new BussinessObj();
+
+/**
+ * 流程基本信息
+ */
+var FlowInfo =function(obj){
+	var defaultModel = {
+		"flowId":0,/*流程模型的编号*/
+		"version":'1.0',/*流程模型的版本号*/
+		"flowName":'',/*流程模型的名称*/
+		"displayName":'1',
+		"description":''
+	};
+	obj.model = $.extend(defaultModel,obj.model);
+	BussinessObj.call(this,obj);
+}
 
 /**
  * 一个坐标点
@@ -193,9 +208,10 @@ function FlRenderer(canvasId,options){
 	 * 模型
 	 */
 	var flowModle = {
-		  activities:[],/*活动*/
-		  operations:[],/*操作结果*/
-		  subsequents:[] /*操作结果*/
+		flowInfo:{model:{},view:{}},
+		activities:[],/*活动*/
+		operations:[],/*操作结果*/
+		subsequents:[] /*操作结果*/
 	};
 	
 	var originPoint = {x:0,y:0};//坐标系原点在画布上的位置 
@@ -498,6 +514,8 @@ function FlRenderer(canvasId,options){
 		drawSelect(cxt);
 		drawReadMarked(cxt);
 		cxt.restore();
+		//最后要绘制 flowInfo
+		drawFlowInfo(cxt,flowModle.flowInfo);
 	}
 	
 	/**
@@ -669,6 +687,26 @@ function FlRenderer(canvasId,options){
 			cxt.stroke();
 		}
 		cxt.setLineDash([]);//绘制完后还原成实线。
+	}
+	
+	/**
+	 * 绘制流程基本信息
+	 */
+	function drawFlowInfo(cxt,obj){
+		cxt.beginPath();
+		cxt.lineWidth=1;
+		cxt.fillStyle = '#bdf';
+		cxt.strokeStyle='grey';
+		cxt.rect(0.5,0.5,obj.view.width+0.5,obj.view.height+0.5);
+		cxt.fill();
+		cxt.stroke();
+		//画文字
+		cxt.fillStyle = 'black';
+		cxt.font = "bold 14px songti";
+		console.log(obj.model.displayName);
+		if(obj.model.displayName){//不至于在页面上显示undefind
+			cxt.fillText(obj.model.displayName, 0, 12);//12是字体的高度
+		}
 	}
 	
 	/**
@@ -1058,10 +1096,15 @@ function FlRenderer(canvasId,options){
 		/**加载一个模型*/
 		loadModel:function(modelJson){
 			//先清空模型
+			flowModle.flowInfo={};
 			flowModle.activities = [];
 			flowModle.operations = [];
 			flowModle.subsequents = [];
 			_clearSelected();
+			//基本信息
+			flowModle.flowInfo = new FlowInfo(modelJson.flowInfo);
+			flowModle.flowInfo.view.width = 84;
+			flowModle.flowInfo.view.height = 60;
 			for(var i in modelJson.activities){
 				var act = new Act(modelJson.activities[i]);
 				if(act.view.displayindex){
