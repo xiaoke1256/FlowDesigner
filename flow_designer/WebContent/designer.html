@@ -123,6 +123,11 @@ $(function(){
 	//加载这个模型
 	flRenderer.loadModel(testModel);
 	
+	//"打开按钮"
+	$('#openBtn').click(function(){
+		$("#files").click();
+	});
+	
 	//移动坐标系的控制器
 	var movimgDragCtrl = getMovimgDragCtrl(flRenderer);
 	//移动按钮的点击事件
@@ -394,7 +399,8 @@ $(function(){
 <body>
   <div class="topButtons" >
   	<button ><img src="imgs/design/menus/disk.png">保存</button>
-  	<button ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
+  	<input type="file" id="files" style="display: none" onchange="fileImport();">
+  	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
   	<button ><img src="imgs/design/menus/document-attribute-x-export.png">下载</button>
   	<button id="moveBtn" ><img src="">移动</button>
   	<button id="cancleMoveBtn" ><img src="">取消移动</button>
@@ -776,6 +782,23 @@ $(function(){
 		  $('.rightMenu').hide();
 	  })
   });
+  
+  /**读取文件的函数*/
+  function fileImport() {
+      //获取读取我文件的File对象
+      var selectedFile = document.getElementById('files').files[0];
+      var name = selectedFile.name;//读取选中文件的文件名
+      var size = selectedFile.size;//读取选中文件的大小
+      console.log("文件名:"+name+"大小:"+size);
+      /*
+      var reader = new FileReader();//这是核心,读取操作就是由它完成.
+      //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+      reader.onload = function () {
+          //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
+          console.log(this.result);
+      }
+		*/
+	}
   
   /**
    * 显示需要确认信息
