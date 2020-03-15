@@ -114,6 +114,7 @@ $(function(){
 						$('#'+objType+'Info').find('input[type=radio][name='+prop+']').filter('[value='+value+']').attr("checked",true);
 						$('#'+objType+'Info').find('input[type=checkbox][name='+prop+']').filter('[value='+value+']').attr("checked",true);
 						$('#'+objType+'Info').find('input[type=checkbox][name='+prop+']').filter(':not([value='+value+'])').attr("checked",false);
+						$('#'+objType+'Info').find('textarea[name='+prop+']').val(value);
 					}
 				}
 			}
@@ -270,6 +271,14 @@ $(function(){
 		//处理联动
 		linkageControl(this);
 	});
+	$('#rightInfo textArea').keyup(function(){
+		if(!validate(this,$(this).val())){
+			return;
+		}
+		flRenderer.setVal(this.name,$(this).val());
+		//处理联动
+		linkageControl(this);
+	});
 	/**rediobutton点击后的联动事件*/
 	$('#rightInfo input[type=radio]').click(function(){
 		if(!validate(this,$(this).val())){
@@ -358,6 +367,9 @@ $(function(){
 				$('[name=postDefaultActivity]').attr('disabled',true);
 			}
 			
+		}else if(input.name=='flowName'){
+			$(input).parent().parent().parent().find('[name=displayName]').val($(input).val());
+			flRenderer.setVal('displayName',$(input).val());
 		}
 	}
 	

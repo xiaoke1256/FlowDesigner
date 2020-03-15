@@ -1211,6 +1211,9 @@ function FlRenderer(canvasId,options){
 				subseq.view.height = icons['subseq'].height;
 				flowModle.subsequents.push(subseq);
 			}
+			//加载成功后默认选中流程基本信息
+			selected=[flowModle.flowInfo];
+			setTimeout(function(){onSelect(flowModle.flowInfo);},0)//触发回调函数
 			//加载完后渲染一下。放到另外一个线程去渲染，以保证图像已加载完成。由于浏览器加载图片是异步的，可能需要花较长时间，所以给他200毫秒去加载
 			setTimeout(function(){console.log('开始绘图');drawAll(cxt);},200);
 		},
