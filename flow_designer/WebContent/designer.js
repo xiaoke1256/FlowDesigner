@@ -705,8 +705,32 @@ function FlRenderer(canvasId,options){
 		cxt.font = "bold 14px songti";
 		console.log(obj.model.displayName);
 		if(obj.model.displayName){//不至于在页面上显示undefind
-			cxt.fillText(obj.model.displayName, 0, 12);//12是字体的高度
+			cxt.textAlign="center";
+			cxt.textBaseline="middle";
+			_fillTextInRect(cxt,obj.model.displayName, 0,0,obj.view.width, obj.view.height);//12是字体的高度
 		}
+	}
+	
+	function _fillTextInRect(cxt,text,x1,y1,x2,y2){
+		var dimension = cxt.measureText(text);
+		var allLength = dimension.width;
+		if(allLength<(x2-x1)){
+			//单行文本
+			cxt.fillText(text, (x1+x2)/2, (y1+y2)/2);
+			return
+		}
+		//否则字符超超长需要换行
+		var widthPorChar = Math.ceil(allLength/text.length);//每个字符的宽度.
+		var lineH = dimension.height;//每一行的高度
+		var charsPorLine = Math.floor(((x2-x1)/widthPorChar));//每行能容纳的文字数.
+		//先计算一下总共能容纳多少文字
+		var charCapacity = Math.floor((y2-y1)/lineH)*charsPorLine;
+		if(text.lengt>charCapacity){
+			text = text.substr(0,charCapacity-2)+'...';
+		}
+		//文字换行切割
+		var texts = [];
+		
 	}
 	
 	/**
