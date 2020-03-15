@@ -683,7 +683,7 @@ function FlRenderer(canvasId,options){
 			cxt.lineWidth=0.5;
 			cxt.strokeStyle='black';
 			cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);
-			cxt.lineTo(controlPoint.x-0.5,controlPoint.y-0.5);
+			cxt.lineTo(controlPoint.x-0.5,controlPoint.y-0.5,15);//15每一行的高度（字体高12个像素，在加上3个像素的行距。）
 			cxt.stroke();
 		}
 		cxt.setLineDash([]);//绘制完后还原成实线。
@@ -708,10 +708,12 @@ function FlRenderer(canvasId,options){
 			cxt.textAlign="center";
 			cxt.textBaseline="middle";
 			_fillTextInRect(cxt,obj.model.displayName, 0,0,obj.view.width, obj.view.height);//12是字体的高度
+			cxt.textAlign="start";//恢复成默认值
+			cxt.textBaseline="alphabetic";//恢复成默认值
 		}
 	}
 	
-	function _fillTextInRect(cxt,text,x1,y1,x2,y2){
+	function _fillTextInRect(cxt,text,x1,y1,x2,y2,lineH){
 		var dimension = cxt.measureText(text);
 		var allLength = dimension.width;
 		if(allLength<(x2-x1)){
@@ -721,7 +723,7 @@ function FlRenderer(canvasId,options){
 		}
 		//否则字符超超长需要换行
 		var widthPorChar = Math.ceil(allLength/text.length);//每个字符的宽度.
-		var lineH = dimension.height;//每一行的高度
+		var lineH = lineH||14;//每一行的高度()
 		var charsPorLine = Math.floor(((x2-x1)/widthPorChar));//每行能容纳的文字数.
 		//先计算一下总共能容纳多少文字
 		var charCapacity = Math.floor((y2-y1)/lineH)*charsPorLine;
@@ -730,6 +732,26 @@ function FlRenderer(canvasId,options){
 		}
 		//文字换行切割
 		var texts = [];
+		while(text.length>charsPorLine){
+			texts.push(text.substr(0,charsPorLine));
+			text = text.substr(charsPorLine);
+		}
+		texts.push(text);
+		var lines = texts.length;//行数
+		console.log("lines:"+lines);
+		var startY = (y1+y2)/2;
+		if(lines%2==1){//奇数行
+			startY -=  lineH*Math.floor(lines/2);
+		}else{//偶数行
+			startY -=  lineH*(Math.floor(lines/2)-0.5);
+		}
+		var y=startY;
+		console.log("yyyyyy:"+y);
+		for(var i in texts){
+			cxt.fillText(texts[i], (x1+x2)/2, y);
+			y+=lineH;
+			console.log("yyyyyy:"+y);
+		}
 		
 	}
 	
