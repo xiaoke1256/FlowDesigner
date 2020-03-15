@@ -251,21 +251,29 @@ function FlRenderer(canvasId,options){
 	
 	//监听事件onclick
 	$(c).click(function(){
-		//获取鼠标的坐标（相对于画布的位置）。
-		var cursorPos = getCursorPos(event,c);
-		var x = cursorPos.x;
-        var y = cursorPos.y;
-        //console.log("x:"+x+" y:"+y );
         //看看鼠标落在哪个对象上。
         selected = [];
-        var obj = selectObj(x,y);
-        if(obj && obj instanceof BussinessObj){
-        	selected.push(obj);
-        }
+        //先看看有没有选择流程的基本信息
+        var x = event.pageX-c.offsetLeft;
+	    var y = event.pageY-c.offsetTop;
+	    flowInfoView = flowModle.flowInfo.view;
+	    if(0<=x && x<=flowInfoView.width && 0<=y && y<=flowInfoView.height){
+	    	selected.push(flowModle.flowInfo);
+	    }else{
+			//获取鼠标的坐标（相对于画布的位置）。
+			var cursorPos = getCursorPos(event,c);
+			x = cursorPos.x;
+	        y = cursorPos.y;
+	        //console.log("x:"+x+" y:"+y );
+	        var obj = selectObj(x,y);
+	        if(obj && obj instanceof BussinessObj){
+	        	selected.push(obj);
+	        }
+	    }
         drawAll(cxt);
         if(selected.length>0){
         	//TODO obj 应当深拷贝后再传出去的。
-        	onSelect(obj);
+        	onSelect(selected[selected.length-1]);
         }else{
         	onSelect(null);
         }
@@ -693,6 +701,9 @@ function FlRenderer(canvasId,options){
 	 * 绘制流程基本信息
 	 */
 	function drawFlowInfo(cxt,obj){
+		if(!(obj instanceof FlowInfo)){
+			return ;//本函数仅处理FLowInfo
+		}
 		cxt.beginPath();
 		cxt.lineWidth=1;
 		cxt.fillStyle = '#bdf';
@@ -710,6 +721,15 @@ function FlRenderer(canvasId,options){
 			_fillTextInRect(cxt,obj.model.displayName, 0,0,obj.view.width, obj.view.height);//12是字体的高度
 			cxt.textAlign="start";//恢复成默认值
 			cxt.textBaseline="alphabetic";//恢复成默认值
+		}
+		//是否被选中
+		if(selected.indexOf(obj)>=0){
+			//选中则要绘制一下
+			cxt.beginPath();
+			cxt.lineWidth=1;
+			cxt.strokeStyle='green';
+			cxt.rect(0,0,obj.view.width+1,obj.view.height+1);
+			cxt.stroke();
 		}
 	}
 	
@@ -862,6 +882,9 @@ function FlRenderer(canvasId,options){
 	function drawSelect(ctx){
 		for(var i in selected){
 			var view = selected[i].view;
+			if(selected[i] instanceof FlowInfo){
+				continue;//FlowInfo 另行处理
+			}
 			//console.log("draw selected.");
 			ctx.beginPath();
 			ctx.lineWidth="1";
