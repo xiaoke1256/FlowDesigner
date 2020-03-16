@@ -9,12 +9,13 @@ body {font-size:8px;margin:0}
 .main .clear {clear:both}
 .main .asideTools {border:1px solid grey;height:100%}
 .main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
-.main .asideTools div {text-align:center;padding:8px 0}
-.main .asideTools div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
-.main .asideTools div:not(.title):active {background-color:#9bf}
+#asideContants {overflow-y: auto;height:100%;margin:0;padding:0}
+#asideContants div {text-align:center;padding:8px 0}
+#asideContants div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
+#asideContants div:not(.title):active {background-color:#9bf}
 .main canvas {border:1px solid grey;margin:0 3px}
 
-.rightInfo {width:280px;border:1px solid grey;padding:12px 0}
+.rightInfo {width:280px;border:1px solid grey;padding:12px 0;overflow-y: auto}
 .rightInfo .title {text-align:center;width:80%;margin:3px auto 3px auto;padding:2px;color:white;background-color:blue}
 
 table.info {width:100%;margin:0 0 5px 0}
