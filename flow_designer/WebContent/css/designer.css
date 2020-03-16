@@ -4,6 +4,9 @@ body {font-size:8px;margin:0}
 
 .topButtons {margin:5px 2px}
 .topButtons button ,.topButtons button img {vertical-align: bottom}
+.topButtons button {border:1px solid grey;background:#fff;padding:3px 10px;display:inline-block;margin-right:-4px}
+.topButtons button:first-child {border-radius: 4px 0 0 4px;}
+.topButtons button:last-child {border-radius: 0 4px 4px 0}
 .main {margin:0 2px}
 .main>div,.main>canvas {float:left}
 .main .clear {clear:both}
