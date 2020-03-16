@@ -29,6 +29,8 @@ function loadXML(xmlString){
             domParser  =   new   DOMParser();
             xmlDoc  =  domParser.parseFromString(xmlString,  ' text/xml ' );
         } catch (e){
+        	console.error(e);
+        	throw e;
         }
     }
      else {
@@ -36,4 +38,9 @@ function loadXML(xmlString){
     }
 
      return  xmlDoc;
+}
+
+/**把xml文档转成一个对象*/
+function xmlDocToObj(xmlDoc){
+	return {};
 }
