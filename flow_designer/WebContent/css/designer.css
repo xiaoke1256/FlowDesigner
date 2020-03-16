@@ -1,12 +1,13 @@
-body {font-size:8px}
+body {font-size:8px;margin:0}
 
 .center {padding:0 1px;text-align:center}
 
-.topButtons {margin:5px 0}
+.topButtons {margin:5px 2px}
 .topButtons button ,.topButtons button img {vertical-align: bottom}
+.main {margin:0 2px}
 .main>div,.main>canvas {float:left}
 .main .clear {clear:both}
-.main .asideTools {border:1px solid grey}
+.main .asideTools {border:1px solid grey;height:100%}
 .main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
 .main .asideTools div {text-align:center;padding:8px 0}
 .main .asideTools div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/

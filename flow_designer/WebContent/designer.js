@@ -1361,6 +1361,10 @@ function FlRenderer(canvasId,options){
 			resetControlPoint(obj);
 			//重绘一下
 			drawAll(cxt);
+		},
+		/**重新绘制*/
+		redraw:function(){
+			drawAll(cxt);
 		}
 	};
 	//设定鼠标拖动控制器
