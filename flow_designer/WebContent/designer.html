@@ -399,9 +399,13 @@ $(function(){
 		var height = $(window).height();
 		var width = $(window).width();
 		var buttonsHeight = $('div.topButtons').outerHeight(true);
+		var widthOfLeft = $('div.asideTools').outerWidth(true);
+		var widthOfRight = $('div.rightInfo').outerWidth(true);
 		$('div.main').height(height-buttonsHeight-4);//order 加留白等于4个像素
 		$('div.main .rightInfo').height(height-buttonsHeight-4-24);//因为有12个像素的padding所以要多扣24个像素
 		$('div.main canvas').attr("height",height-buttonsHeight-4);
+		//$('div.main').width(width-widthOfLeft-widthOfRight);
+		$('div.main canvas').attr("width",width-widthOfLeft-widthOfRight-12);
 		flRenderer.redraw();//canvas大小变了要重新绘制一下。
 	});
 	$(window).resize();//初始化时触发一下。
