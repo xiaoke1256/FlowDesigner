@@ -42,5 +42,23 @@ function loadXML(xmlString){
 
 /**把xml文档转成一个对象*/
 function xmlDocToObj(xmlDoc){
-	return {};
+	var flowModle = {
+		flowInfo:{model:{},view:{}},
+		activities:[],/*活动*/
+		operations:[],/*操作结果*/
+		subsequents:[] /*操作结果*/
+	};
+	var flowInfoModel = flowModle.flowInfo.model;
+	var flowId = xmlDoc.getAttribute("flowId");
+	var version = xmlDoc.getAttribute("version");
+	var flowName = xmlDoc.getAttribute("flowName");
+	var displayName = xmlDoc.getAttribute("displayName");
+	var description = xmlDoc.getAttribute("description");
+	flowInfoModel.flowId = flowId;
+	flowInfoModel.version = version;
+	flowInfoModel.flowName = flowName;
+	flowInfoModel.displayName = displayName;
+	flowInfoModel.description = description;
+	
+	return flowModle;
 }
