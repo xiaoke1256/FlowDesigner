@@ -799,6 +799,7 @@ function FlRenderer(canvasId,options){
 			cxt.fillStyle = 'black';
 			cxt.font = "bold 14px songti";
 			var textLeft = act.view.x+(act.view.width-act.model.displayName.length*14)/2  //14是字体的宽度。
+			//console.log("act.model.displayName:"+act.model.displayName+"  textLeft:"+textLeft+"  act.view.y-8"+(act.view.y-8));
 			cxt.fillText(act.model.displayName,textLeft,act.view.y-8);//文字写在图像上方8个像素点处。
 		}
 		var icon = icons['act'];

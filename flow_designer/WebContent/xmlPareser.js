@@ -76,7 +76,7 @@ function xmlDocToObj(xmlDoc){
 		}
 		var childNodes = actNode.children;
 		if(!childNodes){
-			console.log("childNodes 居然为空！！");
+			//console.log("childNodes 居然为空！！");
 			continue;
 		}
 		var modelNode =childNodes[0];
@@ -94,14 +94,14 @@ function xmlDocToObj(xmlDoc){
 			if(!propNodes[j].nodeName)
 				continue;
 			model[propNodes[j].nodeName]=propNodes[j].textContent ;
-			console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
+			//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
 		}
 		var propNodes = viewNode.children;
 		for(var j in propNodes){
 			if(!propNodes[j].nodeName)
 				continue;
-			view[propNodes[j].nodeName]=propNodes[j].textContent ;
-			console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
+			view[propNodes[j].nodeName]=parseInt(propNodes[j].textContent) ;
+			//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+parseInt(propNodes[j].textContent) +"”");
 		}
 		flowModle.activities.push({model:model,view:view});
 	}
