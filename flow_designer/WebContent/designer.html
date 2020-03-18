@@ -7,7 +7,11 @@
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="dragController.js"></script>
 <script type="text/javascript" src="designer.js"></script>
+<script type="text/javascript" src="xmlPareser.js"></script>
 <script type="text/javascript">
+
+//初始化绘图器
+var flRenderer = null;
 
 $(function(){
 	$('#cancleMoveBtn').hide();
@@ -62,7 +66,7 @@ $(function(){
 	};
 	
 	//初始化绘图器
-	var flRenderer = FlRenderer('designer',
+	flRenderer = FlRenderer('designer',
 			{'onSelect':function(obj){
 				    var objType = '';
 				    if(obj instanceof FlowInfo){
@@ -120,7 +124,7 @@ $(function(){
 			}
 	);
 	
-	//加载这个模型
+	//加载测试模型
 	flRenderer.loadModel(testModel);
 	
 	//"打开按钮"
@@ -809,20 +813,25 @@ $(function(){
       var name = selectedFile.name;//读取选中文件的文件名
       var size = selectedFile.size;//读取选中文件的大小
       console.log("文件名:"+name+"大小:"+size);
-      var ext = name.substr(name.indexOf('.')+1);
+      var ext = name.substr(name.lastIndexOf('.')+1);
       console.log("ext:"+ext);
       if(ext.toUpperCase()!='XML'){
     	  showErrMsg("请选择一个xml文件.");
     	  return false;
       }
-      /*
+      
+      //TODO 显示蒙版及滚轮
       var reader = new FileReader();//这是核心,读取操作就是由它完成.
-      //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+      reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
       reader.onload = function () {
           //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
           console.log(this.result);
+          var flowModle = xmlDocToObj(loadXML(this.result));
+          console.log("导出模型："+flowModle);
+          flRenderer.loadModel(flowModle);
+          //TODO 隐藏蒙板及滚轮
       }
-		*/
+		
 	}
   
   /**

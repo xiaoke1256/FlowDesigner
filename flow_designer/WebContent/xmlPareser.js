@@ -27,7 +27,7 @@ function loadXML(xmlString){
              * 可能是 "text/xml" 、"application/xml" 或 "application/xhtml+xml" 中的一个。注意，不支持 "text/html"。
               */ 
             domParser  =   new   DOMParser();
-            xmlDoc  =  domParser.parseFromString(xmlString,  ' text/xml ' );
+            xmlDoc  =  domParser.parseFromString(xmlString,  'text/xml' );
         } catch (e){
         	console.error(e);
         	throw e;
@@ -49,36 +49,59 @@ function xmlDocToObj(xmlDoc){
 		subsequents:[] /*操作结果*/
 	};
 	var flowInfoModel = flowModle.flowInfo.model;
-	var flowId = xmlDoc.getAttribute("flowId");
-	var version = xmlDoc.getAttribute("version");
-	var flowName = xmlDoc.getAttribute("flowName");
-	var displayName = xmlDoc.getAttribute("displayName");
-	var description = xmlDoc.getAttribute("description");
+	var flowNode = xmlDoc.getElementsByTagName("flow")[0];
+	console.log("flowNode.attributes:"+flowNode.attributes);
+	var flowId = flowNode.getAttribute("flowId");
+	var version = flowNode.getAttribute("version");
+	var flowName = flowNode.getAttribute("flowName");
+	var displayName = flowNode.getAttribute("displayName");
+	var description = flowNode.getAttribute("description");
 	flowInfoModel.flowId = flowId;
 	flowInfoModel.version = version;
 	flowInfoModel.flowName = flowName;
 	flowInfoModel.displayName = displayName;
 	flowInfoModel.description = description;
 	
-	var nodes = xmlDoc.getElementsByTagName("activities");
+	var nodes = flowNode.getElementsByTagName("activities");
 	if(!nodes || nodes.length==0){
 		throw "xml 解析异常，未找到 activities 节点。";
 	}
-	var actsNode = xmlDoc.getElementsByTagName("activities")[0];
-	var actNodes = actsNode.getElementsByTagName("activitie");
+	var actsNode = nodes[0];
+	var actNodes = actsNode.getElementsByTagName("activity");
 	for(var i in actNodes){
 		var actNode = actNodes[i];
-		var modelNode = actNode.getElementsByTagName("model");
-		var viewNode = actNode.getElementsByTagName("view");
+		
+		if(typeof(actNode.getElementsByTagName)!='function' ){
+			console.log("getElementsByTagName is not a function! "+typeof(actNode.getElementsByTagName));
+		}
+		var childNodes = actNode.children;
+		if(!childNodes){
+			console.log("childNodes 居然为空！！");
+			continue;
+		}
+		var modelNode =childNodes[0];
+		var viewNode =childNodes[1];
+		if(modelNode.nodeName!='model'){
+			throw "xml 解析异常，activity 下未找到 model 节点。";
+		}
+		if(viewNode.nodeName!='view'){
+			throw "xml 解析异常，activity 下未找到 view 节点。";
+		}
 		var model = {};
 		var view = {};
 		var propNodes = modelNode.children;
 		for(var j in propNodes){
-			model[propNodes[j].nodeName]=propNodes[j].nodeValue;
+			if(!propNodes[j].nodeName)
+				continue;
+			model[propNodes[j].nodeName]=propNodes[j].textContent ;
+			console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
 		}
 		var propNodes = viewNode.children;
 		for(var j in propNodes){
-			view[propNodes[j].nodeName]=propNodes[j].nodeValue;
+			if(!propNodes[j].nodeName)
+				continue;
+			view[propNodes[j].nodeName]=propNodes[j].textContent ;
+			console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
 		}
 		flowModle.activities.push({model:model,view:view});
 	}
