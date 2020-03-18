@@ -49,7 +49,11 @@ function xmlDocToObj(xmlDoc){
 		subsequents:[] /*后续线*/
 	};
 	var flowInfoModel = flowModle.flowInfo.model;
-	var flowNode = xmlDoc.getElementsByTagName("flow")[0];
+	var nodes = xmlDoc.getElementsByTagName("flow")
+	if(!nodes || nodes.length==0){
+		throw "xml 解析异常，未找到 flow 节点。";
+	}
+	var flowNode = nodes[0];
 	console.log("flowNode.attributes:"+flowNode.attributes);
 	var flowId = flowNode.getAttribute("flowId");
 	var version = flowNode.getAttribute("version");
@@ -69,6 +73,9 @@ function xmlDocToObj(xmlDoc){
 	}
 	var actsNode = nodes[0];
 	var actNodes = actsNode.getElementsByTagName("activity");
+	if(!actNodes || actNodes.length==0){
+		throw "xml 解析异常，未找到 activity 节点。";
+	}
 	for(var i in actNodes){
 		var actNode = actNodes[i];
 		
@@ -84,6 +91,9 @@ function xmlDocToObj(xmlDoc){
 	}
 	var opersNode = nodes[0];
 	var operNodes = opersNode.getElementsByTagName("operation");
+	if(!operNodes || operNodes.length==0){
+		throw "xml 解析异常，未找到 operation 节点。";
+	}
 	for(var i in operNodes){
 		var operNode = operNodes[i];
 		
@@ -123,6 +133,9 @@ function bizNodeToObj(bizNode){
 	if(!childNodes){
 		console.warn("childNodes 居然为空！！text:"+bizNode.text);
 		return null;
+	}
+	if(childNodes.length<2){
+		throw "xml 解析异常，一个业务对象应当既包含model节点，又包含view节点。";
 	}
 	var modelNode =childNodes[0];
 	var viewNode =childNodes[1];
