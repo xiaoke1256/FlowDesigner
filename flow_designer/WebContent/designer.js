@@ -50,14 +50,16 @@ var Oper = function(obj){
 	}
 	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
-	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
-	var x = this.view.x +Math.floor((icons['oper'].width)/2);
-	var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
-	var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
-	var controlPoint = new ControlPoint(x,y);
-	controlPoint.parent = this;//父对象就是其业务对象。
-	controlPoint.parentType = 'result';
-	this.view.controlPoint = controlPoint;
+	if(!obj.model.activityId){
+		//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
+		var x = this.view.x +Math.floor((icons['oper'].width)/2);
+		var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
+		var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+		var controlPoint = new ControlPoint(x,y);
+		controlPoint.parent = this;//父对象就是其业务对象。
+		controlPoint.parentType = 'result';
+		this.view.controlPoint = controlPoint;
+	}
 };
 Oper.prototype = new BussinessObj();
 
@@ -73,22 +75,33 @@ var Subsequent = function(obj){
 	}
 	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
+	var numOfControlPoint = 0;//控制点数量
+	if(!obj.model.activityId){
+		numOfControlPoint++;
+	}
+	if(!obj.model.operationId){
+		numOfControlPoint++;
+	}
 	//有两个控制点，一个是controlPoint，一个是controlPoint1
-	//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
-	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
-	var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
-	var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
-	var controlPoint = new ControlPoint(x,y);
-	controlPoint.parent = this;//父对象就是其业务对象。
-	controlPoint.parentType = 'result';
-	this.view.controlPoint=controlPoint;
-	//在业务对象的下方（30个像素处）增加一个控制点。
-	var x = this.view.x +Math.floor((icons['subseq'].width)/2);
-	var y = this.view.y+30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
-	var controlPoint = new ControlPoint(x,y);
-	controlPoint.parent = this;//父对象就是其业务对象。
-	controlPoint.parentType = 'mouse';
-	this.view.controlPoint1=controlPoint;
+	if(numOfControlPoint>=1){
+		//在业务对象的上方（30个像素处）增加一个控制点。(控制点以图形的中心为准)
+		var x = this.view.x +Math.floor((icons['subseq'].width)/2);
+		var heightOfMouse = icons['mouse'].height;//鼠标图形的高度
+		var y = this.view.y-30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+		var controlPoint = new ControlPoint(x,y);
+		controlPoint.parent = this;//父对象就是其业务对象。
+		controlPoint.parentType = 'result';
+		this.view.controlPoint=controlPoint;
+	}
+	if(numOfControlPoint>=2){
+		//在业务对象的下方（30个像素处）增加一个控制点。
+		var x = this.view.x +Math.floor((icons['subseq'].width)/2);
+		var y = this.view.y+30+Math.floor(heightOfMouse/2);// 鼠标图形高度的一半。
+		var controlPoint = new ControlPoint(x,y);
+		controlPoint.parent = this;//父对象就是其业务对象。
+		controlPoint.parentType = 'mouse';
+		this.view.controlPoint1=controlPoint;
+	}
 }
 Subsequent.prototype = new BussinessObj();
 

@@ -46,7 +46,7 @@ function xmlDocToObj(xmlDoc){
 		flowInfo:{model:{},view:{}},
 		activities:[],/*活动*/
 		operations:[],/*操作结果*/
-		subsequents:[] /*操作结果*/
+		subsequents:[] /*后续线*/
 	};
 	var flowInfoModel = flowModle.flowInfo.model;
 	var flowNode = xmlDoc.getElementsByTagName("flow")[0];
@@ -62,6 +62,7 @@ function xmlDocToObj(xmlDoc){
 	flowInfoModel.displayName = displayName;
 	flowInfoModel.description = description;
 	
+	//处理各个环节
 	var nodes = flowNode.getElementsByTagName("activities");
 	if(!nodes || nodes.length==0){
 		throw "xml 解析异常，未找到 activities 节点。";
@@ -71,39 +72,81 @@ function xmlDocToObj(xmlDoc){
 	for(var i in actNodes){
 		var actNode = actNodes[i];
 		
-		if(typeof(actNode.getElementsByTagName)!='function' ){
-			console.log("getElementsByTagName is not a function! "+typeof(actNode.getElementsByTagName));
-		}
-		var childNodes = actNode.children;
-		if(!childNodes){
-			//console.log("childNodes 居然为空！！");
-			continue;
-		}
-		var modelNode =childNodes[0];
-		var viewNode =childNodes[1];
-		if(modelNode.nodeName!='model'){
-			throw "xml 解析异常，activity 下未找到 model 节点。";
-		}
-		if(viewNode.nodeName!='view'){
-			throw "xml 解析异常，activity 下未找到 view 节点。";
-		}
-		var model = {};
-		var view = {};
-		var propNodes = modelNode.children;
-		for(var j in propNodes){
-			if(!propNodes[j].nodeName)
-				continue;
-			model[propNodes[j].nodeName]=propNodes[j].textContent ;
-			//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
-		}
-		var propNodes = viewNode.children;
-		for(var j in propNodes){
-			if(!propNodes[j].nodeName)
-				continue;
-			view[propNodes[j].nodeName]=parseInt(propNodes[j].textContent) ;
-			//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+parseInt(propNodes[j].textContent) +"”");
-		}
-		flowModle.activities.push({model:model,view:view});
+		var act = bizNodeToObj(actNode);
+		if(act)
+			flowModle.activities.push(act);
 	}
+	
+	//处理各个结果
+	var nodes = flowNode.getElementsByTagName("operations");
+	if(!nodes || nodes.length==0){
+		throw "xml 解析异常，未找到 operations 节点。";
+	}
+	var opersNode = nodes[0];
+	var operNodes = opersNode.getElementsByTagName("operation");
+	for(var i in operNodes){
+		var operNode = operNodes[i];
+		
+		var oper = bizNodeToObj(operNode);
+		if(oper)
+			flowModle.operations.push(oper);
+	}
+	
+	//处理各个后续线
+	var nodes = flowNode.getElementsByTagName("subsequents");
+	if(!nodes || nodes.length==0){
+		throw "xml 解析异常，未找到 operations 节点。";
+	}
+	var subseqsNode = nodes[0];
+	var subseqNodes = subseqsNode.getElementsByTagName("subsequent");
+	for(var i in subseqNodes){
+		var subseqNode = subseqNodes[i];
+		
+		var subseq = bizNodeToObj(subseqNode);
+		if(subseq)
+			flowModle.subsequents.push(subseq);
+	}
+	
 	return flowModle;
+}
+
+/**
+ * 把xml中的业务节点转成业务对象。
+ * @param bizNode
+ * @returns
+ */
+function bizNodeToObj(bizNode){
+	if(typeof(bizNode.getElementsByTagName)!='function' ){
+		console.log("getElementsByTagName is not a function! "+typeof(bizNode.getElementsByTagName));
+	}
+	var childNodes = bizNode.children;
+	if(!childNodes){
+		console.warn("childNodes 居然为空！！text:"+bizNode.text);
+		return null;
+	}
+	var modelNode =childNodes[0];
+	var viewNode =childNodes[1];
+	if(modelNode.nodeName!='model'){
+		throw "xml 解析异常，activity 下未找到 model 节点。";
+	}
+	if(viewNode.nodeName!='view'){
+		throw "xml 解析异常，activity 下未找到 view 节点。";
+	}
+	var model = {};
+	var view = {};
+	var propNodes = modelNode.children;
+	for(var j in propNodes){
+		if(!propNodes[j].nodeName)
+			continue;
+		model[propNodes[j].nodeName]=propNodes[j].textContent ;
+		//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+propNodes[j].textContent +"”");
+	}
+	var propNodes = viewNode.children;
+	for(var j in propNodes){
+		if(!propNodes[j].nodeName)
+			continue;
+		view[propNodes[j].nodeName]=parseInt(propNodes[j].textContent) ;
+		//console.log("针对字段“"+propNodes[j].nodeName+"”设置了值“"+parseInt(propNodes[j].textContent) +"”");
+	}
+	return {model:model,view:view};
 }
