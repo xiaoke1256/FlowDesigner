@@ -514,24 +514,25 @@ function FlRenderer(canvasId,options){
 		//移动坐标系
 		cxt.translate(-originPoint.x,-originPoint.y);
 		drawBackground(cxt,0+originPoint.x,0+originPoint.y,c.width+originPoint.x,c.height+originPoint.y);
-		for(var i in flowModle.activities){
-			drawBizLine(cxt,flowModle.activities[i]);
+		for(var i in flowModle.subsequents){
+			drawBizLine(cxt,flowModle.subsequents[i]);
 		}
 		for(var i in flowModle.operations){
 			drawBizLine(cxt,flowModle.operations[i]);
 		}
-		for(var i in flowModle.subsequents){
-			drawBizLine(cxt,flowModle.subsequents[i]);
-		}
 		for(var i in flowModle.activities){
-			drawBizObj(cxt,flowModle.activities[i]);
-		}
-		for(var i in flowModle.operations){
-			drawBizObj(cxt,flowModle.operations[i]);
+			drawBizLine(cxt,flowModle.activities[i]);
 		}
 		for(var i in flowModle.subsequents){
 			drawBizObj(cxt,flowModle.subsequents[i]);
 		}
+		for(var i in flowModle.operations){
+			drawBizObj(cxt,flowModle.operations[i]);
+		}
+		for(var i in flowModle.activities){
+			drawBizObj(cxt,flowModle.activities[i]);
+		}
+		
 		drawSelect(cxt);
 		drawReadMarked(cxt);
 		cxt.restore();
