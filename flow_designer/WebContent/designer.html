@@ -795,16 +795,6 @@ $(function(){
   	</ul>
   </div>
   <script type="text/javascript">
-  $(function(){
-	  //把浏览器默认的右键菜单禁用掉.
-	  $('.rightMenu').bind("contextmenu", function(){
-	    return false;
-	  });
-	  //点击任何地方，就把右键菜单隐藏起来.
-	  $('body').click(function(){
-		  $('.rightMenu').hide();
-	  })
-  });
   
   /**读取文件的函数*/
   function fileImport() {
@@ -830,10 +820,11 @@ $(function(){
 	          var flowModle = xmlDocToObj(loadXML(this.result));
 	          console.log("导出模型："+flowModle);
 	          flRenderer.loadModel(flowModle);
-	          //TODO 隐藏蒙板及滚轮
+	          
           }catch(err){
         	  showErrMsg(err);
           }
+          //TODO 隐藏蒙板及滚轮
       }
 		
 	}

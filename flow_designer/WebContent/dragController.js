@@ -166,6 +166,18 @@ var getDefaultDragCtrl = function(renderCtx){
 	}
 };
 
+//为了配合上述处理把浏览器默认的右键菜单禁用掉.
+$(function(){
+	  //把浏览器默认的右键菜单禁用掉.
+	  $('.rightMenu').bind("contextmenu", function(){
+	    return false;
+	  });
+	  //点击任何地方，就把右键菜单隐藏起来.
+	  $('body').click(function(){
+		  $('.rightMenu').hide();
+	  })
+});
+
 /**
  * 把控制点调整到默认位置。
  * @param obj 业务对象
