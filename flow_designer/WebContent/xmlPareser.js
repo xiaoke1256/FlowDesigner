@@ -60,5 +60,27 @@ function xmlDocToObj(xmlDoc){
 	flowInfoModel.displayName = displayName;
 	flowInfoModel.description = description;
 	
+	var nodes = xmlDoc.getElementsByTagName("activities");
+	if(!nodes || nodes.length==0){
+		throw "xml 解析异常，未找到 activities 节点。";
+	}
+	var actsNode = xmlDoc.getElementsByTagName("activities")[0];
+	var actNodes = actsNode.getElementsByTagName("activitie");
+	for(var i in actNodes){
+		var actNode = actNodes[i];
+		var modelNode = actNode.getElementsByTagName("model");
+		var viewNode = actNode.getElementsByTagName("view");
+		var model = {};
+		var view = {};
+		var propNodes = modelNode.children;
+		for(var j in propNodes){
+			model[propNodes[j].nodeName]=propNodes[j].nodeValue;
+		}
+		var propNodes = viewNode.children;
+		for(var j in propNodes){
+			view[propNodes[j].nodeName]=propNodes[j].nodeValue;
+		}
+		flowModle.activities.push({model:model,view:view});
+	}
 	return flowModle;
 }
