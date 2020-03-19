@@ -2,7 +2,6 @@
  * 把流程模型转成xml的js.
  */
 function flModelToXml(flModel){
-	flModel
 	var xmlDOM = createXMLDOM();
     if (xmlDOM) {
     	//创建根节点
@@ -21,27 +20,19 @@ function flModelToXml(flModel){
         var actsNode = xmlDOM.createElement('activities');
         flowNode.appendChild(actsNode);
         
-        for(var i in flModel.activities){
-        	var act = flModel.activities[i];
-        	var actNode = xmlDOM.createElement('activity');
-        	var modelNode = xmlDOM.createElement('model');
-        	var viewNode = xmlDOM.createElement('view');
-        	for(var prop in act.model){
-        		propNode = xmlDOM.createElement(prop);
-        		textNode = xmlDOM.createTextNode(act.model[prop]);
-        		propNode.appendChild(textNode);
-        		modelNode.appendChild(propNode);
-        	}
-        	for(var prop in act.view){
-        		propNode = xmlDOM.createElement(prop);
-        		textNode = xmlDOM.createTextNode(act.view[prop]);
-        		propNode.appendChild(textNode);
-        		viewNode.appendChild(propNode);
-        	}
-        	actNode.appendChild(modelNode);
-        	actNode.appendChild(viewNode);
-        	actsNode.appendChild(actNode);
-        }
+        bizObjsToXmlNode(flModel.activities,'actibity',actsNode);
+        
+        //创建结果节点
+        var opersNode = xmlDOM.createElement('operations');
+        flowNode.appendChild(opersNode);
+        
+        bizObjsToXmlNode(flModel.operations,'operation',opersNode);
+        
+        //创建后续节点
+        var subseqsNode = xmlDOM.createElement('subsequents');
+        flowNode.appendChild(subseqsNode);
+        
+        bizObjsToXmlNode(flModel.subsequents,'subsequent',subseqsNode)
         
         //创建结果节点.
         
