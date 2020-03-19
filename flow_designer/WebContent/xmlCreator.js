@@ -43,6 +43,8 @@ function flModelToXml(flModel){
         	actsNode.appendChild(actNode);
         }
         
+        //创建结果节点.
+        
         return parserXMLToString(xmlDOM);
     }
 }
