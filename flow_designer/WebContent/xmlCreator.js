@@ -50,6 +50,34 @@ function flModelToXml(flModel){
 }
 
 /**
+ * 把一批业务对象转成xml节点
+ * @returns
+ */
+function bizObjsToXmlNode(bizes,tagName,parentNode){
+	for(var i in bizes){
+    	var biz = bizes[i];
+    	var bizNode = xmlDOM.createElement(tagName);
+    	var modelNode = xmlDOM.createElement('model');
+    	var viewNode = xmlDOM.createElement('view');
+    	for(var prop in act.model){
+    		propNode = xmlDOM.createElement(prop);
+    		textNode = xmlDOM.createTextNode(act.model[prop]);
+    		propNode.appendChild(textNode);
+    		modelNode.appendChild(propNode);
+    	}
+    	for(var prop in act.view){
+    		propNode = xmlDOM.createElement(prop);
+    		textNode = xmlDOM.createTextNode(act.view[prop]);
+    		propNode.appendChild(textNode);
+    		viewNode.appendChild(propNode);
+    	}
+    	bizNode.appendChild(modelNode);
+    	bizNode.appendChild(viewNode);
+    	parentNode.appendChild(bizNode);
+    }
+}
+
+/**
  * 创建 XMLDOM
  * @returns xmlDOM
  */
