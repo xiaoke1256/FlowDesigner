@@ -132,6 +132,11 @@ $(function(){
 		$("#files").click();
 	});
 	
+	//导出按钮
+	$('#exportBtn').click(function(){
+		open('output.html','_blank','location=no,resizable=no,height=400,width=800,top=50,left=100,directories=no');
+	});
+	
 	//移动坐标系的控制器
 	var movimgDragCtrl = getMovimgDragCtrl(flRenderer);
 	//移动按钮的点击事件
@@ -422,7 +427,7 @@ $(function(){
   	<button ><img src="imgs/design/menus/disk.png">保存</button>
   	<input type="file" id="files" style="display: none"  accept=".xml" onchange="fileImport();">
   	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
-  	<button ><img src="imgs/design/menus/document-attribute-x-export.png">下载</button>
+  	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出</button>
   	<button id="moveBtn" ><img src="">移动</button>
   	<button id="cancleMoveBtn" ><img src="">取消移动</button>
   	<button id="makeCenterBtn" ><img src="">居中</button>
@@ -828,6 +833,7 @@ $(function(){
       }
 		
 	}
+  
   
   /**
    * 显示需要确认信息
