@@ -8,6 +8,7 @@
 <script type="text/javascript" src="dragController.js"></script>
 <script type="text/javascript" src="designer.js"></script>
 <script type="text/javascript" src="xmlPareser.js"></script>
+<script type="text/javascript" src="xmlCreator.js"></script>
 <script type="text/javascript">
 
 //初始化绘图器
@@ -134,7 +135,9 @@ $(function(){
 	
 	//导出按钮
 	$('#exportBtn').click(function(){
-		open('output.html','_blank','location=no,resizable=no,height=400,width=800,top=50,left=100,directories=no');
+		var flModel = flRenderer.getFlowModle();
+		var xml = flModelToXml(flModel);
+		console.log("xml:"+xml);
 	});
 	
 	//移动坐标系的控制器

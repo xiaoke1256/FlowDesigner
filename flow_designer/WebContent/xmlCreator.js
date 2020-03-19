@@ -20,19 +20,19 @@ function flModelToXml(flModel){
         var actsNode = xmlDOM.createElement('activities');
         flowNode.appendChild(actsNode);
         
-        bizObjsToXmlNode(flModel.activities,'actibity',actsNode);
+        bizObjsToXmlNode(xmlDOM,flModel.activities,'actibity',actsNode);
         
         //创建结果节点
         var opersNode = xmlDOM.createElement('operations');
         flowNode.appendChild(opersNode);
         
-        bizObjsToXmlNode(flModel.operations,'operation',opersNode);
+        bizObjsToXmlNode(xmlDOM,flModel.operations,'operation',opersNode);
         
         //创建后续节点
         var subseqsNode = xmlDOM.createElement('subsequents');
         flowNode.appendChild(subseqsNode);
         
-        bizObjsToXmlNode(flModel.subsequents,'subsequent',subseqsNode)
+        bizObjsToXmlNode(xmlDOM,flModel.subsequents,'subsequent',subseqsNode)
         
         return parserXMLToString(xmlDOM);
     }
@@ -42,21 +42,21 @@ function flModelToXml(flModel){
  * 把一批业务对象转成xml节点
  * @returns
  */
-function bizObjsToXmlNode(bizes,tagName,parentNode){
+function bizObjsToXmlNode(xmlDOM,bizes,tagName,parentNode){
 	for(var i in bizes){
     	var biz = bizes[i];
     	var bizNode = xmlDOM.createElement(tagName);
     	var modelNode = xmlDOM.createElement('model');
     	var viewNode = xmlDOM.createElement('view');
-    	for(var prop in act.model){
+    	for(var prop in biz.model){
     		propNode = xmlDOM.createElement(prop);
-    		textNode = xmlDOM.createTextNode(act.model[prop]);
+    		textNode = xmlDOM.createTextNode(biz.model[prop]);
     		propNode.appendChild(textNode);
     		modelNode.appendChild(propNode);
     	}
-    	for(var prop in act.view){
+    	for(var prop in biz.view){
     		propNode = xmlDOM.createElement(prop);
-    		textNode = xmlDOM.createTextNode(act.view[prop]);
+    		textNode = xmlDOM.createTextNode(biz.view[prop]);
     		propNode.appendChild(textNode);
     		viewNode.appendChild(propNode);
     	}
