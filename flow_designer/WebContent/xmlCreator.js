@@ -34,8 +34,6 @@ function flModelToXml(flModel){
         
         bizObjsToXmlNode(flModel.subsequents,'subsequent',subseqsNode)
         
-        //创建结果节点.
-        
         return parserXMLToString(xmlDOM);
     }
 }
