@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>模态框测试页面</title>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/modal.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#testModal').click(function(){
+		$.modal();
+	});
+	
+	
+	$('#testXScrollbar').click(function(){
+		alert(hasXScrollbar());
+	});
+	
+	$('#testYScrollbar').click(function(){
+		alert(hasYScrollbar());
+	});
+	
+});
+
+</script>
+</head>
+<body>
+  <p>点击<a id="testModal" href="#" >此处</a>，测试模态框。
+  <p><a id="testXScrollbar" href="#" >是否有横向滚动条</a>
+  <p><a id="testYScrollbar" href="#" >是否有纵向滚动条</a>
+ <div style="width:250px;height:1580px" >超大的div</div>
+</body>
+</html>
