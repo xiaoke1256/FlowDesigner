@@ -11,18 +11,40 @@
 		scrollWidth = getScrollWidth();
 	});
 	
+	//默认的长和宽
+	var defaultSize = {width:600,height:220};
+	
 	$.extend({
-		modal:function(html){
+		modal:function(html,size){
+			size = $.extend(defaultSize,size);
 			//获取整个页面可视区域的大小
-			var width = $(window).width();
-			var height = $(window).height();
+			var cWidth = $(window).width();
+			var cHeight = $(window).height();
 			console.log("scrollWidth:"+scrollWidth);
 			//先创建一个蒙板，蒙住整个页面。
 			var mask = $('<div style="filter:alpha(Opacity=50);-moz-opacity:0.5;opacity:0.5;position:absolute;left:0;top:0;z-index:999" ></div>');
-			mask.width(width);
-			mask.height(height);
+			mask.width(cWidth);
+			mask.height(cHeight);
 			mask.css('background','#999');
 			$('body').append(mask);
+			
+			//页面正中放一个dev作为模态框。
+			var $modal = $('<div style="background:#fff;position:absolute;left:0;top:0;z-index:1000" ></div>');
+			if(html){
+				$modal.html(html);
+			}
+			$modal.width(size.width);
+			$modal.height(size.height);
+			var left = (cWidth-size.width)/2;
+			if(left< 20) 
+				left = 20;
+			var top = (cHeight-size.height)/2;
+			if(top< 10) 
+				top = 10;
+			$modal.css("left",left);
+			$modal.css("top",top);
+			$('body').append($modal);
+			
 			//窗口大小变更，蒙板尺寸要跟着变
 			var hasYScoll = hasYScrollbar(mask[0]);//是否存在纵向的滚动条。
 			var hasXScoll = hasXScrollbar(mask[0]);
@@ -58,7 +80,7 @@
 		        mask.css("top",scroH);
 		        mask.css("left",scroV);
 			});
-			//放一个dev作为模态框。
+			
 			
 			//窗口大小变更，窗口的位置也要跟着变。
 			//滚动条滚动了,窗口的位置也要跟着变。
