@@ -14,9 +14,7 @@ $(function(){
 	});
 	
 	$('body').on('click','.modalClosed',function(){
-		if(modal){
-			modal.closed();
-		}
+		$.closeModal();
 	});
 	
 	$('#testXScrollbar').click(function(){

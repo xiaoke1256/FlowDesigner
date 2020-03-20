@@ -14,6 +14,9 @@
 	//默认的长和宽
 	var defaultSize = {width:600,height:220};
 	
+	/**模态对话框对象*/
+	var modalObj = null;
+	
 	$.extend({
 		modal:function(html,size){
 			size = $.extend(defaultSize,size);
@@ -73,6 +76,14 @@
 				mask.height(nHeight);
 				
 				//模态对话框的位置也要跟着变。
+				var left = (nWidth-size.width)/2;
+				if(left< 20) 
+					left = 20;
+				var top = (nHeight-size.height)/2;
+				if(top< 10) 
+					top = 10;
+				$modal.css("left",left);
+				$modal.css("top",top);
 			}
 			$(window).resize(resizeEve);
 			
@@ -84,11 +95,13 @@
 		        mask.css("left",scroV);
 		        
 		        //模态对话框的位置也要跟着变。
+		        $modal.css("left",left+scroV);
+				$modal.css("top",top+scroH);
 			}
 			$(document).scroll(scrollEve);
 			
 			//返回模态窗口对象
-			return {
+			modalObj = {
 				/*关闭模态对话框*/
 				closed:function(){
 					//删除模态对话框
@@ -101,6 +114,12 @@
 					$(document).off('scroll',scrollEve);
 				}
 			};
+			return modalObj;
+		},
+		closeModal:function(){
+			if(modalObj){
+				modalObj.closed();
+			}
 		}
 	});
 	
