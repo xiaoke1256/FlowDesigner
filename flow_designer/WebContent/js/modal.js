@@ -1,14 +1,21 @@
 /**
  * 用jQuery实现一个模态对话框
  */
+
+
+
 (function($){
+	//滚动条的宽度，页面加载时就获取
+	var scrollWidth = 0;
+	$(function(){
+		scrollWidth = getScrollWidth();
+	});
+	
 	$.extend({
 		modal:function(html){
-			//获取窗口的大小
+			//获取整个页面可视区域的大小
 			var width = $(window).width();
 			var height = $(window).height();
-			//滚动条的宽度
-			var scrollWidth = getScrollWidth();
 			console.log("scrollWidth:"+scrollWidth);
 			//先创建一个蒙板，蒙住整个页面。
 			var mask = $('<div style="filter:alpha(Opacity=50);-moz-opacity:0.5;opacity:0.5;position:absolute;left:0;top:0;z-index:999" ></div>');
@@ -18,7 +25,7 @@
 			$('body').append(mask);
 			//窗口大小变更，蒙板尺寸要跟着变
 			var hasYScoll = hasYScrollbar(mask[0]);//是否存在纵向的滚动条。
-			var hasXScoll = hasXScrollbar(mask[0])
+			var hasXScoll = hasXScrollbar(mask[0]);
 			var resizeEve = $(window).resize(function(){
 				var nWidth = $(window).width();
 				var nHeight = $(window).height();
@@ -45,12 +52,16 @@
 				
 			});
 			//滚动条滚动了，蒙版位置要跟着变。
-			$(document).scroll(function() {
+			var scrollEve = $(document).scroll(function() {
 		        var scroH = $(document).scrollTop();//滚动的高度
+		        var scroV = $(document).scrollLeft();//滚动的居左位置
+		        mask.css("top",scroH);
+		        mask.css("left",scroV);
 			});
+			//放一个dev作为模态框。
+			
 			//窗口大小变更，窗口的位置也要跟着变。
 			//滚动条滚动了,窗口的位置也要跟着变。
-			
 			//返回模态窗口对象
 			return {
 				/*关闭模态对话框*/
