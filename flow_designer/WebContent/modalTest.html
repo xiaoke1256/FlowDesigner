@@ -7,10 +7,17 @@
 <script type="text/javascript" src="js/modal.js"></script>
 <script type="text/javascript">
 $(function(){
+	
+	var modal = null;
 	$('#testModal').click(function(){
-		$.modal();
+		modal = $.modal('<center><button class="modalClosed" >关闭</button></center>');
 	});
 	
+	$('body').on('click','.modalClosed',function(){
+		if(modal){
+			modal.closed();
+		}
+	});
 	
 	$('#testXScrollbar').click(function(){
 		alert(hasXScrollbar());

@@ -48,7 +48,7 @@
 			//窗口大小变更，蒙板尺寸要跟着变
 			var hasYScoll = hasYScrollbar(mask[0]);//是否存在纵向的滚动条。
 			var hasXScoll = hasXScrollbar(mask[0]);
-			var resizeEve = $(window).resize(function(){
+			var resizeEve = function(){
 				var nWidth = $(window).width();
 				var nHeight = $(window).height();
 				var newHasYScoll = hasYScrollbar(mask[0]);
@@ -72,23 +72,33 @@
 				mask.width(nWidth);
 				mask.height(nHeight);
 				
-			});
+				//模态对话框的位置也要跟着变。
+			}
+			$(window).resize(resizeEve);
+			
 			//滚动条滚动了，蒙版位置要跟着变。
-			var scrollEve = $(document).scroll(function() {
+			var scrollEve = function() {
 		        var scroH = $(document).scrollTop();//滚动的高度
 		        var scroV = $(document).scrollLeft();//滚动的居左位置
 		        mask.css("top",scroH);
 		        mask.css("left",scroV);
-			});
+		        
+		        //模态对话框的位置也要跟着变。
+			}
+			$(document).scroll(scrollEve);
 			
-			
-			//窗口大小变更，窗口的位置也要跟着变。
-			//滚动条滚动了,窗口的位置也要跟着变。
 			//返回模态窗口对象
 			return {
 				/*关闭模态对话框*/
 				closed:function(){
-					
+					//删除模态对话框
+					$modal.remove();
+					//删除蒙板
+					mask.remove();
+					//注销窗口变化事件
+					$(window).off('resize',resizeEve);
+					//注销滚动条变化事件
+					$(document).off('scroll',scrollEve);
 				}
 			};
 		}
