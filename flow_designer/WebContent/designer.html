@@ -5,6 +5,7 @@
 <title>流程模型管理</title>
 <link rel="stylesheet" type="text/css" href="css/designer.css" />
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/modal.js"></script>
 <script type="text/javascript" src="dragController.js"></script>
 <script type="text/javascript" src="designer.js"></script>
 <script type="text/javascript" src="xmlPareser.js"></script>
@@ -138,7 +139,8 @@ $(function(){
 		var flModel = flRenderer.getFlowModle();
 		var xml = flModelToXml(flModel);
 		console.log("xml:"+xml);
-		//$.modal("<div><h1>SimpleModal</h1></div>");
+		$.modal('<div><h1>SimpleModal</h1><div id="content" class="content"><xmp>'+xml+'</xmp></div></div>');
+		
 	});
 	
 	//移动坐标系的控制器
