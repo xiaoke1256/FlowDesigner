@@ -10,6 +10,17 @@
 <script type="text/javascript" src="designer.js"></script>
 <script type="text/javascript" src="xmlPareser.js"></script>
 <script type="text/javascript" src="xmlCreator.js"></script>
+<template id="showHtmlModal" >
+	<div>
+	  <h1>流程模板</h1>
+	  <div id="content" class="content">
+	  	<xmp>{{xml}}</xmp>
+	  </div>
+	  <div class="center btnContainer" >
+	  	<button onclick="$.closeModal()" >关闭</button>
+	  </div>
+	</div>
+</template>
 <script type="text/javascript">
 
 //初始化绘图器
@@ -139,7 +150,10 @@ $(function(){
 		var flModel = flRenderer.getFlowModle();
 		var xml = flModelToXml(flModel);
 		console.log("xml:"+xml);
-		$.modal('<div><h1>SimpleModal</h1><div id="content" class="content"><xmp>'+xml+'</xmp></div></div>');
+		
+		var modalContent = $('#showHtmlModal').html();
+		modalContent = modalContent.replace('{{xml}}',xml);
+		$.modal(modalContent,{width:890,height:480});
 		
 	});
 	

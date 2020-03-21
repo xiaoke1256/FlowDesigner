@@ -1,5 +1,6 @@
 /**
  * 用jQuery实现一个模态对话框
+ * 本模块依赖于 jQuery
  */
 
 
@@ -32,7 +33,7 @@
 			$('body').append(mask);
 			
 			//页面正中放一个dev作为模态框。
-			var $modal = $('<div style="background:#fff;position:absolute;left:0;top:0;z-index:1000" ></div>');
+			var $modal = $('<div class="modal" style="background:#fff;position:absolute;left:0;top:0;z-index:1000" ></div>');
 			if(html){
 				$modal.html(html);
 			}
