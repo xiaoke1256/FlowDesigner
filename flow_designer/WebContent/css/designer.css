@@ -38,7 +38,7 @@ table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
 /*Ä£Ì¬¶Ô»°¿ò*/
 .modal h1 {margin:6px 30px}
 .modal .content {margin:10px 30px;}
-.modal xmp {white-space:normal;border:1px solid grey;width:100%;height:300px;overflow:scroll;color:blue}
+.modal textarea {border:1px solid grey;width:100%;height:300px;overflow:scroll;color:blue;resize:none}
 .modal .btnContainer {margin:20px 1px;}
 
 

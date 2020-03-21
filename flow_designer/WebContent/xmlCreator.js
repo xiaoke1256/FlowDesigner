@@ -34,7 +34,7 @@ function flModelToXml(flModel){
         
         bizObjsToXmlNode(xmlDOM,flModel.subsequents,'subsequent',subseqsNode)
         
-        return parserXMLToString(xmlDOM);
+        return xmlFormat(parserXMLToString(xmlDOM));
     }
 }
 
@@ -96,5 +96,47 @@ function parserXMLToString(xmlDOM) {
             && document.implementation.createDocument) {
         return new XMLSerializer().serializeToString(xmlDOM);
     }
+}
+
+/**
+ * 把xml格式化一下
+ * @param xml
+ * @returns
+ */
+function xmlFormat(xml){
+	if(!xml){
+		return xml;
+	}
+	xml = $.trim(xml);
+	var prefix = '';
+	if(xml.indexOf('<?xml')!=0){
+		prefix = '<?xml version="1.0" encoding="UTF-8"?>\n\n';
+	}
+	var sp = 2;//缩进
+	var index = xml.indexOf('<',1);
+	while(index>0){
+		console.log(index+"  char At(index+1):"+xml.charAt(index+1));
+		if(xml.charAt(index+1)=='/'){
+			sp -= 2;
+			if(xml.charAt(index-1)!='>'){
+				//不用换行处理
+				index = xml.indexOf('<',index+1);
+				continue;
+			}
+		}else{
+			sp += 2;
+		}
+		//在index位置插入一个换行符和若干个空格
+		var spaces = '';
+		for(var i=0;i<sp;i++){
+			spaces += ' ';
+		}
+		xml = xml.substr(0,index)+'\n'+spaces+xml.substr(index);
+		console.log('xml:'+xml);
+		index += (sp+1);
+		index = xml.indexOf('<',index+1);
+	}
+	
+	return prefix+xml;
 }
 
