@@ -36,53 +36,6 @@ $(function(){
 	$('#cancleMoveBtn').hide();
 	
 	$('#rightInfo>div').hide();
-
-	//用来测试的模型
-	var testModel = {
-		flowInfo:{
-		  model:{
-		    flowId:"06000013",
-		    version:"1.0",
-		    flowName:"药品再注册",
-		    displayName:"药品再注册",
-		    description:""  
-		  }
-		},
-		activities:
-		  [
-			{model:{
-				activityId:'0000',
-				activityName:'任务分配',
-				activityType:'01',
-				displayName:'任务分配',
-				activityBz:'1'
-			  },
-			  view:{
-				displayindex:168,
-				height:36,
-				width:28,
-				x:349,
-				y:28
-			  }
-			},
-		  ],
-		  operations:[
-		    {model:{
-		    	activityId:'0000',
-		    	autoFinish:'0',
-		    	operationName:'分配完成',
-		    	displayName:'分配完成',
-		    	operationId:'000001',
-		    	sequence:0 //sequence 就是优先级.
-		      },
-		      view:{
-		    	x:257,
-		    	y:90
-		      }
-			  
-		    }
-		  ]
-	};
 	
 	//初始化绘图器
 	flRenderer = FlRenderer('designer',
@@ -144,7 +97,10 @@ $(function(){
 	);
 	
 	//加载测试模型
-	flRenderer.loadModel(testModel);
+	var tempModel = localStorage.getItem("tempFlModel");
+	if(tempModel){
+		flRenderer.loadModel(JSON.parse(tempModel));
+	}
 	
 	//"打开按钮"
 	$('#openBtn').click(function(){
@@ -167,6 +123,17 @@ $(function(){
 
 		$.modal(modalContent,{width:890,height:480});
 		
+	});
+	
+	//保存按钮
+	$('#saveBtn').click(function(){
+		confirmMsg('流程模型将临时保存在浏览器缓存中，再次进入此页面时会重新加载。确认要保存？',function(result){
+			if(result){
+				var temp =  flRenderer.getFlowModle();
+				localStorage.setItem("tempFlModel", JSON.stringify(temp));
+				alert("保存成功。");
+			}
+		});
 	});
 	
 	//移动坐标系的控制器
@@ -456,7 +423,7 @@ $(function(){
 </head>
 <body>
   <div class="topButtons" >
-  	<button ><img src="imgs/design/menus/disk.png">保存</button>
+  	<button id="saveBtn" ><img src="imgs/design/menus/disk.png">保存</button>
   	<input type="file" id="files" style="display: none"  accept=".xml" onchange="fileImport();">
   	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
   	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出</button>

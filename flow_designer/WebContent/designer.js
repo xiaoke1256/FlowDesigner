@@ -116,7 +116,13 @@ var FlowInfo =function(obj){
 		"displayName":'',
 		"description":''
 	};
+	if(!obj){
+		obj = {};
+	}
 	obj.model = $.extend(defaultModel,obj.model);
+	if(!obj.view){
+		obj.view = {width:84,height:60};
+	}
 	BussinessObj.call(this,obj);
 }
 
@@ -221,7 +227,7 @@ function FlRenderer(canvasId,options){
 	 * 模型
 	 */
 	var flowModle = {
-		flowInfo:{model:{},view:{}},
+		flowInfo:new FlowInfo({}),
 		activities:[],/*活动*/
 		operations:[],/*操作结果*/
 		subsequents:[] /*操作结果*/
@@ -1186,6 +1192,7 @@ function FlRenderer(canvasId,options){
 			flowModle.subsequents = [];
 			_clearSelected();
 			//基本信息
+			console.log("displayName:"+modelJson.flowInfo.displayName);
 			flowModle.flowInfo = new FlowInfo(modelJson.flowInfo);
 			flowModle.flowInfo.view.width = 84;
 			flowModle.flowInfo.view.height = 60;
