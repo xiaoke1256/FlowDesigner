@@ -2,14 +2,15 @@ body {font-size:8px;margin:0}
 
 .center {padding:0 1px;text-align:center}
 
-.topButtons {margin:5px 2px}
+.clear {clear:both}
+
+.topButtons {margin:5px 2px;float:left;margin-right:35px}
 .topButtons button ,.topButtons button img {vertical-align: bottom}
 .topButtons button {border:1px solid grey;background:#fff;padding:3px 10px;display:inline-block;margin-right:-4px}
 .topButtons button:first-child {border-radius: 4px 0 0 4px;}
 .topButtons button:last-child {border-radius: 0 4px 4px 0}
 .main {margin:0 2px}
 .main>div,.main>canvas {float:left}
-.main .clear {clear:both}
 .main .asideTools {border:1px solid grey;height:100%}
 .main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
 #asideContants {overflow-y: auto;height:100%;margin:0;padding:0}
