@@ -39,6 +39,7 @@ table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
 .modal h1 {margin:6px 30px}
 .modal div {margin:10px 30px;}
 .modal textarea {border:1px solid grey;width:100%;height:330px;overflow:scroll;color:blue;resize:none}
+#xmlArea {white-space:pre}
 .modal .btnContainer {margin:20px 1px;}
 
 
