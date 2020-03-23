@@ -32,7 +32,8 @@ var Act = function(obj){
 		"listNo":0,/*排序号*/
 		"activityType":'01',
 		"activityBz":'0',
-		"authority":'0'
+		"authority":'0',
+		"canWithdraw":'0'
 	}
 	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
@@ -46,7 +47,10 @@ var Oper = function(obj){
 	var defaultModel = {
 		"listNo":0,/*排序号*/
 		"deadlineType":'1',
-		"deadlineTime":'00:00:00'
+		"deadlineTime":'00:00:00',
+		"resultFlag":'0',
+		"mustHaveOpinion":'0',
+		"autoFinish":'0'
 	}
 	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
@@ -71,7 +75,12 @@ var Subsequent = function(obj){
 		"sortNumber":0,/*排序号*/
 		"sequence":'0',
 		"postDisplay":'1',
-		"postDefault":''
+		"postDefault":'',
+		"inessential":'0',
+		"postDisplay":'0',
+		"postMustHave":'0',
+		"postMustOne":'0',
+		"postSameDept":'0'
 	}
 	obj.model = $.extend(defaultModel,obj.model);
 	BussinessObj.call(this,obj);
