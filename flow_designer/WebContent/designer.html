@@ -19,8 +19,8 @@
 	  	<label><input name="outputType" value="2" type="radio" onclick="$('#base64Area').show();$('#xmlArea').hide();" >xml | base64</label>
 	  </div>
 	  <div id="content" class="content">
-	  	<textarea id="xmlArea" readonly="true" >{{xml}}</textarea>
-	  	<textarea id="base64Area" style="display:none" readonly="true" >{{base64}}</textarea>
+	  	<textarea id="xmlArea" readonly="true" ></textarea>
+	  	<textarea id="base64Area" style="display:none" readonly="true" ></textarea>
 	  </div>
 	  <div class="center btnContainer" >
 	  	<button onclick="$.closeModal()" >关闭</button>
@@ -96,7 +96,7 @@ $(function(){
 			}
 	);
 	
-	//加载测试模型
+	//加载缓存中的模型
 	var tempModel = localStorage.getItem("tempFlModel");
 	if(tempModel){
 		flRenderer.loadModel(JSON.parse(tempModel));
@@ -107,21 +107,34 @@ $(function(){
 		$("#files").click();
 	});
 	
+	//清空按钮
+	$('#clearBtn').click(function(){
+		confirmMsg('确认要清空流程模型？',function(result){
+			if(result){
+				flRenderer.loadModel({flowInfo:{},activities:[],operations:[],subsequents:[]});
+			}
+		});
+	});
+	
 	//导出按钮
 	$('#exportBtn').click(function(){
-		var flModel = flRenderer.getFlowModle();
-		var xml = flModelToXml(flModel);
-		console.log("xml:"+xml);
-		
-		var b = new Base64();
-		var base64 = b.encode(xml);
-		console.log("base64:"+base64);
-		
+		//先把对话框展现出来
 		var modalContent = $('#showHtmlModal').html();
-		modalContent = modalContent.replace('{{xml}}',xml);
-		modalContent = modalContent.replace('{{base64}}',base64);
-
 		$.modal(modalContent,{width:890,height:480});
+		//在另外一个线程中去处理xml内容
+		setTimeout(function(){
+			var flModel = flRenderer.getFlowModle();
+			var xml = flModelToXml(flModel);
+			console.log("xml:"+xml);
+			
+			var b = new Base64();
+			var base64 = b.encode(xml);
+			console.log("base64:"+base64);
+
+			$('#xmlArea').text(xml);
+			$('#base64Area').text(base64);
+		},0);
+		
 		
 	});
 	
@@ -427,6 +440,7 @@ $(function(){
   	<input type="file" id="files" style="display: none"  accept=".xml" onchange="fileImport();">
   	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
   	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出</button>
+  	<button id="clearBtn" ><img src="imgs/design/menus/broom.png">清空</button>
   	<button id="moveBtn" ><img src="">移动</button>
   	<button id="cancleMoveBtn" ><img src="">取消移动</button>
   	<button id="makeCenterBtn" ><img src="">居中</button>
@@ -466,7 +480,7 @@ $(function(){
 	      <tbody>
 	        <tr>
 	      	  <td class="dt" >流程代码</td>
-	      	  <td class="dc" ><input name="flowId" readonly="readonly" type="text" ></td>
+	      	  <td class="dc" ><input name="flowId"  type="text" ></td>
 	      	</tr>
 	      	<tr>
 	      	  <td class="dt" >版本号</td>
