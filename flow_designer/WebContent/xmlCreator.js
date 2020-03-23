@@ -112,28 +112,64 @@ function xmlFormat(xml){
 	if(xml.indexOf('<?xml')!=0){
 		prefix = '<?xml version="1.0" encoding="UTF-8"?>\n\n';
 	}
-	var sp = 2;//缩进
-	var index = xml.indexOf('<',1);
-	while(index>0){
-		console.log(index+"  char At(index+1):"+xml.charAt(index+1));
-		if(xml.charAt(index+1)=='/'){
+	var sp = 0;//缩进
+	var preTagName = ''; //上次循环处理的TagName
+	var preStartTagFlage = false;//true为 <tag> false 为 </tag>,null为 <tag/>. 
+	var index = xml.indexOf('<',0);
+	while(index>=0){
+		//console.log(index+"  char At(index+1):"+xml.charAt(index+1));
+		var tagEndIndex = xml.indexOf('>',index+1);
+		//console.log("end Tag index:"+tagEndIndex);
+		var tagName = xml.substring(index+1,tagEndIndex);
+		//console.log("tagName:"+tagName);
+		var startTagFlage = false;
+		if(tagName.charAt(0)=='/'){
+			//需要出栈
+			console.log("出栈.");
+			startTagFlage = false;
+			tagName = tagName.substring(1); 
+		}else if(tagName.charAt(tagName.length-1)=='/'){
+			//不出栈也不入栈
+			console.log("不出栈也不入栈.");
+			startTagFlage = null;
+			tagName = tagName.substring(0,tagName.length-1); 
+		}else{
+			console.log("入栈.");
+			//需要入栈
+			startTagFlage = true;
+		}
+		console.log("tagName:"+tagName);
+		if(startTagFlage==null){
+			//要换行，
+			//sp+=2;
+		}else if(!startTagFlage ){
 			sp -= 2;
-			if(xml.charAt(index-1)!='>'){
+			//上次为入栈且处理的标签是一样的。
+			if(preStartTagFlage && preTagName == tagName){
 				//不用换行处理
 				index = xml.indexOf('<',index+1);
 				continue;
 			}
-		}else{
-			sp += 2;
+			
+		}else if(startTagFlage){
+			//不处理后续再处理。
 		}
 		//在index位置插入一个换行符和若干个空格
+		//console.log("sp:"+sp);
 		var spaces = '';
 		for(var i=0;i<sp;i++){
 			spaces += ' ';
 		}
-		xml = xml.substr(0,index)+'\n'+spaces+xml.substr(index);
-		console.log('xml:'+xml);
-		index += (sp+1);
+		xml = xml.substring(0,index)+'\n'+spaces+xml.substring(index);
+		if(startTagFlage){
+			sp += 2;
+		}
+		//console.log('xml:'+xml);
+		//if(index<=2500)
+		//	break;
+		preTagName = tagName;
+		preStartTagFlage = startTagFlage;
+		index += ((sp>0?sp:0)+1);
 		index = xml.indexOf('<',index+1);
 	}
 	
