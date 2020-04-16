@@ -153,17 +153,20 @@ $(function(){
 	var movimgDragCtrl = getMovimgDragCtrl(flRenderer);
 	//移动按钮的点击事件
 	$('#moveBtn').click(function(){
-		flRenderer.setDragCtrl(movimgDragCtrl);
-		$('#moveBtn').hide();
-		$('#cancleMoveBtn').show();
-		$('#designer').css({"cursor":'move'});
-	});
-	//取消移动按钮的点击事件
-	$('#cancleMoveBtn').click(function(){
-		flRenderer.resetDragCtrl();
-		$('#cancleMoveBtn').hide();
-		$('#moveBtn').show();
-		$('#designer').css({"cursor":'default'});
+		if("移动" == $(this).text()){
+			flRenderer.setDragCtrl(movimgDragCtrl);
+			var $img = $('#moveBtn>img');
+			$('#moveBtn').empty();
+			$('#moveBtn').append($img);
+			$('#moveBtn').append("取消移动");
+			$('#designer').css({"cursor":'move'});
+		}else if("取消移动" == $(this).text()){
+			flRenderer.resetDragCtrl();
+			$('#moveBtn').empty();
+			$('#moveBtn').append($img);
+			$('#moveBtn').append("移动");
+			$('#designer').css({"cursor":'default'});
+		}
 	});
 	
 	
@@ -444,7 +447,6 @@ $(function(){
   </div>
   <div class="topButtons" >
   	<button id="moveBtn" ><img src="">移动</button>
-  	<button id="cancleMoveBtn" ><img src="">取消移动</button>
   	<button id="makeCenterBtn" ><img src="">居中</button>
   </div>
   <div class="clear" ></div>
