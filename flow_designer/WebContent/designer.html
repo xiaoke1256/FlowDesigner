@@ -162,6 +162,7 @@ $(function(){
 			$('#designer').css({"cursor":'move'});
 		}else if("取消移动" == $(this).text()){
 			flRenderer.resetDragCtrl();
+			var $img = $('#moveBtn>img');
 			$('#moveBtn').empty();
 			$('#moveBtn').append($img);
 			$('#moveBtn').append("移动");
