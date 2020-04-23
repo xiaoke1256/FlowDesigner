@@ -1189,6 +1189,18 @@ function FlRenderer(canvasId,options){
 		return false;
 	}
 	
+	/**把整个流程图转成一个图片，base64方式输出*/
+	function _toImg(){
+		//记录下当前的画布大小，坐标系等。
+		//清空画布
+		//调整画布大小和坐标系
+		//绘制整个流程图。
+		//把流程图转成base64.
+		//清空画布
+		//还原画布大小，坐标系等。
+		//重新绘制
+	}
+	
 	
 	//暴露出去一个对象
 	var exportObj = {
