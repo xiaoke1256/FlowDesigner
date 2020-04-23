@@ -1217,7 +1217,12 @@ function FlRenderer(canvasId,options){
 		var imgData = c.toDataURL("image/png");
 		console.log("imgData:"+imgData);
 		//还原画布大小，坐标系等。
+		c.width = orgSize.width;
+		c.height = orgSize.height;
+		originPoint.x = orgOPoint.x;
+		originPoint.y = orgOPoint.y;
 		//重新绘制
+		drawAll(cxt);
 		
 		return imgData;
 	}
