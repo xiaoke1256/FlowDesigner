@@ -959,9 +959,9 @@ function FlRenderer(canvasId,options){
 	}
 	
 	/**
-	 * 使整个流程图居中
+	 * 获取整个图形的边界
 	 */
-	function _makeCenter(){
+	function getBound(){
 		var maxX = null;
 		var minX = null;
 		var maxY = null;
@@ -1046,6 +1046,19 @@ function FlRenderer(canvasId,options){
 			//只要有一个为空则无需处理坐标系
 			return;
 		}
+		return {maxX:maxX,minX:minX,maxY:maxY,minY:minY};
+	}
+	
+	/**
+	 * 使整个流程图居中
+	 */
+	function _makeCenter(){
+		var bound = getBound();
+		var maxX = bound.maxX;
+		var minX = bound.minX;
+		var maxY = bound.maxY;
+		var minY = bound.minY;
+		
 		//获得了模型的中心点
 		var centerX = (minX+maxX)/2;
 		var centerY = (minY+maxY)/2;
@@ -1194,11 +1207,15 @@ function FlRenderer(canvasId,options){
 		//记录下当前的画布大小，坐标系等。
 		var orgSize = {width:c.width,height:c.height} ;
 		var orgOPoint = {x:originPoint.x,y:originPoint.y};
-		//调整画布大小和坐标系
-		
-		//绘制整个流程图。
-		drawAll(cxt);
+		//调整画布大小
+		var bound = getBound();
+		c.width=(bound.maxX-bound.minX+100)>orgSize.width?(bound.maxX-bound.minX+100):orgSize.width;//100是指留100个像素的空白边
+		c.height=(bound.maxY-bound.minY+100)>orgSize.height?(bound.maxY-bound.minY+100):orgSize.height;//100是指留100个像素的空白边
+		//居中显示
+		_makeCenter();
 		//把流程图转成base64.
+		var imgData = c.toDataURL("image/png");
+		console.log("imgData:"+imgData);
 		//还原画布大小，坐标系等。
 		//重新绘制
 	}
