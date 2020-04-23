@@ -1203,7 +1203,7 @@ function FlRenderer(canvasId,options){
 	}
 	
 	/**把整个流程图转成一个图片，base64方式输出*/
-	function _toImg(){
+	function _getImgData(){
 		//记录下当前的画布大小，坐标系等。
 		var orgSize = {width:c.width,height:c.height} ;
 		var orgOPoint = {x:originPoint.x,y:originPoint.y};
@@ -1427,7 +1427,10 @@ function FlRenderer(canvasId,options){
 		/**重新绘制*/
 		redraw:function(){
 			drawAll(cxt);
-		}
+		},
+		getImgData:function(){
+			return _getImgData();
+		} 
 	};
 	//设定鼠标拖动控制器
 	defualtDragCtrl = getDefaultDragCtrl(exportObj);
