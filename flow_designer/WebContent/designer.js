@@ -566,7 +566,7 @@ function FlRenderer(canvasId,options){
 		ctx.beginPath();
 		ctx.rect(x1,y1,x2-x1,y2-y1);
 		ctx.fill();
-		//每500个像素画一道维线
+		//每500个像素画一道纬线
 		var y=-0.5;
 		while(y>y1){
 			y-=500;
@@ -1192,11 +1192,13 @@ function FlRenderer(canvasId,options){
 	/**把整个流程图转成一个图片，base64方式输出*/
 	function _toImg(){
 		//记录下当前的画布大小，坐标系等。
-		//清空画布
+		var orgSize = {width:c.width,height:c.height} ;
+		var orgOPoint = {x:originPoint.x,y:originPoint.y};
 		//调整画布大小和坐标系
+		
 		//绘制整个流程图。
+		drawAll(cxt);
 		//把流程图转成base64.
-		//清空画布
 		//还原画布大小，坐标系等。
 		//重新绘制
 	}
