@@ -1218,6 +1218,8 @@ function FlRenderer(canvasId,options){
 		console.log("imgData:"+imgData);
 		//还原画布大小，坐标系等。
 		//重新绘制
+		
+		return imgData;
 	}
 	
 	

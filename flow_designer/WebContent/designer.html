@@ -149,6 +149,15 @@ $(function(){
 		});
 	});
 	
+	//导出图片
+	$('#expImgBtn').click(function(){
+		if(!window.location.protocol == 'http' && !window.location.protocol == 'https' ){
+			alert("由于本功能不支持跨域，请将本系统部署到tomcat.");
+			return false;
+		}
+		var imgData = flRenderer.getImgData();
+	});
+	
 	//移动坐标系的控制器
 	var movimgDragCtrl = getMovimgDragCtrl(flRenderer);
 	//移动按钮的点击事件
@@ -445,6 +454,7 @@ $(function(){
   	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
   	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出</button>
   	<button id="clearBtn" ><img src="imgs/design/menus/broom.png">清空</button>
+  	<button id="expImgBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出图片</button>
   </div>
   <div class="topButtons" >
   	<button id="moveBtn" ><img src="">移动</button>
