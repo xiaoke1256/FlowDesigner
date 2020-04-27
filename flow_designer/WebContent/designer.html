@@ -117,26 +117,24 @@ $(function(){
 		});
 	});
 	
-	//导出按钮
+	//导出XML按钮
 	$('#exportBtn').click(function(){
 		//先把对话框展现出来
-		var modalContent = $('#showHtmlModal').html();
-		$.modal(modalContent,{width:890,height:480});
-		//在另外一个线程中去处理xml内容
-		setTimeout(function(){
-			var flModel = flRenderer.getFlowModle();
-			var xml = flModelToXml(flModel);
-			console.log("xml:"+xml);
-			
-			var b = new Base64();
-			var base64 = b.encode(xml);
-			console.log("base64:"+base64);
-
-			$('#xmlArea').text(xml);
-			$('#base64Area').text(base64);
-		},0);
-		
-		
+		var flModel = flRenderer.getFlowModle();
+		var xml = flModelToXml(flModel);
+		console.log("xml:"+xml);
+		saveFile(xml,"text/xml;charset=utf-8", flModel.flowInfo.model.flowId+".xml");		
+	});
+	
+	//导出Base64按钮
+	$('#expBase64Btn').click(function(){
+		//先把对话框展现出来
+		var flModel = flRenderer.getFlowModle();
+		var xml = flModelToXml(flModel);
+		var b = new Base64();
+		var base64 = b.encode(xml);
+		console.log("base64:"+base64);
+		saveFile(base64,"text/plan", flModel.flowInfo.model.flowId+".txt");		
 	});
 	
 	//保存按钮
@@ -460,8 +458,9 @@ $(function(){
   	<button id="saveBtn" ><img src="imgs/design/menus/disk.png">保存</button>
   	<input type="file" id="files" style="display: none"  accept=".xml" onchange="fileImport();">
   	<button id="openBtn" ><img src="imgs/design/menus/folder-open-image-disk.png">打开</button>
-  	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出</button>
   	<button id="clearBtn" ><img src="imgs/design/menus/broom.png">清空</button>
+  	<button id="exportBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出XML</button>
+  	<button id="expBase64Btn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出Base64</button>
   	<button id="expImgBtn" ><img src="imgs/design/menus/document-attribute-x-export.png">导出图片</button>
   </div>
   <div class="topButtons" >
