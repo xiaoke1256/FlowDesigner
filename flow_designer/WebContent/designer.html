@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="css/designer.css" />
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/modal.js"></script>
+<script type="text/javascript" src="js/file_save.js"></script>
 <script type="text/javascript" src="dragController.js"></script>
 <script type="text/javascript" src="designer.js"></script>
 <script type="text/javascript" src="xmlPareser.js"></script>
@@ -151,11 +152,18 @@ $(function(){
 	
 	//导出图片
 	$('#expImgBtn').click(function(){
-		if(window.location.protocol != 'http' && !window.location.protocol != 'https' ){
+		if(window.location.protocol != 'http:' && !window.location.protocol != 'https:' ){
 			alert("由于本功能不支持跨域，请将本系统部署到tomcat.");
 			return false;
 		}
 		var imgData = flRenderer.getImgData();
+		var arr = imgData.split(',') , mime = arr[0].match(/:(.*?);/)[1] , bstr = atob(arr[1]) , n = bstr.length , u8arr = new Uint8Array(n);
+	    while (n--) {
+	        u8arr[n] = bstr.charCodeAt(n);
+	    }
+
+    	saveFile(u8arr,"image/png", flRenderer.getFlowModle().flowInfo.model.flowId+".png");
+		
 	});
 	
 	//移动坐标系的控制器
