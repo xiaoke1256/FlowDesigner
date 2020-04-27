@@ -12,22 +12,6 @@
 <script type="text/javascript" src="xmlPareser.js"></script>
 <script type="text/javascript" src="xmlCreator.js"></script>
 <script type="text/javascript" src="js/base64.js"></script>
-<template id="showHtmlModal" >
-	<div>
-	  <h1>流程模型</h1>
-	  <div>
-	  	<label><input name="outputType" value="1" type="radio" onclick="$('#xmlArea').show();$('#base64Area').hide();" checked >xml</label>
-	  	<label><input name="outputType" value="2" type="radio" onclick="$('#base64Area').show();$('#xmlArea').hide();" >xml | base64</label>
-	  </div>
-	  <div id="content" class="content">
-	  	<textarea id="xmlArea" readonly="true" ></textarea>
-	  	<textarea id="base64Area" style="display:none" readonly="true" ></textarea>
-	  </div>
-	  <div class="center btnContainer" >
-	  	<button onclick="$.closeModal()" >关闭</button>
-	  </div>
-	</div>
-</template>
 <script type="text/javascript">
 
 //初始化绘图器
