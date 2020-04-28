@@ -138,12 +138,7 @@ $(function(){
 			return false;
 		}
 		var imgData = flRenderer.getImgData();
-		var arr = imgData.split(',') , mime = arr[0].match(/:(.*?);/)[1] , bstr = atob(arr[1]) , n = bstr.length , u8arr = new Uint8Array(n);
-	    while (n--) {
-	        u8arr[n] = bstr.charCodeAt(n);
-	    }
-
-    	saveFile(u8arr,"image/png", flRenderer.getFlowModle().flowInfo.model.flowId+".png");
+    	saveFile(base64ToBytes(imgData),"image/png", flRenderer.getFlowModle().flowInfo.model.flowId+".png");
 		
 	});
 	
