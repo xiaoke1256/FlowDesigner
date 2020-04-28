@@ -72,8 +72,8 @@ $(function(){
 						$('#'+objType+'Info').find('input[type=text][name='+prop+']').val(value);
 						$('#'+objType+'Info').find('select[name='+prop+']').val(value);
 						$('#'+objType+'Info').find('input[type=radio][name='+prop+']').filter('[value='+value+']').attr("checked",true);
+						$('#'+objType+'Info').find('input[type=checkbox][name='+prop+']').attr("checked",false);
 						$('#'+objType+'Info').find('input[type=checkbox][name='+prop+']').filter('[value='+value+']').attr("checked",true);
-						$('#'+objType+'Info').find('input[type=checkbox][name='+prop+']').filter(':not([value='+value+'])').attr("checked",false);
 						$('#'+objType+'Info').find('textarea[name='+prop+']').val(value);
 					}
 				}
