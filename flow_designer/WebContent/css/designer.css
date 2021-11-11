@@ -1,4 +1,7 @@
-body {font-size:8px;margin:0}
+html {font-size:62.5%}
+body {margin:0;
+	-webkit-font-smoothing: subpixel-antialiased;
+ -moz-osx-font-smoothing: auto; }
 
 .center {padding:0 1px;text-align:center}
 
@@ -28,7 +31,7 @@ table.info .dc {text-align:left;width:68%;padding:2px 4px;}
 table.info .dc input[type=text],table.info .dc select {width:85%}
 table.info .dc textarea {width:150px;height:80px}
 
-table.info .dd {text-align:left;width:68%;font:6px/14px kaiti}
+table.info .dd {text-align:left;width:68%;font:1em cursive}
 
 .rightMenu {background-color:white;border:1px solid grey}
 .rightMenu ul {list-style:none;margin:2px;padding:0px}
