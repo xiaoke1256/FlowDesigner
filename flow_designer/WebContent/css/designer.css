@@ -1,7 +1,8 @@
 html {font-size:62.5%}
-body {margin:0;
+body {font-size:12px;margin:0;
 	-webkit-font-smoothing: subpixel-antialiased;
- -moz-osx-font-smoothing: auto; }
+ -moz-osx-font-smoothing: auto;
+ -webkit-text-size-adjust: none }
 
 .center {padding:0 1px;text-align:center}
 
@@ -15,7 +16,7 @@ body {margin:0;
 .main {margin:0 2px}
 .main>div,.main>canvas {float:left}
 .main .asideTools {border:1px solid grey;height:100%}
-.main .asideTools .title  {text-align:center;font-size:8px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
+.main .asideTools .title  {text-align:center;font-size:14px;width:80px;margin:0;padding:5px;color:white;background-color:blue}
 #asideContants {overflow-y: auto;height:100%;margin:0;padding:0}
 #asideContants div {text-align:center;padding:8px 0}
 #asideContants div:not(.title):hover {background-color:#bef}/*鼠标移上去后变浅蓝色*/
