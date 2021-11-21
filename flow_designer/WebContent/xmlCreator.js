@@ -20,7 +20,7 @@ function flModelToXml(flModel){
         var actsNode = xmlDOM.createElement('activities');
         flowNode.appendChild(actsNode);
         
-        bizObjsToXmlNode(xmlDOM,flModel.activities,'actibity',actsNode);
+        bizObjsToXmlNode(xmlDOM,flModel.activities,'activity',actsNode);
         
         //创建结果节点
         var opersNode = xmlDOM.createElement('operations');

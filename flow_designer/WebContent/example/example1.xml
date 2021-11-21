@@ -4,7 +4,7 @@
 <esflow>
   <flow flowId="0032" version="1.0" flowName="请假流程" displayName="请假流程" description="">
     <activities>
-      <actibity>
+      <activity>
         <model>
           <listNo>0</listNo>
           <activityType>01</activityType>
@@ -22,8 +22,8 @@
           <x>401</x>
           <y>124</y>
         </view>
-      </actibity>
-      <actibity>
+      </activity>
+      <activity>
         <model>
           <listNo>0</listNo>
           <activityType>01</activityType>
@@ -41,8 +41,8 @@
           <x>402</x>
           <y>294</y>
         </view>
-      </actibity>
-      <actibity>
+      </activity>
+      <activity>
         <model>
           <listNo>0</listNo>
           <activityType>01</activityType>
@@ -60,8 +60,8 @@
           <x>404</x>
           <y>463</y>
         </view>
-      </actibity>
-      <actibity>
+      </activity>
+      <activity>
         <model>
           <listNo>0</listNo>
           <activityType>01</activityType>
@@ -79,8 +79,8 @@
           <x>405</x>
           <y>627</y>
         </view>
-      </actibity>
-      <actibity>
+      </activity>
+      <activity>
         <model>
           <listNo>0</listNo>
           <activityType>01</activityType>
@@ -98,7 +98,7 @@
           <x>633</x>
           <y>699</y>
         </view>
-      </actibity>
+      </activity>
     </activities>
     <operations>
       <operation>
