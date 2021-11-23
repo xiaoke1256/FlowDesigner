@@ -168,6 +168,11 @@ $(function(){
 		flRenderer.makeCenter();
 	});
 	
+	//加载样例按钮
+	$('#example1Btn').click(function(){
+		importExample1();
+	});
+	
 	
 	//左边的按钮
 	//任意一人（环节）
@@ -444,6 +449,9 @@ $(function(){
   <div class="topButtons" >
   	<button id="moveBtn" ><img src="">移动</button>
   	<button id="makeCenterBtn" ><img src="">居中</button>
+  </div>
+  <div class="topButtons" >
+  	<button id="example1Btn" ><img src="">样例1</button>
   </div>
   <div class="clear" ></div>
   <div class="main" >
@@ -846,6 +854,51 @@ $(function(){
           //TODO 隐藏蒙板及滚轮
       }
 		
+	}
+  
+  /**载入样例1的函数*/
+  function importExample1() {
+      
+      //TODO 显示蒙版及滚轮
+      var file_url = 'example/example1.xml';
+      let xhr = new XMLHttpRequest();
+      xhr.open('get', file_url, true);
+      xhr.responseType = 'blob';
+      xhr.onload = function () {
+        if (this.status == 200) {
+          // if (callback) {
+          // callback();
+          console.log(this.response)
+          const reader = new FileReader()
+          reader.onload = function () {
+            console.log('reader.result', reader.result);
+            var flowModle = xmlDocToObj(loadXML(reader.result));
+	        console.log("导出模型："+flowModle);
+	        flRenderer.loadModel(flowModle);
+          }
+          reader.readAsText(this.response);
+        //TODO 隐藏蒙板及滚轮
+        }
+      };
+      xhr.send();
+    	  
+      /*
+      var reader = new FileReader();//这是核心,读取操作就是由它完成.
+      reader.readAsText('example/example1.xml');//读取文件的内容,
+      reader.onload = function () {
+          //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
+          try{
+	          console.log(this.result);
+	          var flowModle = xmlDocToObj(loadXML(this.result));
+	          console.log("导出模型："+flowModle);
+	          flRenderer.loadModel(flowModle);
+	          
+          }catch(err){
+        	  showErrMsg(err);
+          }
+          //TODO 隐藏蒙板及滚轮
+      }
+	*/
 	}
   
   
