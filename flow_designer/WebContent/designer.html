@@ -858,48 +858,21 @@ $(function(){
   
   /**载入样例1的函数*/
   function importExample1() {
+	  if(window.location.protocol != 'http:' && window.location.protocol != 'https:' ){
+		  alert("由于本功能不支持跨域，请将本系统部署到tomcat.");
+		  return false;
+	  }
+
+      var url = 'example/example1.xml';
+      $.get(url,{},function(result){
+    	  console.log('reader.result', result);
+          var flowModle = xmlDocToObj(result);
+	      console.log("导出模型："+flowModle);
+	      flRenderer.loadModel(flowModle);
       
-      //TODO 显示蒙版及滚轮
-      var file_url = 'example/example1.xml';
-      let xhr = new XMLHttpRequest();
-      xhr.open('get', file_url, true);
-      xhr.responseType = 'blob';
-      xhr.onload = function () {
-        if (this.status == 200) {
-          // if (callback) {
-          // callback();
-          console.log(this.response)
-          const reader = new FileReader()
-          reader.onload = function () {
-            console.log('reader.result', reader.result);
-            var flowModle = xmlDocToObj(loadXML(reader.result));
-	        console.log("导出模型："+flowModle);
-	        flRenderer.loadModel(flowModle);
-          }
-          reader.readAsText(this.response);
-        //TODO 隐藏蒙板及滚轮
-        }
-      };
-      xhr.send();
-    	  
-      /*
-      var reader = new FileReader();//这是核心,读取操作就是由它完成.
-      reader.readAsText('example/example1.xml');//读取文件的内容,
-      reader.onload = function () {
-          //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
-          try{
-	          console.log(this.result);
-	          var flowModle = xmlDocToObj(loadXML(this.result));
-	          console.log("导出模型："+flowModle);
-	          flRenderer.loadModel(flowModle);
-	          
-          }catch(err){
-        	  showErrMsg(err);
-          }
-          //TODO 隐藏蒙板及滚轮
-      }
-	*/
-	}
+      });
+ 
+  }
   
   
   /**
