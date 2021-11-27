@@ -133,7 +133,7 @@ $(function(){
 	
 	//导出图片
 	$('#expImgBtn').click(function(){
-		if(window.location.protocol != 'http:' && !window.location.protocol != 'https:' ){
+		if(window.location.protocol != 'http:' && window.location.protocol != 'https:' ){
 			alert("由于本功能不支持跨域，请将本系统部署到tomcat.");
 			return false;
 		}
