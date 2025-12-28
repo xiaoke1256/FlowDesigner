@@ -160,9 +160,9 @@ ControlPoint.prototype = new Point();
 var icons = (function(){
 	//活动图片.
 	var actImg = new Image();
-	actImg.src='imgs/design/anyone.gif';
-	actImg.width = 28;//这里未必是图片真实的宽度，因图片上有可能有空白的边。
-	actImg.height = 36;//这里未必是图片真实的高度，因图片上有可能有空白的边。
+	actImg.src='imgs/design/anyone.svg';
+	actImg.width = 32;//这里未必是图片真实的宽度，因图片上有可能有空白的边。
+	actImg.height = 32;//这里未必是图片真实的高度，因图片上有可能有空白的边。
 	//开始活动图片.
 	var actStartImg = new Image();
 	actStartImg.src='imgs/design/anyone_start.gif';
@@ -841,7 +841,7 @@ function FlRenderer(canvasId,options){
 		}else if(act.model.activityType=='02'){
 			icon = icons['act_seq'];
 		}
-		cxt.drawImage(icon,act.view.x,act.view.y);
+		cxt.drawImage(icon,act.view.x,act.view.y,icon.width,icon.height);
 	}
 	/**
 	 * 绘制一个结果线
