@@ -1,0 +1,28 @@
+<svg viewBox="0 0 110 110" width="200" height="200" xmlns="http://www.w3.org/2000/svg" >
+    <!-- 圆 -->
+
+    <circle cx="45" cy="48" r="20" fill="none" stroke-width="4" stroke="black"/>
+	<defs>
+      <clipPath id="clipHalfTop">
+        <rect x="0" y="50" width="110" height="50"/>
+      </clipPath>
+    </defs>
+	<ellipse cx="45" cy="100" rx="40" ry="24" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop)" />
+	<line x1="5" y1="100" x2="85" y2="100" stroke="black" stroke-width="4" stroke-linecap="round" />
+
+	
+	
+	<defs>
+      <clipPath id="clipHalfTop2">
+        <rect x="20" y="30" width="100" height="50"/>
+      </clipPath>
+    </defs>
+	<mask id="circleMask">
+	  <rect x="0" y="0" width="110" height="110" fill="white"/>
+	  <circle cx="45" cy="48" r="25" fill="black" />
+	  <ellipse cx="45" cy="100" rx="45" ry="29" fill="black"/>
+	</mask>
+	<circle cx="65" cy="28" r="20" fill="none" stroke-width="4" stroke="black" mask="url(#circleMask)"/>
+	<ellipse cx="65" cy="80" rx="40" ry="24" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop2)" mask="url(#circleMask)" />
+	<line x1="80" y1="80" x2="105" y2="80" stroke="black" stroke-width="4" stroke-linecap="round" />
+</svg>
