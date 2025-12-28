@@ -175,14 +175,14 @@ var icons = (function(){
 	actAutoImg.height = 36;
 	//多人并行
 	var actPiallImg = new Image();
-	actPiallImg.src='imgs/design/paiallel.gif';
-	actPiallImg.width = 28;
-	actPiallImg.height = 36;
+	actPiallImg.src='imgs/design/paiallel.svg';
+	actPiallImg.width = 32;
+	actPiallImg.height = 32;
 	//多人串行
 	var actSeqImg = new Image();
-	actSeqImg.src='imgs/design/sequence.gif';
-	actSeqImg.width = 28;
-	actSeqImg.height = 36;
+	actSeqImg.src='imgs/design/sequence.svg';
+	actSeqImg.width = 32;
+	actSeqImg.height = 32;
 	//图片结果图片
 	var operImg = new Image();
 	operImg.src='imgs/design/result.gif';
