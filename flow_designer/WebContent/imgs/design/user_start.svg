@@ -1,0 +1,14 @@
+<svg viewBox="0 0 110 110" width="200" height="200" xmlns="http://www.w3.org/2000/svg" >
+    <!-- 圆 -->
+    <circle cx="55" cy="35" r="25" fill="none" stroke-width="4" stroke="black"/>
+	<defs>
+      <clipPath id="clipHalfTop">
+        <rect x="0" y="50" width="110" height="50"/>
+      </clipPath>
+    </defs>
+	<ellipse cx="55" cy="100" rx="50" ry="30" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop)" />
+	<line x1="5" y1="100" x2="105" y2="100" stroke="black" stroke-width="4" stroke-linecap="round" />
+	
+	<!-- 三角形 -->
+	<polygon points="0,75 0,110 35,110" fill="#669933" />
+</svg>
