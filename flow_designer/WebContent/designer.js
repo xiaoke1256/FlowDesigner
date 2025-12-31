@@ -165,14 +165,14 @@ var icons = (function(){
 	actImg.height = 32;//这里未必是图片真实的高度，因图片上有可能有空白的边。
 	//开始活动图片.
 	var actStartImg = new Image();
-	actStartImg.src='imgs/design/anyone_start.gif';
-	actStartImg.width = 28;
-	actStartImg.height = 36;
+	actStartImg.src='imgs/design/anyone_start.svg';
+	actStartImg.width = 32;
+	actStartImg.height = 32;
 	//自动完成活动图片.
 	var actAutoImg = new Image();
-	actAutoImg.src='imgs/design/anyone_auto.gif';
-	actAutoImg.width = 28;
-	actAutoImg.height = 36;
+	actAutoImg.src='imgs/design/anyone_auto.svg';
+	actAutoImg.width = 32;
+	actAutoImg.height = 32;
 	//多人并行
 	var actPiallImg = new Image();
 	actPiallImg.src='imgs/design/paiallel.svg';
