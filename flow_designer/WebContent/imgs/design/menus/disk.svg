@@ -1,0 +1,15 @@
+<svg viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg" >
+	<polygon points="0,0 0,28 4,32 32,32 32,0" stroke-linecap="square" mask="url(#rectsMask)" />
+	
+	<mask id="rectsMask">
+	  <rect x="0" y="0" width="32" height="32" fill="white"/>
+	  <rect x="4" y="2" width="23" height="14" fill="black" />
+	  <rect x="6" y="21" width="21" height="8" fill="black" />
+	</mask>
+	<line x1="21" y1="21" x2="21" y2="31" fill="black" stroke="black" stroke-width="4"  />
+	<!--
+	<rect x="17" y="5" width="70" height="55" fill="none" stroke-width="12" stroke="black"  />
+	<rect x="17" y="70" width="70" height="30" fill="none" stroke-width="12" stroke="black" stroke-linecap="round" />
+	<line x1="65" y1="70" x2="65" y2="100" stroke="black" stroke-width="12"  />
+	-->
+</svg>
