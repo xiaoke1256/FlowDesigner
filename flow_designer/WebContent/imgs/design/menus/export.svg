@@ -1,0 +1,9 @@
+<svg viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg" >
+	<mask id="mask">
+		<rect x="0" y="0" width="32" height="32" fill="white"/>
+		<polygon points="22,2 22,8 28,8" />
+		<line x1="16" y1="12" x2="16" y2="24" stroke="black" stroke-width="4" stroke-linecap="round" />
+		<path d="M 12 20 L 16 24 L 20 20" stroke="black" stroke-width="4" stroke-linecap="round"/>
+	</mask>
+	<polygon points="2,0 2,32 30,32 30,8 22,0" rx="4" ry="4" mask="url(#mask)" />
+</svg>
