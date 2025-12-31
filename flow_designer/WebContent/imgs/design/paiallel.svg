@@ -1,22 +1,22 @@
 <svg viewBox="0 0 110 110" width="200" height="200" xmlns="http://www.w3.org/2000/svg" >
     <!-- 圆 -->
-    <circle cx="35" cy="53" r="13" fill="none" stroke-width="4" stroke="black"/>
+    <circle cx="35" cy="43" r="15" fill="none" stroke-width="4" stroke="black"/>
 	<defs>
       <clipPath id="clipHalfTop1">
-        <rect x="0" y="50" width="110" height="50"/>
+        <rect x="0" y="40" width="110" height="50"/>
       </clipPath>
 	  <clipPath id="clipHalfTop2">
-		 <polygon points="45,50 45,75 75,100 105,100 105,50"/>
+		 <polygon points="25,50 62,75 75,90 110,90 110,50"/>
       </clipPath>
 	  
     </defs>
 	
-	<ellipse cx="35" cy="100" rx="25" ry="20" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop1)" />
+	<ellipse cx="35" cy="90" rx="30" ry="20" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop1)" />
 	
 	
 	<!-- 圆 -->
-    <circle cx="75" cy="53" r="13" fill="none" stroke-width="4" stroke="black"/>
-	<ellipse cx="75" cy="100" rx="25" ry="20" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop2)" />
+    <circle cx="75" cy="43" r="15" fill="none" stroke-width="4" stroke="black"/>
+	<ellipse cx="75" cy="90" rx="30" ry="20" stroke-width="4" fill="none" stroke="black"  clip-path="url(#clipHalfTop2)" />
 	
-	<line x1="5" y1="100" x2="105" y2="100" stroke="black" stroke-width="4" stroke-linecap="round" />
+	<line x1="5" y1="90" x2="105" y2="90" stroke="black" stroke-width="4" stroke-linecap="round" />
 </svg>
