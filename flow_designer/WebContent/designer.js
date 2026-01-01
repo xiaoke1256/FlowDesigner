@@ -646,16 +646,37 @@ function FlRenderer(canvasId,options){
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
 				var x = act.view.x+act.view.width/2;
 				var y = act.view.y+act.view.height/2;
-				if((x-view.x)>0 && Math.abs(x-view.x)>act.view.width/2){
-					x -= act.view.width/2;
-				}else if ((view.x-x)>0 && Math.abs(x-view.x)>act.view.width/2){
-					x += act.view.width/2;
+				//x方向上解二原一次方程
+				var dx = (view.x-x)*(act.view.height/2)/Math.abs(view.y-y)
+				if(Math.abs(dx)>act.view.width/2){
+					if(dx>0){
+						dx=act.view.width/2
+					}else{
+						dx=-act.view.width/2
+					}
 				}
-				if((y-view.y)>0 && Math.abs(y-view.y)>act.view.height/2){
-					y -= act.view.height/2;
-				}else if ((view.y-y)>0 && Math.abs(y-view.y)>act.view.height/2){
-					y += act.view.height/2;
+				//y方向上解二原一次方程
+				var dy = (view.y-y)*(act.view.width/2)/Math.abs(view.x-x)
+				if(Math.abs(dy)>act.view.height/2){
+					if(dy>0){
+						dy=act.view.height/2
+					}else{
+						dy=-act.view.height/2
+					}
 				}
+				x+=dx;
+				y+=dy;
+				
+				// if((x-view.x)>0 && Math.abs(x-view.x)>act.view.width/2){
+				// 	x -= act.view.width/2;
+				// }else if ((view.x-x)>0 && Math.abs(x-view.x)>act.view.width/2){
+				// 	x += act.view.width/2;
+				// }
+				// if((y-view.y)>0 && Math.abs(y-view.y)>act.view.height/2){
+				// 	y -= act.view.height/2;
+				// }else if ((view.y-y)>0 && Math.abs(y-view.y)>act.view.height/2){
+				// 	y += act.view.height/2;
+				//}
 				cxt.lineTo(x,y);
 				cxt.stroke();
 			}
