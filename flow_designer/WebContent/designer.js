@@ -640,6 +640,7 @@ function FlRenderer(canvasId,options){
 			//绘制从结果到活动的线条。
 			if(act){
 			    //act.view
+				//TODO: 如果这条线过短，则不用绘制
 				cxt.beginPath();
 				cxt.lineWidth=2;
 				cxt.strokeStyle='#48f';
