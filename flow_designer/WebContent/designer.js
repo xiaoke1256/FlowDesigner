@@ -640,13 +640,19 @@ function FlRenderer(canvasId,options){
 			//绘制从结果到活动的线条。
 			if(act){
 			    //act.view
+				var x = act.view.x+act.view.width/2;
+				var y = act.view.y+act.view.height/2;
+
 				//TODO: 如果这条线过短，则不用绘制
+				if(Math.abs(view.y-y)<act.view.height/2 && Math.abs(view.x-x)<act.view.width/2){
+					return;
+				}
+
 				cxt.beginPath();
 				cxt.lineWidth=2;
 				cxt.strokeStyle='#48f';
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-				var x = act.view.x+act.view.width/2;
-				var y = act.view.y+act.view.height/2;
+				
 				//x方向上解二原一次方程
 				var dx = (view.x-x)*(act.view.height/2)/Math.abs(view.y-y)
 				if(Math.abs(dx)>act.view.width/2){
