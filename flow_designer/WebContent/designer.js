@@ -644,7 +644,19 @@ function FlRenderer(canvasId,options){
 				cxt.lineWidth=2;
 				cxt.strokeStyle='#48f';
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
-				cxt.lineTo(act.view.x+act.view.width/2,act.view.y+act.view.height/2);
+				var x = act.view.x+act.view.width/2;
+				var y = act.view.y+act.view.height/2;
+				if((x-view.x)>0 && Math.abs(x-view.x)>act.view.width/2){
+					x -= act.view.width/2;
+				}else if ((view.x-x)>0 && Math.abs(x-view.x)>act.view.width/2){
+					x += act.view.width/2;
+				}
+				if((y-view.y)>0 && Math.abs(y-view.y)>act.view.height/2){
+					y -= act.view.height/2;
+				}else if ((view.y-y)>0 && Math.abs(y-view.y)>act.view.height/2){
+					y += act.view.height/2;
+				}
+				cxt.lineTo(x,y);
 				cxt.stroke();
 			}
 		}else if(oper.view.controlPoint){//存在控制点
