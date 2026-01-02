@@ -721,14 +721,9 @@ function FlRenderer(canvasId,options){
 				var x = act.view.x+act.view.width/2;
 				var y = act.view.y+act.view.height/2;
 
-				console.log("x:",x)
-				console.log("view.x:",view.x)
-				console.log("(view.y-y):",(view.y-y))
 				//x方向上解二原一次方程
 				var dx = (view.x+view.width/2-x)*((view.y+view.height/2)-y<0?(act.view.height/2+22):(act.view.height/2))/Math.abs((view.y+view.height/2)-y)
 				
-				console.log("dx:",dx)
-				console.log("act.view.width/2:",act.view.width/2)
 				if(Math.abs(dx)>act.view.width/2){
 					if(dx>0){
 						dx=act.view.width/2
@@ -736,10 +731,8 @@ function FlRenderer(canvasId,options){
 						dx=-act.view.width/2
 					}
 				}
-				console.log("dx2:",dx)
 				//y方向上解二原一次方程
 				var dy = (view.y+view.height/2-y)*(act.view.width/2)/Math.abs(view.x+view.height/2-x)
-				console.log("dy:",dy)
 				if(dy>0 && Math.abs(dy)>act.view.height/2){
 					dy=act.view.height/2
 				}else if (dy<0 && Math.abs(dy)>(act.view.height/2+22)){
@@ -747,7 +740,6 @@ function FlRenderer(canvasId,options){
 				}
 				x+=dx;
 				y+=dy;
-				console.log("x2:",x)
 			    //act.view
 				cxt.beginPath();
 				cxt.lineWidth=0.5;
