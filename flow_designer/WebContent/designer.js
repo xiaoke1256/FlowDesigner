@@ -644,7 +644,7 @@ function FlRenderer(canvasId,options){
 				var y = act.view.y+act.view.height/2;
 
 				//TODO: 如果这条线过短，则不用绘制
-				if(Math.abs(view.y-y)<act.view.height/2 && Math.abs(view.x-x)<act.view.width/2){
+				if(Math.abs(view.y+view.height/2-y)<act.view.height/2 && Math.abs(view.x+view.width/2-x)<act.view.width/2){
 					return;
 				}
 
@@ -654,7 +654,7 @@ function FlRenderer(canvasId,options){
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
 				
 				//x方向上解二原一次方程
-				var dx = (view.x-x)*(act.view.height/2)/Math.abs(view.y-y)
+				var dx = (view.x+view.width/2-x)*(act.view.height/2)/Math.abs(view.y+view.height/2-y)
 				if(Math.abs(dx)>act.view.width/2){
 					if(dx>0){
 						dx=act.view.width/2
@@ -663,7 +663,7 @@ function FlRenderer(canvasId,options){
 					}
 				}
 				//y方向上解二原一次方程
-				var dy = (view.y-y)*(act.view.width/2)/Math.abs(view.x-x)
+				var dy = (view.y+view.height/2-y)*(act.view.width/2)/Math.abs(view.x+view.width/2-x)
 				if(Math.abs(dy)>act.view.height/2){
 					if(dy>0){
 						dy=act.view.height/2
