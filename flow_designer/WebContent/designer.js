@@ -718,12 +718,42 @@ function FlRenderer(canvasId,options){
 			var act = selectActByActId(subseq.model.activityId);
 			//绘制从圆圈到活动的线条。
 			if(act){
+				var x = act.view.x+act.view.width/2;
+				var y = act.view.y+act.view.height/2;
+
+				console.log("x:",x)
+				console.log("view.x:",view.x)
+				console.log("(view.y-y):",(view.y-y))
+				//x方向上解二原一次方程
+				var dx = (view.x+view.width/2-x)*((view.y+view.height/2)-y<0?(act.view.height/2+22):(act.view.height/2))/Math.abs((view.y+view.height/2)-y)
+				
+				console.log("dx:",dx)
+				console.log("act.view.width/2:",act.view.width/2)
+				if(Math.abs(dx)>act.view.width/2){
+					if(dx>0){
+						dx=act.view.width/2
+					}else{
+						dx=-act.view.width/2
+					}
+				}
+				console.log("dx2:",dx)
+				//y方向上解二原一次方程
+				var dy = (view.y+view.height/2-y)*(act.view.width/2)/Math.abs(view.x+view.height/2-x)
+				console.log("dy:",dy)
+				if(dy>0 && Math.abs(dy)>act.view.height/2){
+					dy=act.view.height/2
+				}else if (dy<0 && Math.abs(dy)>(act.view.height/2+22)){
+					dy=-(act.view.height/2+22)
+				}
+				x+=dx;
+				y+=dy;
+				console.log("x2:",x)
 			    //act.view
 				cxt.beginPath();
 				cxt.lineWidth=0.5;
 				cxt.strokeStyle='black';
 				cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);//由于像素精度问题所以每个坐标都要减0.5个像素
-				cxt.lineTo(act.view.x+act.view.width/2-0.5,act.view.y+act.view.height/2-0.5);
+				cxt.lineTo(x-0.5,y-0.5);
 				cxt.stroke();
 			}
 		}
