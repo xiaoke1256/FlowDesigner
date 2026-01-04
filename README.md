@@ -5,4 +5,4 @@ FlowDesigner
 ===
 一个用H5实现的工作流引擎的可视化编辑器。可在其上绘制一个流程图。完成绘制后可以以xml文件导出。
 
-![图片](./imgAndDoc/FlowDesigner/ask_for_leave.jpg?raw=true)
+![图片](./FlowDesigner/imgAndDoc/ask_for_leave.jpg?raw=true)
