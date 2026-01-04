@@ -702,15 +702,17 @@ function FlRenderer(canvasId,options){
 	 */
 	function drawSubsequentLine(cxt,subseq){
 		var view = subseq.view;
+		var dashType = [];//虚线的模式
 		if(subseq.model.sequence==0){//优先级是0，则用实线
-			cxt.setLineDash([]);
+			dashType = [];
 		}else if(subseq.model.sequence==1){//优先级是1，则用虚线
-			cxt.setLineDash([10,10]);
+			dashType = [10,10];
 		}else if(subseq.model.sequence==2){//优先级是2，则用点划线
-			cxt.setLineDash([10,4,2,4]);
+			dashType = [10,4,2,4];
 		}else if(subseq.model.sequence>=3){//优先级大于2，则用双点划线
-			cxt.setLineDash([10,4,2,4,2,4]);
+			dashType = [10,4,2,4,2,4];
 		}
+		cxt.setLineDash(dashType);
 		
 		if(subseq.model.activityId){//如果关联了一个活动
 			//console.log("subseq.model.activityId:"+subseq.model.activityId);
@@ -772,16 +774,7 @@ function FlRenderer(canvasId,options){
 				cxt.stroke();
 
 				//还原虚线
-				if(subseq.model.sequence==0){//优先级是0，则用实线
-					cxt.setLineDash([]);
-				}else if(subseq.model.sequence==1){//优先级是1，则用虚线
-					cxt.setLineDash([10,10]);
-				}else if(subseq.model.sequence==2){//优先级是2，则用点划线
-					cxt.setLineDash([10,4,2,4]);
-				}else if(subseq.model.sequence>=3){//优先级大于2，则用双点划线
-					cxt.setLineDash([10,4,2,4,2,4]);
-				}
-
+				cxt.setLineDash(dashType);
 			}
 		}
 		if(subseq.model.operationId){//如果关联了一个结果
