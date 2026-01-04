@@ -650,7 +650,7 @@ function FlRenderer(canvasId,options){
 
 				cxt.beginPath();
 				cxt.lineWidth=2;
-				cxt.strokeStyle='#48f';
+				cxt.strokeStyle='#888888';
 				cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
 				
 				//x方向上解二原一次方程
