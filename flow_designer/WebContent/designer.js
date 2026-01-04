@@ -691,7 +691,7 @@ function FlRenderer(canvasId,options){
 			 //绘制连线到控制点
 			 cxt.beginPath();
 			 cxt.lineWidth=2;
-			 cxt.strokeStyle='#48f';
+			 cxt.strokeStyle='#888888';
 			 cxt.moveTo(view.x+view.width/2,view.y+view.height/2);
 			 cxt.lineTo(oper.view.controlPoint.x,oper.view.controlPoint.y);
 			 cxt.stroke();
