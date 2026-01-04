@@ -721,8 +721,9 @@ function FlRenderer(canvasId,options){
 				var x = act.view.x+act.view.width/2;
 				var y = act.view.y+act.view.height/2;
 
-				//x方向上解二原一次方程,（22=8+14，8是图片与文字的间隙，14是文字的高度）
-				var dx = (view.x+view.width/2-x)*((view.y+view.height/2)-y<0?(act.view.height/2+22):(act.view.height/2))/Math.abs((view.y+view.height/2)-y)
+				//x方向上解二原一次方程,
+				var OFFSET_TOP = 22;//（22=8+14，8是图片与文字的间隙，14是文字的高度）
+				var dx = (view.x+view.width/2-x)*((view.y+view.height/2)-y<0?(act.view.height/2+OFFSET_TOP):(act.view.height/2))/Math.abs((view.y+view.height/2)-y)
 				
 				if(Math.abs(dx)>act.view.width/2){
 					if(dx>0){
@@ -735,8 +736,8 @@ function FlRenderer(canvasId,options){
 				var dy = (view.y+view.height/2-y)*(act.view.width/2)/Math.abs(view.x+view.height/2-x)
 				if(dy>0 && Math.abs(dy)>act.view.height/2){
 					dy=act.view.height/2
-				}else if (dy<0 && Math.abs(dy)>(act.view.height/2+22)){
-					dy=-(act.view.height/2+22)
+				}else if (dy<0 && Math.abs(dy)>(act.view.height/2+OFFSET_TOP)){
+					dy=-(act.view.height/2+OFFSET_TOP)
 				}
 				x+=dx;
 				y+=dy;
@@ -749,13 +750,14 @@ function FlRenderer(canvasId,options){
 				cxt.stroke();
 
 				//画个三角,三角形长度是16
+				var LENGTH_OF_DELTA = 16;
 				var cos = (x-(view.x+view.width/2))/Math.sqrt(Math.pow(y-(view.y+view.height/2),2)+Math.pow(x-(view.x+view.width/2),2));
 				var sin = (y-(view.y+view.height/2))/Math.sqrt(Math.pow(y-(view.y+view.height/2),2)+Math.pow(x-(view.x+view.width/2),2));
 				var enOfDelta = {x:0,y:0};
-				enOfDelta.x = x-cos*16
-				enOfDelta.y = y-sin*16
-				var leftPoint = {x:enOfDelta.x+sin*16/2,y:enOfDelta.y-cos*16/2};
-				var rightPoint = {x:enOfDelta.x-sin*16/2,y:enOfDelta.y+cos*16/2};
+				enOfDelta.x = x-cos*LENGTH_OF_DELTA
+				enOfDelta.y = y-sin*LENGTH_OF_DELTA
+				var leftPoint = {x:enOfDelta.x+sin*LENGTH_OF_DELTA/2,y:enOfDelta.y-cos*LENGTH_OF_DELTA/2};
+				var rightPoint = {x:enOfDelta.x-sin*LENGTH_OF_DELTA/2,y:enOfDelta.y+cos*LENGTH_OF_DELTA/2};
 
 				//实线
 				cxt.beginPath();
