@@ -721,7 +721,7 @@ function FlRenderer(canvasId,options){
 				var x = act.view.x+act.view.width/2;
 				var y = act.view.y+act.view.height/2;
 
-				//x方向上解二原一次方程
+				//x方向上解二原一次方程,（22=8+14，8是图片与文字的间隙，14是文字的高度）
 				var dx = (view.x+view.width/2-x)*((view.y+view.height/2)-y<0?(act.view.height/2+22):(act.view.height/2))/Math.abs((view.y+view.height/2)-y)
 				
 				if(Math.abs(dx)>act.view.width/2){
@@ -747,6 +747,39 @@ function FlRenderer(canvasId,options){
 				cxt.moveTo(view.x+view.width/2-0.5,view.y+view.height/2-0.5);//由于像素精度问题所以每个坐标都要减0.5个像素
 				cxt.lineTo(x-0.5,y-0.5);
 				cxt.stroke();
+
+				//画个三角,三角形长度是16
+				var cos = (x-(view.x+view.width/2))/Math.sqrt(Math.pow(y-(view.y+view.height/2),2)+Math.pow(x-(view.x+view.width/2),2));
+				var sin = (y-(view.y+view.height/2))/Math.sqrt(Math.pow(y-(view.y+view.height/2),2)+Math.pow(x-(view.x+view.width/2),2));
+				var enOfDelta = {x:0,y:0};
+				enOfDelta.x = x-cos*16
+				enOfDelta.y = y-sin*16
+				var leftPoint = {x:enOfDelta.x+sin*16/2,y:enOfDelta.y-cos*16/2};
+				var rightPoint = {x:enOfDelta.x-sin*16/2,y:enOfDelta.y+cos*16/2};
+
+				//实线
+				cxt.beginPath();
+				cxt.setLineDash([]);
+				cxt.lineWidth=1;
+				cxt.strokeStyle='black';
+				cxt.moveTo(x-0.5,y-0.5);
+				// cxt.lineTo(enOfDelta.x,enOfDelta.y);
+				cxt.lineTo(leftPoint.x-0.5,leftPoint.y-0.5);
+				cxt.lineTo(rightPoint.x-0.5,rightPoint.y-0.5);
+				cxt.lineTo(x-0.5,y-0.5);
+				cxt.stroke();
+
+				//还原虚线
+				if(subseq.model.sequence==0){//优先级是0，则用实线
+					cxt.setLineDash([]);
+				}else if(subseq.model.sequence==1){//优先级是1，则用虚线
+					cxt.setLineDash([10,10]);
+				}else if(subseq.model.sequence==2){//优先级是2，则用点划线
+					cxt.setLineDash([10,4,2,4]);
+				}else if(subseq.model.sequence>=3){//优先级大于2，则用双点划线
+					cxt.setLineDash([10,4,2,4,2,4]);
+				}
+
 			}
 		}
 		if(subseq.model.operationId){//如果关联了一个结果
