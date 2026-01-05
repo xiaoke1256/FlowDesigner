@@ -30,8 +30,8 @@
           <activityBz>0</activityBz>
           <authority>1</authority>
           <activityId>0001</activityId>
-          <activityName>科长审批</activityName>
-          <displayName>科长审批</displayName>
+          <activityName>项目经理审批</activityName>
+          <displayName>项目经理审批</displayName>
           <baseId>0001</baseId>
         </model>
         <view>
@@ -49,8 +49,8 @@
           <activityBz>0</activityBz>
           <authority>0</authority>
           <activityId>0002</activityId>
-          <activityName>处级领导审批</activityName>
-          <displayName>处级领导审批</displayName>
+          <activityName>部门领导审批</activityName>
+          <displayName>部门领导审批</displayName>
           <baseId>0002</baseId>
         </model>
         <view>
@@ -68,8 +68,8 @@
           <activityBz>0</activityBz>
           <authority>0</authority>
           <activityId>0003</activityId>
-          <activityName>局级领导审批</activityName>
-          <displayName>局级领导审批</displayName>
+          <activityName>公司领导审批</activityName>
+          <displayName>公司领导审批</displayName>
           <baseId>0003</baseId>
         </model>
         <view>
